@@ -1,0 +1,94 @@
+////// GENERAMOS EL PROYECTO ///////
+C:\Users\Alexia>cd documents
+
+C:\Users\Alexia\Documents>cd ysapy menu
+
+C:\Users\Alexia\Documents\YSAPY MENU>cd 7.0
+
+C:\Users\Alexia\Documents\YSAPY MENU\7.0>ng new ysapy-web
+? Would you like to add Angular routing? Yes
+? Which stylesheet format would you like to use? CSS
+
+/////// INSTALACIONES ////////
+
+-----BOOTSTRAP
+npm install bootstrap@5.3.0
+
+-agregar a archivo angular.json
+	"node_modules/bootstrap/dist/css/bootstrap.min.css",
+	
+              "node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+-el popperjs es necesario para los menus desplegables y debe estar en este orden
+----BOOTSTRAP ICONS
+https://stackoverflow.com/questions/60365440/how-to-programmatically-use-bootstrap-icons-in-an-angular-project
+
+npm i bootstrap-icons
+
+-agregar a archivo styles.css
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+---- ANGULAR DATATABLES 
+npm install jquery@3.6.4 --save
+npm install datatables.net@1.13.4 --save
+npm install datatables.net-dt@1.13.4 --save
+npm install angular-datatables@15.0.1 --save
+npm install @types/datatables.net@1.10.24 --save-dev
+
+- agregar a archivo angular.json
+	"node_modules/datatables.net-dt/css/jquery.dataTables.css"
+
+        "node_modules/jquery/dist/jquery.js",
+        "node_modules/datatables.net/js/jquery.dataTables.js"
+
+- importar angular datatable module en cada archivo ts del componente en donde se utilizará
+	import { DataTablesModule } from "angular-datatables";
+
+
+	imports: [BrowserModule, DataTablesModule],
+
+----- ALERTIFY JS
+https://www.youtube.com/watch?v=KSs8JiYPlAc&list=LL&index=99&t=1101s
+
+npm install alertifyjs@1.13.1
+
+-creamos el siguiente archivo 
+alertify.type.d.ts
+
+-le agregamos el siguiente contenido
+declare module 'alertifyjs';
+
+-agregamos al archivo tsconfig.json
+"typeRoots":["node_modules/@types", "src/alertifytype.d.ts"],
+
+-agregamos al archivo styles.css
+@import "../node_modules/alertifyjs/build/css/alertify.css";
+@import "../node_modules/alertifyjs/build/css/themes/bootstrap.css";
+
+-importamos en cada componente en donde necesitamos utilizar
+import * as alertify from 'alertifyjs';
+
+----- SWIPERJS
+https://v8.swiperjs.com/
+
+npm i swiper@8.4.6
+
+-agregamos al archivo angular.json lo siguiente
+"node_modules/swiper/swiper-bundle.min.css"
+
+-agregamos swiper a cada modulo 
+import { SwiperModule } from 'swiper/angular';
+
+...aun no se ha implementado, faltan más detalles
+
+
+---para modales de bootstrap manipulables mediante ts
+https://stackoverflow.com/questions/32735396/error-ts2339-property-modal-does-not-exist-on-type-jquery
+https://stackoverflow.com/questions/27064176/typeerror-modal-is-not-a-function-with-bootstrap-modal
+
+-se instala el tipado de bootstrap
+	npm install -D @types/bootstrap@5.2.6
+
+-se agrega solo al archivo app.component.ts
+	import * as $ from 'jquery';
+	import * as bootstrap from "bootstrap";
