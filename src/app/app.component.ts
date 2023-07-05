@@ -8,9 +8,4 @@ import * as alertify from 'alertifyjs';
 })
 export class AppComponent {
   title = 'ysapy-web';
-
-
-  mostrar(){
-    alertify.error('Error message');
-  }
 }

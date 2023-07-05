@@ -1,0 +1,28 @@
+<div class="modal fade" [id]="idModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{titulo}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <!--Spinner-->
+          <div class="text-center" *ngIf="cargandoOperacion">
+            <div class="spinner-border text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <ng-content></ng-content>
+          <!--falta el cuerpo que seria el formulario-->
+        </div>
+        
+        <div class="modal-footer">
+          <button *ngIf="cargandoOperacion!=true" (click)="guardar()" class="btn e-tercer-boton">{{(accion=='M')?'Actualizar':'Guardar'}}</button>
+          <button *ngIf="accion=='M' && cargandoOperacion!=true" (click)="eliminar()" class="btn e-primer-boton">Eliminar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>

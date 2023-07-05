@@ -92,3 +92,7 @@ https://stackoverflow.com/questions/27064176/typeerror-modal-is-not-a-function-w
 -se agrega solo al archivo app.component.ts
 	import * as $ from 'jquery';
 	import * as bootstrap from "bootstrap";
+
+
+/////// DESARROLLO  ////////
+

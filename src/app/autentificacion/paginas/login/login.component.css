@@ -1,0 +1,34 @@
+#tarjeta{
+    width: 25rem;
+}
+
+#iconoLogin{
+    font-size: 7rem;
+    color: var(--segundo-color);
+}
+
+.e-texto-marron{
+    color: var(--tercer-color);
+}
+
+.e-iconoLabel{
+    background-color: var(--segundo-color); 
+    color: white;
+    border-color:  var(--segundo-color); 
+}
+
+#btnIngresar{
+    background-color: var(--tercer-color);
+}
+
+/*
+#fondo{
+    background-image:  radial-gradient(var(--segundo-color) 0.5px, transparent 0.5px), radial-gradient(var(--segundo-color) 0.5px, var(--tercer-color) 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0,10px 10px;
+}
+*/
+
+#iconoGoogle{
+    height: 1.6rem;
+}

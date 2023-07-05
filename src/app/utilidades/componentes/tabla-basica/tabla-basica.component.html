@@ -1,0 +1,43 @@
+ <!--
+  - La propiedad "cargandoTabla" permite mostrar u ocultar el loading 
+  
+  - La propiedad "cargandoTabla" evita que haya errores si se retrasa la obtencion de datos;
+  si la tabla no utiliza el ngIf para validar que ya se cuenta con los datos,
+  la misma igual se construye y muestra el mensaje "No hay datos disponibles en la tabla" cuando la 
+  obtencion de datos esta pendiente, luego de que se haya completado, la tabla ya no se actualiza 
+  pq el datatable solo tiene en cuenta los datos inciales(vacío al momento de construir la tabla), por esta razon
+  muestra con el paginado incorrecto y ademas el mensaje "No hay datos disponibles en la tabla" se muestra al final
+  
+  - Teniendo en cuenta el caso anterior el datatable tampoco se actualiza cuando se realizan abm's de los datos, a pesar de 
+  actualizar el array la tabla lo hace con errores, porque se tienen en cuenta los datos iniciales, es por esto que al utilizar 
+  la propiedad cargandoTabla al volver a recargar los datos también se vuelve a construir el template
+
+  - Se puede construir dos tablas en un mismo componente independientemente ya que cada propiedades para cada
+  tabla se pueden establecer por separado,mediante una variable para cada propiedad de cada tabla
+  (cargandoTabla diferentes para cada uno - tabla diferentes para cada uno)
+
+  - Se puede construir tablas con los mismos datos en el mismo componente pero ambos tienen que tener en común tanto la propiedad cargandoTabla
+  y la tabla para evitar los errores descritos anteriormente, cada vez que se actualiza el array se reconstruye mediante la misma propiedad cargandoTabla
+  (cargandoTabla iguales - tabla iguales)
+-->
+
+  <div class="text-center mt-3" *ngIf="cargandoTabla">
+    <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table" class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+        <thead>
+          <tr>
+            <th *ngFor="let campo of tabla.campos">{{ campo }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tabla.datos" (dblclick)="seleccionarItem(item)">
+            <td *ngFor="let propiedad of tabla.propiedades">{{ getPropiedadValor(item, propiedad)}}</td>
+          </tr>
+        </tbody>
+    </table>
+  </div>

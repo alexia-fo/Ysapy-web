@@ -1,0 +1,21 @@
+<!--PARA EMPLEADOS-->
+
+<h1>Perfil de usuario</h1>
+<h3>Nombre: </h3>
+<p>{{usuario.nombre}}</p>
+
+<h3>Usuario: </h3>
+<p>{{usuario.nusuario}}</p>
+
+<h3>Correo: </h3>
+<p>{{usuario.correo}}</p>
+
+<h3>Rol: </h3>
+<p>{{usuario.Rol.rol}}</p>
+
+<h3>Sucursal: </h3>
+<p>{{usuario.Sucursal.nombre}}</p>
+
+<h3>Imagen: </h3>
+<img [src]="apiUrl+usuario.idUsuario" alt="">
+<!--PARA CLIENTES-->

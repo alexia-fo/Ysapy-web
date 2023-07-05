@@ -1,29 +1,83 @@
+/*PARA USAR ICONOS DE BOOSTRAP*/
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
+/*PARA ALERTIFY*/
 @import "../node_modules/alertifyjs/build/css/alertify.css";
 @import "../node_modules/alertifyjs/build/css/themes/bootstrap.css";
 
+/*VARIABLES CSS DE LOS PRINCIPALES COLORES*/
+:root {
+    --primer-color: #CB1C20;
+    --primer-color-claro: #f33b3e;
+    --segundo-color: #FCC326;
+    --segundo-color-claro: #ffdb77;
+    --tercer-color: #593F3F;
+    --tercer-color-claro: #715b5b;
+    --cuarto-color: #F2F2F2;
+    --cuarto-color-claro: #fcfcfc;
+}
+.e-mensaje-error{
+  color: red;
+}
 
+/*---------- BOTONES ----------------*/
 
-/*PROBANDO SLIDER*/
+/*ESTILOS BASICOS DE LOS BOTONES*/
 
-.swiper {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: red;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .swiper-slide img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.e-primer-boton{
+  background-color: var(--primer-color);
+  color: white;
+}
+.e-segundo-boton{
+  background-color: var(--segundo-color);
+  color: black;
+}
+.e-tercer-boton{
+  background-color: var(--tercer-color);
+  color: white;  
+}
+.e-cuarto-boton{
+  background-color: var(--cuarto-color);
+  color: black;
+  border-color: black;
+}
+
+/*ESTILOS DE BOTONES AL GANAR EL FOCO*/
+.e-primer-boton:hover{
+  background-color: var(--primer-color-claro);
+  color: white;
+}
+.e-segundo-boton:hover{
+  background-color: var(--segundo-color-claro);
+  color: black;
+}
+.e-tercer-boton:hover{
+  background-color: var(--tercer-color-claro);
+  color: white;
+}
+.e-cuarto-boton:hover{
+  background-color: var(--cuarto-color-claro);
+  color: black;
+  border-color: black;
+}
+/*
+.e-imagen-lista{
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+}
+*/
+
+/**-----------fondos-------------*/
+.e-primer-fondo{
+  background-color: var(--primer-color-claro);
+}
+.e-segundo-fondo{
+  background-color: var(--segundo-color);
+}
+.e-tercer-fondo{
+  background-color: var(--tercer-color);
+}
+.e-cuarto-fondo{
+  background-color: var(--cuarto-color);
+}
