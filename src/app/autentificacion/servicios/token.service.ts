@@ -4,18 +4,18 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TokenService {
-  constructor() {}
+  constructor() { }
 
-  guardarToken(token: string){
+  guardarToken(token: string) {
     localStorage.setItem('token_ysapy', token);
   }
 
-  retornarToken(){
-    const token=localStorage.getItem('token_ysapy');
+  retornarToken() {
+    const token = localStorage.getItem('token_ysapy');
     return token;
-  }  
+  }
 
-  removerToken(){
+  removerToken() {
     localStorage.removeItem('token_ysapy');
   }
 }

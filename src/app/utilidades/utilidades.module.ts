@@ -28,6 +28,16 @@ import { DataTablesModule } from 'angular-datatables';
     CommonModule,
     RouterModule,
     DataTablesModule
-  ]
+  ],
+  exports: [
+    MenuNavegacionComponent,
+    ModalComponent,
+    ModalBuscarComponent,
+    ModalFormularioComponent,
+    TablaServersideComponent,
+    TablaBasicaComponent,
+    TablaEventoComponent,
+    MenuRafComponent
+  ],
 })
 export class UtilidadesModule { }

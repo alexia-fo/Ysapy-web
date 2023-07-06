@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './paginas/login/login.component';
 import { MainComponent } from './main/main.component';
 import { PerfilComponent } from './paginas/perfil/perfil.component';
+import { ValidarTokenGuard } from '../guardianes/validar-token.guard';
 
 const routes: Routes = [
   {
@@ -15,7 +16,8 @@ const routes: Routes = [
       },
       {
         path:'perfil',
-        component:PerfilComponent
+        component:PerfilComponent,
+        canActivate: [ValidarTokenGuard]
       },
       {
         path:'**',

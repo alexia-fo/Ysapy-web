@@ -6,6 +6,7 @@ import { LoginComponent } from './paginas/login/login.component';
 import { PerfilComponent } from './paginas/perfil/perfil.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MainComponent } from './main/main.component';
+import { CompartidosModule } from '../compartidos/compartidos.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MainComponent } from './main/main.component';
   imports: [
     CommonModule,
     AutentificacionRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CompartidosModule
   ]
 })
 export class AutentificacionModule { }

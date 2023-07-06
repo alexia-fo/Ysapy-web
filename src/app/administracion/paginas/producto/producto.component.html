@@ -1,0 +1,123 @@
+<!--PANTALLA-->
+<div class="container">
+    <div class="row">
+      <!--Boton Nuevo-->
+      <div class="col offset-md-9 col-md-3">
+        <div class="d-grid gap-2 my-2">
+          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
+        </div>
+      </div>
+      <!--Tabla Para Listar Datos-->
+      <div class="col-12">
+        <app-tabla-basica 
+        [tabla]="tabla" 
+        [cargandoTabla]="cargandoTabla" 
+        (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones"></app-tabla-basica>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- MODAL DATOS E IMAGEN -->
+  <app-modal-formulario 
+  [idModal]="modProductoId" 
+  [titulo]="'Producto'" 
+  [accion]="accion" 
+  (guardarClick)="guardar()"
+  (eliminarClick)="eliminar()" 
+  [cargandoOperacion]="cargandoOperacion">
+    <!--Formulario para realizar ABMC de los datos-->
+    <form [formGroup]="form" class="row g-3">
+      <div class="col-12">
+        <h3 class="text-center">Datos del Producto</h3>
+      </div>
+  
+      <div class="col-md-6">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input formControlName="nombre" type="text" id="nombre" class="form-control">
+        <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+        <small *ngIf="formPendiente" class="e-mensaje-error">Validacion del nombre en proceso...</small>
+      </div>
+  
+      <div class="col-md-6">
+        <label for="precio" class="form-label">Precio</label>
+        <input formControlName="precio" type="number" id="precio" class="form-control">
+        <small *ngIf="datoInvalido('precio')" class="e-mensaje-error">{{mensaje('precio')}}</small>
+      </div>
+  
+      <div class="col-12">
+        <label for="descripcion" class="form-label">Descripcion</label>
+        <input formControlName="descripcion" type="text" id="descripcion" class="form-control">
+        <small *ngIf="datoInvalido('descripcion')" class="e-mensaje-error">{{mensaje('descripcion')}}</small>
+      </div>
+  
+      <div class="col-md-6" *ngIf="!cargandoComboClasif">
+        <label for="idclasificacion" class="form-label">Clasificación</label>
+        <select formControlName="idclasificacion" id="clasificacion" class="form-select">
+          <option *ngFor="let c of clasificaciones" [value]="c.idClasificacion">{{c.nombre}}</option>
+        </select>
+        <small *ngIf="datoInvalido('idclasificacion')" class="e-mensaje-error">{{mensaje('idclasificacion')}}</small>
+      </div>
+  
+      <div class="col-md-6" *ngIf="accion=='M'">
+        <label for="facturable" class="form-label">Facturable</label>
+        <div>
+          <div class="form-check form-check-inline">
+            <input formControlName="facturable" [value]="true" class="form-check-input" type="radio" name="facturable" id="flexRadioDefault1" checked>
+            <label class="form-check-label" for="flexRadioDefault1">SI</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input formControlName="facturable" [value]="false" class="form-check-input" type="radio" name="facturable" id="flexRadioDefault2">
+            <label class="form-check-label" for="flexRadioDefault2">NO</label>
+          </div>
+          <small *ngIf="datoInvalido('facturable')" class="e-mensaje-error">{{mensaje('facturable')}}</small>
+        </div>
+      </div>
+  
+      <div class="col-12" *ngIf="cargandoComboClasif">
+        <div class="text-center">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div class="text-center text-danger">
+          Obteniendo los Datos...
+        </div>
+      </div>
+    </form>
+  
+    <!--FORMULARIO DE IMAGEN-->
+    <form [formGroup]="formImagen" class="row g-3" *ngIf="accion=='M'">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <h3 class="text-center">Imagen del Producto</h3>
+          </div>
+  
+          <div class="col-12">
+            <label class="form-label fw-bold">Editar Imagen</label>
+            <div class="input-group my-2">
+              <input type="file" (change)="capturarArchivo($event)" formControlName="imagenControl" class="form-control">
+              <button class="btn btn-warning" type="button" (click)="subirArchivo()" [disabled]="cargandoImagen">{{(cargandoImagen)? 'Cargando':'Guardar'}}</button>
+            </div>
+            <small *ngIf="archivoInvalido('imagenControl')" class="e-mensaje-error">{{mensajeArchivo('imagenControl')}}</small>
+          </div>
+  
+          <div class="col-6">
+            <div class="fw-bold">Imagen Actual</div>
+            <img [src]="apiUrl+seleccionado.idProducto" alt="" width="100%" height="auto">
+          </div>
+  
+          <div class="col-6">
+            <div class="fw-bold">Imagen Nueva</div>
+            <img [src]="previsualizacion" alt="" width="100%" height="auto">
+          </div>
+  
+        </div>
+      </div>
+    </form>
+  </app-modal-formulario>
+  
+  
+  

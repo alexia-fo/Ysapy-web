@@ -1,0 +1,49 @@
+<!--PANTALLA-->
+<div class="container">
+    <div class="row">
+      <!--Boton Nuevo-->
+      <div class="col offset-md-9 col-md-3">
+        <div class="d-grid gap-2 my-2">
+          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
+        </div>
+      </div>
+      <!--Tabla Para Listar Datos-->
+      <div class="col-12">
+        <app-tabla-basica 
+        [tabla]="tabla" 
+        [cargandoTabla]="cargandoTabla" 
+        (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones"></app-tabla-basica>
+      </div>
+    </div>
+  </div>
+  
+    
+     
+  <!-- MODAL -->
+  <app-modal-formulario
+  [idModal]="modSucursalId"
+  [titulo]="'Dineros'"
+  [accion]="accion"
+  (guardarClick)="guardar()" 
+  (eliminarClick)="eliminar()"
+  [cargandoOperacion]="cargandoOperacion"
+  >
+    <!--Formulario para realizar ABMC de los datos-->
+    <form [formGroup]="form" class="row g-3">
+  
+      <div class="col-12">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="nombre">
+        <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+      </div>
+      
+    </form>
+  </app-modal-formulario>
+    
+    
+    
+    
+    
+    
+    
