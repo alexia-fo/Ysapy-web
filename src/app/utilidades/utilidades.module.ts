@@ -10,6 +10,7 @@ import { TablaEventoComponent } from './componentes/tabla-evento/tabla-evento.co
 import { MenuRafComponent } from './paginas/menu-raf/menu-raf.component';
 import { RouterModule } from '@angular/router';
 import { DataTablesModule } from 'angular-datatables';
+import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.component';
 
 
 
@@ -22,7 +23,8 @@ import { DataTablesModule } from 'angular-datatables';
     TablaServersideComponent,
     TablaBasicaComponent,
     TablaEventoComponent,
-    MenuRafComponent
+    MenuRafComponent,
+    TablaPipeComponent
   ],
   imports: [
     CommonModule,

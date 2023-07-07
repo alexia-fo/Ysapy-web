@@ -97,22 +97,22 @@ export class MenuFuncionarioComponent {
         },
         {
           title: 'Inventarios',
-          route: '/empleado',
+          route: '/funcionario',
           isDropdown: true,
           dropdownItems: [
+            {
+              title: 'Inventario Apertura',
+              route: '/aperturaInventario',
+              isDropdown: false
+            },
             {
               title: 'Inventario',
               route: '/inventario',
               isDropdown: false
             },
             {
-              title: 'Recepcion',
-              route: '/recepcion',
-              isDropdown: false
-            },
-            {
-              title: 'Pedido',
-              route: '/pedido',
+              title: 'Rendicion',
+              route: '/rendicion',
               isDropdown: false
             }
           ]

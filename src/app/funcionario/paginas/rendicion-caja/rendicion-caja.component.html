@@ -1,0 +1,120 @@
+<!-------------- CON NG MODEL -------------->
+
+<!-- 
+ <table *ngIf="productos.length>0">
+        <thead>
+            <tr>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Cantidad</th>
+                <th>Total</th>
+                <th>Total2</th>
+
+            </tr>
+        </thead>
+        <tbody > 
+            <tr *ngFor="let i of productos">
+                <td>{{i.nombre | titlecase}}</td>
+                <td>{{i.precio | number}}</td>
+                <td>
+                    <input type="number" [(ngModel)]="i.cantidad" required min="" [ngClass]="{'is-invalid': !i.cantidad}" (ngModelChange)="actualizarCantidad(i)">
+                </td>
+                <td *ngIf="i.precio*i.cantidad">{{i.precio*i.cantidad}}</td>
+                <td>{{i.total}}</td>
+                </tr>    
+        </tbody>
+    </table>
+    
+    <button (click)="mostrar()">Mostrar</button>
+-->
+<!------ TABLA ------>
+
+<div class="container">
+
+    <div class="row">
+
+    <!---->
+    <div class="col-12">
+      <h3 class="text-center mt-3">{{descripcion}}</h3>
+    </div>
+    <!---->
+
+    <div class="col offset-md-9 col-md-3" *ngIf="invHabilitado">
+      <div class="d-grid gap-2 my-2">
+        <button class="btn e-primer-boton" (click)="enviar()">Enviar</button>
+      </div>
+    </div>
+    
+    <div class="col-12">
+        <div class="text-center" *ngIf="cargando">
+            <div class="spinner-border text-danger" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="text-center text-danger">
+              Registrando el inventario..
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12" *ngIf="cargandoTabla">
+        <div class="text-center">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div class="text-center text-danger">
+          Obteniendo billetes...
+        </div>
+    </div>
+
+        <div class="col-12 table-responsive rounded p-0 e-primer-fondo-claro" >
+            <form [formGroup]="form" *ngIf="dineros.length>0">
+
+                <table datatable [dtOptions]="dtOptions" class="table hover" > 
+
+                    <thead *ngIf="!cargandoTabla">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Monto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="!cargandoTabla">
+                        <!--
+                            able-group-divider: Agregue un borde más grueso, más oscuro entre los grupos de tablas
+                        -->
+                        <!--CON TOTAL-->
+                        <!--
+                        <tr *ngFor="let i of productos">
+                            <td>{{i.nombre | titlecase}}</td>
+                            <td>{{i.precio | number}}</td>
+                            <td>
+                                <input type="number" [(ngModel)]="i.cantidad" required min="" [ngClass]="{'is-invalid': !i.cantidad}" (ngModelChange)="actualizarCantidad(i)">
+                            </td>
+                        </tr>
+                        -->
+    
+                        <tr *ngFor="let i of dineros; let j=index;">
+                            <td>{{i.nombreBillete | titlecase}}</td>
+                            <td>{{i.monto | number}}</td>
+                            <td  class="col-2"> 
+
+                                <div>
+                                    <input type="number" class="form-control" formControlName="{{ i.idBillete }}" [id]="i.idBillete">
+                                    <span *ngIf="datoInvalido(i.idBillete.toString())" class="e-mensaje-error">{{mensaje(i.idBillete.toString())}}</span>   
+                
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+            </form>
+        </div>
+    </div>
+</div>
+
+ 
+
+
+

@@ -81,3 +81,156 @@
 .e-cuarto-fondo{
   background-color: var(--cuarto-color);
 }
+
+/*---------- MENU ----------------*/
+
+/*ESTILOS PARA LA IMAGEN DEL MENU*/
+.navbar-brand {
+  color: #fff;
+  font-size: 24px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.1);
+}
+
+/*ESTILOS PARA LAS LISTAS DESPLEGABLES DEL MENU*/
+.dropdown-item.active{
+  background-color: var(--segundo-color);
+  color: black; /* Color del texto del menú desplegable */
+
+}
+.dropdown-menu {
+  background-color: var(--cuarto-color); /* Color de fondo del menú desplegable */
+}
+
+.dropdown-item {
+  color: black; /* Color del texto del menú desplegable */
+}
+
+.dropdown-item:hover {
+  /* Color de fondo al pasar el cursor sobre el menú desplegable */
+  background-color: var(--segundo-color-claro);
+  color: black; /* Color del texto del menú desplegable */
+}
+
+.navbar-toggler{
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-toggler:hover {
+  transform: scale(1.1);
+}
+
+
+
+ /*-----------------datatable-------------*/
+ /*
+ .dataTables_wrapper {
+    position: relative;
+    background-color: #ffdb77;
+  }
+
+.dataTables_wrapper .dataTables_filter {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 1;
+    background-color: #FCC326;
+  }
+
+*/
+/*
+.outer-wrapper {
+  margin: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid black;
+  border-radius: 4px;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+  max-width: fit-content;
+  max-height: fit-content;
+
+  
+}
+.table-wrapper {
+
+  overflow-y: scroll;
+  overflow-x: scroll;
+  height: fit-content;
+  max-height: 66.4vh;
+  margin-top: 22px;
+  margin: 15px;
+  padding-bottom: 20px;
+  
+}
+
+
+table {
+    
+  min-width: max-content;
+  
+  border-collapse: separate;
+  border-spacing: 0px;    
+  
+}
+*/
+
+ /*-----------------datatable-------------*/
+ /*
+ .outer-wrapper .table-wrapper table.dataTable thead > tr > th.sorting,
+ table.dataTable thead > tr > th.sorting{
+  background-color: #f33b3e;
+    position: sticky; 
+    top: 56.2px;
+    
+    text-align: center;
+    font-weight: normal;
+    font-size: 18px;
+    outline: 0.5px solid white;
+
+    color: var(--cuarto-color-claro)  ;
+
+    margin: 0;
+}
+
+.dataTables_wrapper .dataTables_filter{
+    width: 100%;
+    position: sticky;
+    top: 0px;
+    box-sizing: border-box;
+    padding: 10px;
+
+    background-color: var(--cuarto-color);
+
+    
+    margin: 0;
+}
+
+input[type="search"]{
+    font-family: "Quicksand", sans-serif;
+    font-size: var(--sm);
+}
+.dataTables_wrapper .dataTables_filter input{
+  background-color: #77ff92;
+}
+
+
+
+/*para seleccionar imagen*/
+/*
+input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+input[type="file"]::before {
+  content: '\f093';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: white;
+  background-color: #007bff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+*/

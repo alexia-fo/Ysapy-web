@@ -1,7 +1,11 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top"> 
     <div class="container-fluid">
 
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" routerLink="/" routerLinkActive="router-link-active" >
+        <div class=".card-border">
+          <img src="../../../../assets/logo-rojo.png" alt="" width="95" height="40">
+        </div>
+      </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,26 +20,32 @@
         </div>
 
         <div class="offcanvas-body">
-          <ul class="navbar-nav" *ngFor="let item of menuItems">
+          <ul class="navbar-nav align-items-lg-center" *ngFor="let item of menuItems">
   
             <li class="nav-item" [routerLink]="item.route" *ngIf="!item.isDropdown; else esDropdown">
-              <a class="nav-link active" aria-current="page" href="#">{{ item.title }}</a>
+              <a class="nav-link active fs-5" aria-current="page" href="#" routerLinkActive="active">{{ item.title }}</a>
             </li>
   
             <ng-template #esDropdown>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.title }}</a>
+                <a class="nav-link dropdown-toggle fs-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.title }}</a>
                 <ul *ngIf="item.isDropdown" class="dropdown-menu">
                   <li *ngFor="let dropdownItem of item.dropdownItems">
-                    <a [routerLink]="item.route+'/'+dropdownItem.route" class="dropdown-item">{{ dropdownItem.title }}</a>
+                    <a [routerLink]="item.route+'/'+dropdownItem.route" class="dropdown-item" routerLinkActive="active">{{ dropdownItem.title }}</a>
                   </li>
                 </ul>
               </li>
             </ng-template>
   
           </ul>
+
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item pe-2" routerLink="../autentificacion/perfil">
+              <a class="nav-link" aria-current="page"><i class="bi bi-person-circle d-none d-lg-block fs-3"></i> <span class="bi d-lg-none fs-5">Perfil</span></a>
+            </li>
+          </ul>
+
         </div>
-        
       </div>
     </div>
 </nav>
