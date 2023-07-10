@@ -117,6 +117,23 @@ export class MenuFuncionarioComponent {
             }
           ]
         },
+        {
+          title: 'Productos',
+          route: '/funcionario',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Recepcion',
+              route: '/recepcion',
+              isDropdown: false
+            },
+            {
+              title: 'Salida',
+              route: '/salidaProductos',
+              isDropdown: false
+            },
+          ]
+        },
         // Agrega más opciones de menú aquí según tus necesidades
       ];
     }

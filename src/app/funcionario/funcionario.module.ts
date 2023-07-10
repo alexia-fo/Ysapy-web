@@ -9,6 +9,8 @@ import { RendicionCajaComponent } from './paginas/rendicion-caja/rendicion-caja.
 import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { CompartidosModule } from '../compartidos/compartidos.module';
+import { RecepcionProductosComponent } from './paginas/recepcion-productos/recepcion-productos.component';
+import { SalidaProductosComponent } from './paginas/salida-productos/salida-productos.component';
 
 
 @NgModule({
@@ -16,7 +18,9 @@ import { CompartidosModule } from '../compartidos/compartidos.module';
     MainComponent,
     InvRendCabeceraComponent,
     InventarioProductosComponent,
-    RendicionCajaComponent
+    RendicionCajaComponent,
+    RecepcionProductosComponent,
+    SalidaProductosComponent
   ],
   imports: [
     CommonModule,

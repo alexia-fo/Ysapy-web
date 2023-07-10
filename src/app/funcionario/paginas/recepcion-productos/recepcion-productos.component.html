@@ -1,0 +1,188 @@
+<!-------------------PANTALLA-------------------->
+<div class="container mt-2">
+    <div class="row">
+        
+        <div class="col-12 d-flex justify-content-end">
+            <button class="btn e-tercer-boton fw-bold" (click)="guardar()">Enviar</button>
+        </div>
+        
+        <div class="col-12">
+            <h2>Accion: {{accion | titlecase}}</h2>
+        </div>
+
+        <div class="col-12" *ngIf="!cargandoTabla">
+            <form [formGroup]="formCabecera" class="mt-3">
+                <!-- cabecera de recepcion -->
+
+                <div class="row g-3">
+                    
+                                    <div class="col-md-3">
+                                        <label for="nroComprobante" class="form-label">Nro. Comprobante</label>
+                                        <input formControlName="nroComprobante" type="text" id="nroComprobante" class="form-control">
+                                        <small *ngIf="datoInvalido('nroComprobante')" class="e-mensaje-error">{{mensaje('nroComprobante')}}</small>
+                                    </div>
+                    
+                                    <div class="col-md-9">
+                                        <label for="observacion" class="form-label">Observacion</label>
+                                        <input formControlName="observacion" type="text" id="observacion" class="form-control">
+                                        <small *ngIf="datoInvalido('observacion')"
+                                            class="e-mensaje-error">{{mensaje('observacion')}}</small>
+                                    </div>
+
+                </div>
+                
+                
+            </form>
+            <hr>
+            <hr>
+            <form [formGroup]="form" class="mt-3">
+                <div class="row g-3">
+                    <!-- Detalle de recepcion -->
+                    <div class="col-md-1">
+                        <label for="idProducto" class="form-label">Id</label>
+                        <input formControlName="idProducto" type="text" id="idProducto" class="form-control">
+                        <small *ngIf="datoInvalido('idProducto')"
+                            class="e-mensaje-error">{{mensaje('idProducto')}}</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input formControlName="nombre" type="text" id="nombre" class="form-control">
+                        <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input formControlName="cantidad" type="number" id="cantidad" class="form-control">
+                        <small *ngIf="datoInvalido('cantidad')" class="e-mensaje-error">{{mensaje('cantidad')}}</small>
+                    </div>
+                    <div class="col-md-2">
+
+                        <div class="row justify-content-end justify-content-md-around">
+                            <div class="col-2">
+                                <label for="cantidad" class="form-label fw-bold">Buscar</label>
+                                <button class="btn e-primer-boton " (click)="buscar()"><i
+                                        class="bi bi-search"></i></button>
+                            </div>
+                            <div class="col-2 align-text-end ">
+                                <label for="cantidad" class="form-label fw-bold">Agregar</label>
+                                <button class="btn e-primer-boton " (click)="agregar()"><i
+                                        class="bi bi-plus-square"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+
+        <div class="col-12 offset-md-9 col-md-3" *ngIf="productosRecibidos.length>0">
+            <div class="d-grid gap-2">
+                <button class="btn e-tercer-boton fw-bold my-4" (click)="nuevo()">Nuevo</button>    
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="text-center" *ngIf="cargando">
+                <div class="spinner-border text-danger" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="text-center text-danger">
+                    Registrando el inventario..
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" *ngIf="cargandoTabla">
+            <div class="text-center">
+                <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="text-center text-danger">
+                Obteniendo productos...
+            </div>
+        </div>
+
+
+        <div class="col-12">
+            <div class="table-responsive rounded p-0 e-primer-fondo-claro">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table hover">
+                    <!--
+                        <thead *ngIf="!cargandoT">
+                    -->
+                    <thead *ngIf="!cargandoT">
+                        <tr>
+                            <th> Id </th>
+                            <th> Nombre</th>
+                            <th> Cantidad </th>
+                            <th> Eliminar </th>
+                            <th> Modificar </th>
+                        </tr>
+                    </thead>
+                    <!--
+                        <tbody *ngIf="!cargandoT">
+                    -->
+                    <tbody *ngIf="!cargandoT">
+                        <tr *ngFor="let i of productosRecibidos">
+                            <td>{{i.idProducto}}</td>
+                            <td>{{i.nombre | titlecase}}</td>
+                            <td>{{i.cantidad}}</td>
+                            <td (click)="eliminar(i.idProducto)"><i class="bi bi-trash3"></i></td>
+                            <td (click)="modificar(i)"><i class="bi bi-arrow-up-right-square"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--
+<p *ngIf="1>productosRecibidos.length && !cargandoTabla && !cargandoT" class="text-danger">Para registrar debe agregar al menos un producto {{productosRecibidos.length}}</p>
+-->
+</div>
+
+
+
+
+
+<!-------------- MODAL ---------------->
+
+<div class="modal fade" id="smodal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Productos</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table *ngIf="productos.length>0" class="table" datatable [dtOptions]="dtOptionsProductos">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> Id </th>
+                            <th class="text-center"> Nombre</th>
+                            <th class="text-center"> Precio </th>
+                            <th class="text-center"> Descripicon </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of productos" (dblclick)="seleccionarProducto(i)">
+                            <td>{{i.idProducto}}</td>
+                            <td>{{i.nombre | titlecase}}</td>
+                            <td>{{i.precio | number}}</td>
+                            <td>{{i.descripcion | titlecase}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn e-tercer-boton">guardar</button>
+                <button class="btn e-primer-boton">Eliminar</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+<!---->
