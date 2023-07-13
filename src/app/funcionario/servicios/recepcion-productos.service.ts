@@ -22,9 +22,8 @@ constructor(
 
 ///////////para almacenar los datos de manera temporal//////////
   // Obtener datos del localStorage
-  ///////FALTA VALIDAR SI EL USUARIO COINCIDE
   getItems() {
-    const storedData = localStorage.getItem('productos');
+    const storedData = localStorage.getItem('productosRecepcion');
     if (storedData) {
       const { fecha, items, observacion, nroComprobante, uId } = JSON.parse(storedData);
       // Comprobar si la fecha almacenada coincide con la fecha actual
@@ -47,11 +46,11 @@ constructor(
       nroComprobante,
       uId:this.autService.usuario.idUsuario//si inicia sesion con otra cuenta no va a retornar
     };
-    localStorage.setItem('productos', JSON.stringify(data));
+    localStorage.setItem('productosRecepcion', JSON.stringify(data));
   }
 
   removerItems() {
-    localStorage.removeItem('productos');
+    localStorage.removeItem('productosRecepcion');
   }
 //////////////////////
 

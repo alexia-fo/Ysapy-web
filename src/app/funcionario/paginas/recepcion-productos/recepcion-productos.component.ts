@@ -79,6 +79,9 @@ export class RecepcionProductosComponent {
     cantidad:['', [Validators.required, Validators.min(1)]],
   });
 
+  invHabilitado:boolean=false;
+  descripcion:string='';
+
   productos:Producto[]=[];
   productosRecibidos:ProdRecibido[]=[];/*=[{idProducto:1, nombre:'prueba 1', cantidad:8}, {idProducto:2, nombre:'prueba 2', cantidad:8}, {idProducto:3, nombre:'prueba 3', cantidad:8}];*/
   accion:'Crear' | 'Modificar' | 'Eliminar'='Crear';
@@ -107,6 +110,8 @@ export class RecepcionProductosComponent {
     this.servicioP.obtenerDatos()
     .subscribe({
       next:(response:RespuestaDatos)=>{
+        this.invHabilitado=response.mostrar;
+        this.descripcion=response.descripcion;
         if(response.mostrar){//si ya existe una apertura de caja se puede registrar recepciones
           this.productos=response.producto!;//se obtienen los productos si existe apertura
           console.log('response.producto',response.producto)
@@ -354,7 +359,7 @@ export class RecepcionProductosComponent {
         this.mensajeAlertify.mensajeExito(
           `La recepcion se ha registrado correctamente ✓✓`
         );
-        this.servicioP.removerItems();
+        this.limpiar();
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
@@ -364,5 +369,23 @@ export class RecepcionProductosComponent {
         this.cargando = false;
       },
     });
+  }
+
+  limpiar(){
+    this.servicioP.removerItems();
+    this.formCabecera.reset();
+    this.form.reset();
+
+    //para evitar errores del datatable
+    this.cargandoT=true;
+    this.productosRecibidos=[];
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+      console.log('Destruyendo..');
+      this.dtTrigger.next(0);
+    })
+    this.cargandoT=false;
+   
+
   }
 }

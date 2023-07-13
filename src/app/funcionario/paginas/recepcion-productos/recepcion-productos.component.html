@@ -1,11 +1,19 @@
 <!-------------------PANTALLA-------------------->
 <div class="container mt-2">
     <div class="row">
-        
+        <div class="col-12">
+            <p class="text-danger">
+                {{descripcion}}
+            </p>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="invHabilitado">
+
         <div class="col-12 d-flex justify-content-end">
             <button class="btn e-tercer-boton fw-bold" (click)="guardar()">Enviar</button>
         </div>
-        
+
         <div class="col-12">
             <h2>Accion: {{accion | titlecase}}</h2>
         </div>
@@ -15,23 +23,24 @@
                 <!-- cabecera de recepcion -->
 
                 <div class="row g-3">
-                    
-                                    <div class="col-md-3">
-                                        <label for="nroComprobante" class="form-label">Nro. Comprobante</label>
-                                        <input formControlName="nroComprobante" type="text" id="nroComprobante" class="form-control">
-                                        <small *ngIf="datoInvalido('nroComprobante')" class="e-mensaje-error">{{mensaje('nroComprobante')}}</small>
-                                    </div>
-                    
-                                    <div class="col-md-9">
-                                        <label for="observacion" class="form-label">Observacion</label>
-                                        <input formControlName="observacion" type="text" id="observacion" class="form-control">
-                                        <small *ngIf="datoInvalido('observacion')"
-                                            class="e-mensaje-error">{{mensaje('observacion')}}</small>
-                                    </div>
+
+                    <div class="col-md-3">
+                        <label for="nroComprobante" class="form-label">Nro. Comprobante</label>
+                        <input formControlName="nroComprobante" type="text" id="nroComprobante" class="form-control">
+                        <small *ngIf="datoInvalido('nroComprobante')"
+                            class="e-mensaje-error">{{mensaje('nroComprobante')}}</small>
+                    </div>
+
+                    <div class="col-md-9">
+                        <label for="observacion" class="form-label">Observacion</label>
+                        <input formControlName="observacion" type="text" id="observacion" class="form-control">
+                        <small *ngIf="datoInvalido('observacion')"
+                            class="e-mensaje-error">{{mensaje('observacion')}}</small>
+                    </div>
 
                 </div>
-                
-                
+
+
             </form>
             <hr>
             <hr>
@@ -77,7 +86,7 @@
 
         <div class="col-12 offset-md-9 col-md-3" *ngIf="productosRecibidos.length>0">
             <div class="d-grid gap-2">
-                <button class="btn e-tercer-boton fw-bold my-4" (click)="nuevo()">Nuevo</button>    
+                <button class="btn e-tercer-boton fw-bold my-4" (click)="nuevo()">Nuevo</button>
             </div>
         </div>
 
@@ -181,7 +190,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
 
