@@ -144,7 +144,7 @@ export class InvRendService {
   }
 
   registrarRendicion(rendicion: any): Observable<any> {
-    console.log(rendicion)
+    //console.log(rendicion)
     return this.http.post<any>(`${this.apiUrl}/inventarios/registrarRendicion`, { ...rendicion })
       .pipe(
         catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas

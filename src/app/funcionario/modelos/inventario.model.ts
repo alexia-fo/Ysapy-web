@@ -60,6 +60,7 @@ export interface Dinero {
     idBillete:number;
     nombreBillete:string; 
     monto:number;   
+    montoEditable:boolean;
     //el resto de los datos no son necesarios
 }
 

@@ -32,8 +32,8 @@ export class InvRendCabeceraComponent implements OnInit {
   ngOnInit(): void {
     
     this.form = this.formulario.group({
-      nombreSucursal: ['', [Validators.required]],
-      observacion: ['', [Validators.required]],
+      nombreSucursal: [''],
+      observacion: ['' ],
     });
 
     this.form.get('nombreSucursal')?.disable();//solo mostramos el nombre de la sucursal

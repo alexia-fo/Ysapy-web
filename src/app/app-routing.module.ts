@@ -25,10 +25,12 @@ const routes:Routes=[
   {
     path:'funcionario',
     loadChildren:()=>import('./funcionario/funcionario.module').then(m=>m.FuncionarioModule),
+    
     canActivate: [ValidarTokenGuard, ValidarRolesGuard],
     data: {
       roles: ['FUNCIONARIO'] // Roles permitidos para acceder a la ruta
     }
+    
   },
   {
     path:'**',
