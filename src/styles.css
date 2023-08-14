@@ -234,3 +234,7 @@ input[type="file"]::before {
   border-radius: 5px;
 }
 */
+
+.dataTables_filter{
+  margin-bottom: 10px;
+}

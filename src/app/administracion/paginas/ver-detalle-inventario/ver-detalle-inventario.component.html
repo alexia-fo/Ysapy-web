@@ -1,0 +1,115 @@
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad A.</th>
+                            <th>Cantidad C.</th>
+                            <th>Cantidad R.</th>
+                            <th>Cantidad S.</th>
+                            <th>Precio</th>
+                            <th class="text-center">Ver recep</th>
+                            <th class="text-center">Ver salida</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let i of detalleInventario">
+                        <tr>
+                            <td>{{i.Producto.nombre}}</td>
+                            <td>{{i.cantidadApertura}}</td>
+                            <td>{{i.cantidadCierre}}</td>
+                            <td>{{i.cantidadRecepcion}}</td>
+                            <td>{{i.cantidadSalida}}</td>
+                            <td>{{i.precio}}</td>
+                            <td class="text-center"><button (click)="verDetalleRecep(i.idproducto)" class="btn btn-success"><i class="bi bi-box-arrow-in-left"></i></button></td>
+                            <td class="text-center"><button (click)="verDetalleSalida(i.idproducto)" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i></button></td>
+                          
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end">
+            <div class="fw-bold text-danger" routerLink="../../inventarios">Regresar a la pagina anterior</div>
+        </div>
+    </div>
+</div>
+
+<app-modal
+[modalId]="modDetalleRec"
+[modalTamaño]="'pantallaCompleta'"
+[titulo]="'Detalle de Recepciones'"
+>
+    <div class="row" *ngIf="detalleRecepcion">
+        <div class="col-12">
+            <div class="table table-striped table-hover">
+                <table class="table hover">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Fecha R.</th>
+                        <th>Observacion</th>
+                        <th>Usuario</th>
+                        <th>Nro Comprobante</th>
+                    </tr>
+                    <tbody *ngFor="let i of detalleRecepcion">
+                        <td>{{i.Producto.nombre}}</td>
+                        <td>{{i.cantidad}}</td>
+                        <td>{{i.total}}</td>
+                        <td>{{i.Crecepcion.fecha}}</td>
+                        <td>{{i.Crecepcion.observacion}}</td>
+                        <td>{{i.Crecepcion.Usuario.nombre}}</td>
+                        <td>{{i.Crecepcion.nroComprobante}}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
+
+
+
+
+
+
+
+<app-modal
+[modalId]="modDetalleSalida"
+[modalTamaño]="'pantallaCompleta'"
+[titulo]="'Detalle de Salidas'"
+>
+
+    <div class="row" *ngIf="detalleSalida">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table hover">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Fecha S.</th>
+                        <th>Observacion</th>
+                        <th>Usuario</th>
+                        <th>Tipo Salida</th>
+                    </tr>
+                    <tbody *ngFor="let i of detalleSalida">
+                        <td>{{i.Producto.nombre}}</td>
+                        <td>{{i.cantidad}}</td>
+                        <td>{{i.total}}</td>
+                        <td>{{i.Csalida.fecha}}</td>
+                        <td>{{i.Csalida.observacion}}</td>
+                        <td>{{i.Csalida.Usuario.nombre}}</td>
+                        <td>{{i.Salida.descripcion}}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-modal> 

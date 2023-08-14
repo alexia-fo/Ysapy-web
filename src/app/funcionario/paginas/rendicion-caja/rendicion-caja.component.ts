@@ -4,6 +4,7 @@ import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.
 import { InvRendService } from '../../servicios/inv-rend.service';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { formatNumber } from '@angular/common';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 
 @Component({
   selector: 'app-rendicion-caja',
@@ -26,7 +27,9 @@ export class RendicionCajaComponent {
     paging:false,
     info:false,
     responsive:false,
-
+    // ordering: false, // Deshabilitar la ordenación por defecto
+    order: [[1, 'asc']], // Ordenar por el segundo campo (índice 1) en forma ascendente
+    
     language: {
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
@@ -56,121 +59,11 @@ export class RendicionCajaComponent {
     });
   }
 
-  /*
-  getControlGroup(index: number): FormGroup {
-    const control = this.form.get(index.toString());
-    return control instanceof FormGroup ? control : null;
-  }
-  */
-  getControlGroup(index: number): FormGroup {
-    return this.form.get(index.toString()) as FormGroup ;
-  }
-  
-  hasControlGroup(index: number): boolean {
-    return this.form.contains(index.toString());
-  }
-
   dineroControles!: FormArray;
   
 
   ngOnInit(): void {
-    this.servicioR.obtenerDatosDinero()
-    .subscribe({
-      next:(respuesta:RespuestaDatosDinero)=>{
-        console.log('suscribe: ', respuesta)
-        this.descripcion=respuesta.descripcion;
-        if(respuesta.mostrar){
-          this.invHabilitado=true;
-          this.dineros=respuesta.dineros!;
-          //mod1
-          /*      
-          this.dineros.forEach(dinero => {
-            this.form.addControl(dinero.idBillete.toString(), new FormControl(0, [Validators.required, Validators.min(0)]));
-          });
-          */
-
-          /*
-          this.dineros.forEach((dinero: Dinero) => {
-            const group = this.fb.group({
-              cantidad: [{ value: 0 }, [Validators.required, Validators.min(0)]],
-              monto: [{ value: 0 }, [Validators.required, Validators.min(0)]]
-            });
-      
-            console.log('dinero ', dinero.idBillete.toString())
-            console.log('form ', group)
-            this.form.addControl(dinero.idBillete.toString(), group);
-
-            console.log('formulario, ', this.form)
-          });
-          */
-         /*
-          this.form = this.fb.group({
-            idBillete1: this.fb.group({
-              cantidad: [0, [Validators.required, Validators.min(0)]],
-              monto: [0, [Validators.required, Validators.min(0)]]
-            }),
-            idBillete2: this.fb.group({
-              cantidad: [0, [Validators.required, Validators.min(0)]],
-              monto: [0, [Validators.required, Validators.min(0)]]
-            }),
-            // ...
-          });
-          */
-         //console.log(this.dineros)
-         
-         
-         /*
-          this.dineroControles = this.form.get('dineroControles') as FormArray;
-          this.dineros.forEach((dinero: Dinero) => {
-            const group = this.fb.group({
-              cantidad: [{value:0, disabled:dinero.montoEditable}, [Validators.required, Validators.min(0)]],
-              monto: [{value:dinero.monto, disabled:!dinero.montoEditable}, [Validators.required, Validators.min(0)]],
-              observacion: ['']
-            });
-            
-            this.dineroControles.setControl(dinero.idBillete, group);
-          });
-          */
-         /*
-         this.dineroControles = this.form.get('dineroControles') as FormArray;
-         this.dineros.forEach((dinero: Dinero) => {
-           const group = this.fb.group({
-             cantidad: [{value:0, disabled:dinero.montoEditable}, [Validators.required, Validators.min(0)]],
-             monto: [{value:dinero.monto, disabled:!dinero.montoEditable}, [Validators.required, Validators.min(0)]],
-             observacion: [''],
-             idBillete: [dinero.idBillete]
-           });
-           this.dineroControles.push(group);
-         });
-         */
-         this.dineroControles = this.form.get('dineroControles') as FormArray;
-         this.dineros.forEach((dinero: Dinero) => {
-          console.log('dinero id ', typeof(dinero.idBillete))
-          console.log('dinero monto ', typeof(dinero.monto))
-          const group = this.fb.group({
-            cantidad: [{value: dinero.montoEditable ? 1 : 0, disabled: dinero.montoEditable}, [Validators.required, Validators.min(0)]],
-            monto: [{value: dinero.monto, disabled: !dinero.montoEditable}, [Validators.required, Validators.min(0)]],
-            observacion: [''],
-            idBillete: [dinero.idBillete]
-          });
-          this.dineroControles.push(group);
-        });
-         
-          console.log('formulario, ', this.form)
-          //console.log('value ', this.form.getRawValue())
-        }else{
-          this.invHabilitado=false;
-        }
-        this.cargandoTabla = false;
-      },
-      error:(errores)=>{
-        errores.forEach((error: string) => {
-          this.mensajeAlertify.mensajeError(error);
-        });
-        
-        this.cargandoTabla = false;      }
-    });
-  
+    this.consultarDetalle();
   }
 
   mensaje(campo:string){
@@ -217,24 +110,6 @@ datoInvalido(campo: string, formArrayName: string, index: number): boolean {
   return valido?valido:false;
 }
 
-
-/* *//*
-    datoInvalido(campo:string){
-      let valido=(this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
-      let input = document.getElementById(campo);
-      if(valido){
-        input?.classList.add("is-invalid");
-      }else if((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid){
-        input?.classList.remove("is-invalid");
-        input?.classList.add("is-valid");
-      }else{
-        input?.classList.remove("is-invalid");
-        input?.classList.remove("is-valid");
-      }
-      
-      return valido;
-    }
-*/
   //falta
   enviar(){
     if (!this.form.valid) {
@@ -242,34 +117,67 @@ datoInvalido(campo: string, formArrayName: string, index: number): boolean {
       return;
     }
 
-    console.log(this.form.getRawValue())
-
-
+    // console.log(this.form.getRawValue())
     
-    let rendicion = {dineros:this.form.value } ;
+    // let rendicion = {dineros:this.form.value } ;
     this.cargando = true;
-
 
     this.servicioR.registrarRendicion(this.form.getRawValue()).subscribe({
     //this.servicioR.registrarRendicion(rendicion).subscribe({
     
-      next: (respuesta: any) => {
-        console.log(respuesta)
+      next: (respuesta: respuestaMensaje) => {
         this.cargando = false;
         $('#modal').modal('hide');
         this.mensajeAlertify.mensajeExito(
-          `Se ha registrado correctamente ✓✓`
+          `${respuesta.msg}`
         );
+        this.consultarDetalle();
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        console.log(errores);
         this.cargando = false;
       },
     });
 
+  }
+
+  consultarDetalle(){
+    this.form.reset();//para limpiar al volver a mostrar luego de guardar
+    this.cargandoTabla=true;
+    this.servicioR.obtenerDatosDinero()
+    .subscribe({
+      next:(respuesta:RespuestaDatosDinero)=>{
+
+        this.descripcion=respuesta.descripcion;
+        if(respuesta.mostrar){
+          this.invHabilitado=true;
+          this.dineros=respuesta.dineros!;
+
+          this.dineroControles = this.form.get('dineroControles') as FormArray;
+            this.dineros.forEach((dinero: Dinero) => {
+
+            const group = this.fb.group({
+              cantidad: [0, [Validators.required, Validators.min(0)]],
+              observacion: [''],
+              idBillete: [dinero.idBillete]
+            });
+            this.dineroControles.push(group);
+        });
+         
+        }else{
+          this.invHabilitado=false;
+        }
+        this.cargandoTabla = false;
+      },
+      error:(errores)=>{
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+        
+        this.cargandoTabla = false;      }
+    });
   }
   //CON NG MODEL
   
@@ -288,19 +196,19 @@ datoInvalido(campo: string, formArrayName: string, index: number): boolean {
   }
   */
   
-  formatMonto(event: any) {
-    const input = event.target;
-    const value = input.value;
+  // formatMonto(event: any) {
+  //   const input = event.target;
+  //   const value = input.value;
   
-    // Remueve los separadores de miles existentes
-    const numberValue = Number(value.replace(/,/g, ''));
+  //   // Remueve los separadores de miles existentes
+  //   const numberValue = Number(value.replace(/,/g, ''));
   
-    if (!isNaN(numberValue)) {
-      // Formatea el número con separadores de miles y lo asigna nuevamente al input
-      const formattedValue = new Intl.NumberFormat('en-US').format(numberValue);
-      input.value = formattedValue;
-    }
-  }
+  //   if (!isNaN(numberValue)) {
+  //     // Formatea el número con separadores de miles y lo asigna nuevamente al input
+  //     const formattedValue = new Intl.NumberFormat('en-US').format(numberValue);
+  //     input.value = formattedValue;
+  //   }
+  // }
   
   
 }

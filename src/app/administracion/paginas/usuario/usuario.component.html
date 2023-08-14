@@ -3,15 +3,19 @@
     <div class="row">
       <!--Boton Nuevo-->
       <div class="col offset-md-9 col-md-3">
-        <div class="d-grid gap-2  my-2">
+        <div class="d-grid gap-2 my-2">
           <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
         </div>
       </div>
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <app-tabla-basica [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
+        <!-- <app-tabla-basica [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
           [dtOpciones]="dtOpciones">
-        </app-tabla-basica>
+        </app-tabla-basica> -->
+
+        <app-tabla-pipe [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones">
+      </app-tabla-pipe>
       </div>
     </div>
   </div>

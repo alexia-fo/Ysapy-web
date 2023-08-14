@@ -3,6 +3,7 @@ import { Producto, RespuestaDatosProducto } from '../../modelos/inventario.model
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InvRendService } from '../../servicios/inv-rend.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 @Component({
   selector: 'app-inventario-productos',
   templateUrl: './inventario-productos.component.html',
@@ -13,8 +14,10 @@ export class InventarioProductosComponent {
   invHabilitado:boolean=false;
   descripcion:string='';
   cargandoTabla:boolean = false; //obteniendo los datos a mostrar en la tabla
+  
   form = new FormGroup({}); //formulario
-  cargando!: boolean; //registro de inv en proceso
+  cargandoOperacion!: boolean; //registro de inv en proceso
+  
   dtOptions = {
     paging:false,
     info:false,
@@ -47,33 +50,7 @@ export class InventarioProductosComponent {
   }
 
   ngOnInit(): void {
-    this.cargandoTabla = true;
-    this.servicioI.obtenerDatosProducto()
-    .subscribe({
-      next:(respuesta:RespuestaDatosProducto)=>{
-        console.log('suscribe: ', respuesta)
-        this.descripcion=respuesta.descripcion;
-        if(respuesta.mostrar){
-          this.invHabilitado=true;
-          this.productos=respuesta.productos!;
-                
-          this.productos.forEach(product => {
-            this.form.addControl(product.idProducto.toString(), new FormControl(0, [Validators.required, Validators.min(0)]));
-          });
-          
-        }else{
-          this.invHabilitado=false;
-        }
-        this.cargandoTabla = false;      
-      },
-      error:(errores)=>{
-        errores.forEach((error: string) => {
-          this.mensajeAlertify.mensajeError(error);
-        });
-        
-        this.cargandoTabla = false;
-      }
-    });
+    this.consultarDetalle();
   }
 
   mensaje(campo:string){
@@ -107,50 +84,64 @@ export class InventarioProductosComponent {
 
   //falta
   enviar(){
+    
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
 
     let inventario = {productos:this.form.value } ;
-    this.cargando = true;
+    this.cargandoOperacion = true;
 
     this.servicioI.registrarInventario(inventario).subscribe({
-      next: (respuesta: any) => {
-        console.log(respuesta)
-        this.cargando = false;
+      next: (respuesta: respuestaMensaje) => {
+        this.cargandoOperacion = false;
         //$('#modal').modal('hide');
         this.mensajeAlertify.mensajeExito(
-          `Se ha registrado correctamente ✓✓`
+          `${respuesta.msg}`
         );
+        this.consultarDetalle();
       },
       error: (errores: string[]) => {
-        console.log(errores)
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        console.log(errores);
-        this.cargando = false;
+        this.cargandoOperacion = false;
       },
     });
+
   }
-/*
-  verificarInv(){
-    this.servicioI.invProdHabilitado()
+
+  consultarDetalle(){
+    this.form.reset();//para limpiar al volver a mostrar luego de guardar
+
+    this.cargandoTabla = true;
+    this.servicioI.obtenerDatosProducto()
     .subscribe({
-      next:(response:invProdHabilitado)=>{
-        this.invHabilitado=response.habilitado;     
+      next:(respuesta:RespuestaDatosProducto)=>{
+        this.descripcion=respuesta.descripcion;
+        if(respuesta.mostrar){
+          this.invHabilitado=true;
+          this.productos=respuesta.productos!;
+                
+          this.productos.forEach(product => {
+            this.form.addControl(product.idProducto.toString(), new FormControl(0, [Validators.required, Validators.min(0)]));
+          });
+          
+        }else{
+          this.invHabilitado=false;
+        }
+        this.cargandoTabla = false;      
       },
       error:(errores)=>{
-        this.mensajeAlertify.mensajeError(errores);
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+        
         this.cargandoTabla = false;
       }
     });
   }
-*/
-
-
-
 
   //PARA MOSTRAR EL TOTAL DE CADA PRODUCTO SI ES NECESARIO (CON FORMCONTROL)
   /*
@@ -159,7 +150,6 @@ export class InventarioProductosComponent {
     return total;
   }
   */
-
 
   //CON NG MODEL
   /*
@@ -173,6 +163,5 @@ export class InventarioProductosComponent {
 
   }
   */
-
 
 }

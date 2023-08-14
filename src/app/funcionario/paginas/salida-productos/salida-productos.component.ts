@@ -3,8 +3,10 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
-import { ProdEnBaja, Producto, RespuestaDatos, Salida } from '../../modelos/salida-productos.model';
+import { GuardarSalida, ProdEnBaja, RespuestaDatos, Salida } from '../../modelos/salida-productos.model';
 import { SalidaProductosService } from '../../servicios/salida-productos.service';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
+import { Producto } from '../../modelos/inventario.model';
 
 @Component({
   selector: 'app-salida-productos',
@@ -12,9 +14,6 @@ import { SalidaProductosService } from '../../servicios/salida-productos.service
   styleUrls: ['./salida-productos.component.css']
 })
 export class SalidaProductosComponent {
-  
-  //para tabla de productos añadidos
-  cargandoT=false; 
 
   //dtOptions: DataTables.Settings = {};
   dtOptions = {
@@ -72,7 +71,7 @@ export class SalidaProductosComponent {
     //nroComprobante:['', [Validators.required]],
   });
 
-  form:FormGroup=this.fb.group({
+  formSalida:FormGroup=this.fb.group({
     idProducto:['', [Validators.required]],
     nombre:['', [Validators.required]],
     cantidad:['', [Validators.required, Validators.min(1)]],
@@ -81,16 +80,17 @@ export class SalidaProductosComponent {
 
   invHabilitado:boolean=false;
   descripcion:string='';
+
   productos:Producto[]=[]; //para la tabla del buscador
-  salidas:Salida[]=[]; //para el combo de tipo de salidas
-
-
+  //para tabla de productos añadidos
   productosBaja:ProdEnBaja[]=[];/*=[{idProducto:1, nombre:'prueba 1', cantidad:8}, {idProducto:2, nombre:'prueba 2', cantidad:8}, {idProducto:3, nombre:'prueba 3', cantidad:8}];*/
   accion:'Crear' | 'Modificar' | 'Eliminar'='Crear';
   seleccionado!:Producto;
-  cargando=false;
+  cargandoTablaSalida=false; //obteniendo los datos de los productos a buscar
+  cargandoOperacion=false;
+  cargandoProductos=false; 
   
-  cargandoTabla=false; //obteniendo los datos de los productos a buscar
+  salidas:Salida[]=[]; //para el combo de tipo de salidas
 
   constructor(
     private mensajeAlertify: AlertifyService,
@@ -101,46 +101,41 @@ export class SalidaProductosComponent {
 
 
   ngOnInit(): void {
-    console.log('longitud ', this.productosBaja.length)
-    this.form.get('idProducto')?.disable();//solo mostramos
-    this.form.get('nombre')?.disable();//solo mostramos
-
+    this.formSalida.get('idProducto')?.disable();//solo mostramos
+    this.formSalida.get('nombre')?.disable();//solo mostramos
     
-    this.cargandoTabla=true;
+    this.cargandoProductos=true;
+    
+    this.cargandoTablaSalida=true;
 
-    //para tabla de pantalla
-    this.cargandoT=true;
 
     this.servicioP.obtenerDatos()
     .subscribe({
       next:(response:RespuestaDatos)=>{
+
         this.invHabilitado=response.mostrar;
         this.descripcion=response.descripcion;
+
         if(response.mostrar){//si ya existe una apertura de caja se puede registrar recepciones
           this.productos=response.producto!;//se obtienen los productos si existe apertura
           this.salidas=response.salida!;
-          console.log('response.producto',response.producto)
           //obtenemos datos del local storage
-          const {items, observacion} =this.servicioP.getItems();
-          console.log('items ', items)
-          if(items){
-            this.productosBaja=items;//se obtinen los productos ya agregados y no registrados del dia de hoy
-            console.log('this.productosBaja',this.productosBaja)
-            this.formCabecera.get('observacion')?.setValue(observacion);
+          if(this.servicioP.getItems().items){
+            this.productosBaja=this.servicioP.getItems().items;//se obtinen los productos ya agregados y no registrados del dia de hoy
+            this.formCabecera.get('observacion')?.setValue(this.servicioP.getItems().observacion);
           }
         }
-        this.cargandoT=false;
+        this.cargandoProductos=false;
 
         this.establecerDatos();
 
-        this.cargandoTabla=false;
+        this.cargandoTablaSalida=false;
       },
       error:(errores)=>{
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        console.log(errores);
-        this.cargandoTabla=false;
+        this.cargandoTablaSalida=false;
       }});
 
   }
@@ -161,6 +156,7 @@ export class SalidaProductosComponent {
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
+
   // ------ MODAL DE FORMULARIO ------ //
   mostrarModal(id: string, mostrar:boolean) {
     if(mostrar){
@@ -173,36 +169,37 @@ export class SalidaProductosComponent {
   //--------//
   agregar(){
 
-    if(!this.form.valid){
-      this.form.markAllAsTouched();
+    //validar campos dehabilitados
+    if(!(this.formSalida.get('idProducto')?.value || this.formSalida.get('nombre')?.value)){
+      this.mensajeAlertify.mensajeError('Seleccione el producto');
+      return;
+    }
+    
+    if(!this.formSalida.valid){
+      this.formSalida.markAllAsTouched();
       return;
     }
 
-    ////datos de la cabecera
     let { observacion  } = this.formCabecera.value;
-    /*
-  En este ejemplo, utilizamos el operador de coalescencia nula (??) para 
-  asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.
-    */
+      /*TODO: utilizamos el operador de coalescencia nula (??) para 
+      asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.*/
+    
     observacion = observacion ?? '';
-
-    //fin datos de la cabecera
    
-    let producto:ProdEnBaja = this.form.value;
+    let producto:ProdEnBaja = this.formSalida.value;
     //obtenemos los valores de los compos deshabilitados
-    producto.idProducto=this.form.get('idProducto')?.value;
-    producto.nombre=this.form.get('nombre')?.value;
+    producto.idProducto=this.formSalida.get('idProducto')?.value;
+    producto.nombre=this.formSalida.get('nombre')?.value;
 
-    //let {cantidad}=this.form.value
+    //let {cantidad}=this.formSalida.value
     let bandera=false;
     if(this.accion=="Crear"){
-      this.cargandoT= true;////
-
+      this.cargandoTablaSalida= true;
 
       //this.productosRecibidos.push(producto);
       this.productosBaja.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
-          this.productosBaja[i].cantidad=this.productosBaja[i].cantidad+producto.cantidad;//ya esta validado con el form.markAllAsTouched();
+          this.productosBaja[i].cantidad=this.productosBaja[i].cantidad+producto.cantidad;//ya esta validado con el formSalida.markAllAsTouched();
           bandera=true;
         }
       });
@@ -213,71 +210,72 @@ export class SalidaProductosComponent {
       
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.destroy();
-        console.log('Destruyendo..');
         this.dtTrigger.next(0);
       })
       
-      this.cargandoT = false;/////
+      this.cargandoTablaSalida = false;
       
     }else if(this.accion=="Modificar"){
       this.productosBaja.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
-          this.productosBaja[i]=this.form.value;
+          this.productosBaja[i]=this.formSalida.value;
         }
       });
     }
     //this.renderizar();
     //this.establecerDatos();
-    this.form.reset();
+    this.formSalida.reset();
 
     this.accion='Crear'
-      ///actualizamos los datos del localStorage
-      this.servicioP.saveItems(this.productosBaja, observacion);
-      
-      ///
+    ///actualizamos los datos del localStorage
+    this.servicioP.saveItems(this.productosBaja, observacion);
   }
 
   nuevo(){
     this.accion='Crear';
+    this.limpiarDetalle();
+  }
+
+  confirmarEliminacion(producto:ProdEnBaja){
+    this.mensajeAlertify.mensajeConfirmacion(
+      `Desea quitar el producto ${producto.nombre} ?`,
+      ()=>this.eliminar(producto.idProducto)
+    )
   }
 
   eliminar(id: number){
-    ////datos de la cabecera
     let { observacion  } = this.formCabecera.value;
     /*
-  En este ejemplo, utilizamos el operador de coalescencia nula (??) para 
-  asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.
+    En este ejemplo, utilizamos el operador de coalescencia nula (??) para 
+    asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.
     */
     observacion = observacion ?? '';
 
-    this.cargandoT=true;
+    this.cargandoTablaSalida=true;
     this.productosBaja.forEach((p, i) => {
       if(p.idProducto==id){
-        console.log("eliminando")
         this.productosBaja.splice(i, 1);
        // delete(this.productosRecibidos[i]);
       }
     }); 
-    console.log(this.productosBaja)
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
-      console.log('Destruyendo..');
       this.dtTrigger.next(0);
     })
     
-    this.cargandoT = false;/////
+    this.cargandoTablaSalida = false;
 
 
     this.accion='Crear'
-          ///actualizamos los datos del localStorage
-          this.servicioP.saveItems(this.productosBaja, observacion);
-      
-          ///
+    ///actualizamos los datos del localStorage
+    this.servicioP.saveItems(this.productosBaja, observacion);
+  
+    ///
   }
 
   modificar(producto:ProdEnBaja){
     this.accion='Modificar';
-    this.form.setValue(producto);
+    this.formSalida.setValue(producto);
   }
 
   buscar(){
@@ -285,8 +283,8 @@ export class SalidaProductosComponent {
   }
 
   seleccionarProducto(i: Producto){
-    this.form.get('idProducto')?.setValue(i.idProducto)
-    this.form.get('nombre')?.setValue(i.nombre)
+    this.formSalida.get('idProducto')?.setValue(i.idProducto)
+    this.formSalida.get('nombre')?.setValue(i.nombre)
     this.mostrarModal('smodal', false); 
   }
 
@@ -294,21 +292,27 @@ export class SalidaProductosComponent {
   //faltan mensajes
   mensaje(field:string){
     let mensaje="";
-    if(this.form.get(field)?.hasError('required')){
-      if(field=="idProducto"){
-        mensaje="El id es requerido..";
-      }
+    if(this.formSalida.get(field)?.hasError('required')){
+      //TODO:LOS CAMPOS DESHABILITADOS NO CONTIENEN ERRORES(validar con alertify)
+      //LOS CAMPOS DESHABILITADOS NO TIENEN ERRORES
+      // if(field=="idProducto"){
+      //   mensaje="El id es requerido..";
+      // }
 
-      if(field=="nombre"){
-        mensaje="El nombre es requerido..";
-      }
+      // if(field=="nombre"){
+      //   mensaje="El nombre es requerido..";
+      // }
 
       if(field=="cantidad"){
         mensaje="La cantidad es requerida..";
       }
+
+      if(field=="salida"){
+        mensaje="El tipo es requerido..";
+      }
     }
 
-    if(this.form.get(field)?.hasError('min')){
+    if(this.formSalida.get(field)?.hasError('min')){
       if(field == "cantidad"){
         mensaje="La cantidad mínima es 0";
       }
@@ -317,11 +321,11 @@ export class SalidaProductosComponent {
   }
 
   datoInvalido(campo:string){
-    let valido=(this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
+    let valido=(this.formSalida.get(campo)?.touched || this.formSalida.get(campo)?.dirty) && this.formSalida.get(campo)?.invalid;
     let input = document.getElementById(campo);
     if(valido){
       input?.classList.add("is-invalid");
-    }else if((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid){
+    }else if((this.formSalida.get(campo)?.touched || this.formSalida.get(campo)?.dirty) && this.formSalida.get(campo)?.valid){
       input?.classList.remove("is-invalid");
       input?.classList.add("is-valid");
     }else{
@@ -341,47 +345,49 @@ export class SalidaProductosComponent {
       return;
     }
 
-    let data={
-      ...this.formCabecera.value,
+    let data:GuardarSalida={
+      observacion:this.formCabecera.value.observacion || "",
       productos:this.productosBaja,
     }
-    //validar que el nro de comprobante aun no se encuentre registrado en la fecha
-    console.log(data)
 
-    this.servicioP.registrarRecepcion(data).subscribe({
-      next: (respuesta: any) => {
-        this.cargando = false;
+    this.cargandoOperacion=true;
+    this.servicioP.registrarSalida(data).subscribe({
+      next: (respuesta: respuestaMensaje) => {
+        this.cargandoOperacion = false;
         this.mensajeAlertify.mensajeExito(
-          `La recepcion se ha registrado correctamente ✓✓`
+          `${respuesta.msg}`
         );
-        this.limpiar();
+        this.borrarDatos();
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
         console.log(errores);
-        this.cargando = false;
+        this.cargandoOperacion = false;
       },
     });
   }
 
-  limpiar(){
+  borrarDatos(){
     this.servicioP.removerItems();
     this.formCabecera.reset();
-    this.form.reset();
+    this.formSalida.reset();
 
     //para evitar errores del datatable
-    this.cargandoT=true;
+    this.cargandoTablaSalida=true;
     this.productosBaja=[];
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
-      console.log('Destruyendo..');
       this.dtTrigger.next(0);
     })
-    this.cargandoT=false;
-   
+    this.cargandoTablaSalida=false;
+  
+  }
 
+  
+  limpiarDetalle(){
+    this.formSalida.reset();
   }
 
 }

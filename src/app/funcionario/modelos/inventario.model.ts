@@ -21,6 +21,10 @@ export interface RespuestaDatosCab {
     sucursal?: Sucursal;
 }
 
+export interface guardarCabecera{
+    observacion:string;
+}
+
 //--crear apertura aun no tiene modelo--//
 
 ///PARA INVENTARIO DE PRODUCTOS
@@ -48,6 +52,15 @@ export interface RespuestaDatosProducto {
     productos?: Producto[];
 }
 
+/*
+usar una interfaz que utilice la notación de corchetes para definir propiedades con 
+nombres de llaves dinámicas. Dado que no puedes predefinir todas las llaves de antemano, 
+tendrás que usar una notación de índice genérica
+*/
+export interface GuardarInventario{
+    [key: number]: number;
+}
+
 //registrar inventario aun no tiene modelo
 
 //PARA RENDICION DE CAJA 
@@ -60,8 +73,6 @@ export interface Dinero {
     idBillete:number;
     nombreBillete:string; 
     monto:number;   
-    montoEditable:boolean;
-    //el resto de los datos no son necesarios
 }
 
 //para listar dineros

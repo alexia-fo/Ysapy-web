@@ -28,7 +28,7 @@
   </div>
   
   <div class="table-responsive">
-    <table class="table" class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+    <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
         <thead>
           <tr>
             <th *ngFor="let campo of tabla.campos">{{ campo }}</th>

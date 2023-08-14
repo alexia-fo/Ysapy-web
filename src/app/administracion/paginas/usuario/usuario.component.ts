@@ -7,10 +7,11 @@ import { Rol } from '../../modelos/rol.model';
 import { Validaciones } from 'src/app/validaciones/bd';//por ahora no cuenta con validaciones asincronas
 import { environment } from 'src/environments/environment';
 import { Sucursal } from '../../modelos/sucursal.model';
-import { TablaItem } from 'src/app/utilidades/modelos/modal-buscar.model';
+import { TablaItem, TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { ImagenService } from 'src/app/utilidades/servicios/imagenes/imagen.service';
 import { ImagenesService } from 'src/app/utilidades/imagenes.service';
+import { BooleanToStringPipe } from '../../../utilidades/pipes/boolean-to-string.pipe';
 
 @Component({
   selector: 'app-usuario',
@@ -19,6 +20,8 @@ import { ImagenesService } from 'src/app/utilidades/imagenes.service';
 })
 export class UsuarioComponent implements OnInit {
 
+  //!Pipes
+  aCadena:BooleanToStringPipe = new BooleanToStringPipe();
 
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
   //se puede ocultar un modal y mostrar otro y viceversa
@@ -28,8 +31,13 @@ export class UsuarioComponent implements OnInit {
   //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
   //los datos, corresponde al array de informacion que se quiere listar 
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
-  tabla: TablaItem<Usuario> = { //propiedades de la tabla para el listado
-    propiedades: ['idUsuario', 'nombre', 'nusuario', 'correo','Sucursal.nombre','Rol.rol', 'activo', 'google'],
+  // tabla: TablaItem<Usuario> = { //propiedades de la tabla para el listado
+  //   propiedades: ['idUsuario', 'nombre', 'nusuario', 'correo','Sucursal.nombre','Rol.rol', 'activo', 'google'],
+  //   datos: [],
+  //   campos: ['Id', 'Nombre', 'Usuario', 'Correo', 'Sucursal','Rol', 'Activo', 'Google'],
+  // }
+  tabla: TablaItemPipe<Usuario> = { //propiedades de la tabla para el listado
+    propiedades: [{campo:'idUsuario'}, {campo:'nombre'}, {campo:'nusuario'}, {campo:'correo'},{campo:'Sucursal.nombre'},{campo:'Rol.rol'}, {campo:'activo', pipe: this.aCadena}, {campo:'google', pipe:this.aCadena}],
     datos: [],
     campos: ['Id', 'Nombre', 'Usuario', 'Correo', 'Sucursal','Rol', 'Activo', 'Google'],
   }

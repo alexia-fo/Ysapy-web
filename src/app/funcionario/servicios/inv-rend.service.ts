@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
 import { environment } from 'src/environments/environment.prod';
-import { RespuestaDatosCab, RespuestaDatosDinero, RespuestaDatosProducto, RespuestaDineros, RespuestaProductos, RespuestaSucursal, invCabHabilitado, invProdHabilitado, rendCajaHabilitado } from '../modelos/inventario.model';
+import { GuardarInventario, RespuestaDatosCab, RespuestaDatosDinero, RespuestaDatosProducto, RespuestaDineros, RespuestaProductos, RespuestaSucursal, guardarCabecera, invCabHabilitado, invProdHabilitado, rendCajaHabilitado } from '../modelos/inventario.model';
 import { Observable, catchError, switchMap, tap, map, of } from 'rxjs';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 
 @Injectable({
   providedIn: 'root'
@@ -17,19 +18,21 @@ export class InvRendService {
     private errorS:ManejarErrorService
   ) { }
 
-  //////////// ----- CABECERA ---- ///////////
+  //! -------- Cabecera de Inventario ------------
 
+  //verifica si ya existe una cabecera de inventario
   verExiteApertura(): Observable<invCabHabilitado> {
     return this.http.get<invCabHabilitado>(`${this.apiUrl}/inventarios/verExisteApertura`)
     .pipe(
-      catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+      catchError(this.errorS.handleError)
     );
   } 
 
-  obtenerSucDeUsuario(): Observable<RespuestaSucursal> {
+  //obtiene el nombre del usuario activo
+  sucDeUsuario(): Observable<RespuestaSucursal> {
     return this.http.get<RespuestaSucursal>(`${this.apiUrl}/inventarios/sucDeUsuario`)
       .pipe(
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+        catchError(this.errorS.handleError)
     );
   }
 
@@ -38,11 +41,10 @@ export class InvRendService {
     return this.verExiteApertura().pipe(
       switchMap((respuesta: invCabHabilitado): Observable<RespuestaDatosCab> => {
         if (respuesta.habilitado) {
-          return this.obtenerSucDeUsuario().pipe(
-            //map((respuestaProductos: RespuestaProductos): RespuestaDatosProducto => ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })),
-            tap((respuestaSucursal: RespuestaSucursal)=>{
-              console.log({ mostrar: true, descripcion:respuesta.descripcion ,sucursal: respuestaSucursal })
-            }),
+          return this.sucDeUsuario().pipe(
+            // tap((respuestaSucursal: RespuestaSucursal)=>{
+            //   console.log({ mostrar: true, descripcion:respuesta.descripcion ,sucursal: respuestaSucursal })
+            // }),
             map((RespuestaSucursal: RespuestaSucursal): RespuestaDatosCab => {
               return ({ mostrar: true, descripcion:respuesta.descripcion ,sucursal: RespuestaSucursal.sucursal })
             })
@@ -54,12 +56,11 @@ export class InvRendService {
     );
   }  
 
-  //inserta una nueva cabecera de inventario y rendicion
-  crearApertura(datos: any): Observable<any> {
-    console.log(datos)
-    return this.http.post<any>(`${this.apiUrl}/inventarios/crearApertura`, { ...datos })
+  //inserta una nueva cabecera
+  crearApertura(datos: guardarCabecera): Observable<respuestaMensaje> {
+    return this.http.post<respuestaMensaje>(`${this.apiUrl}/inventarios/crearApertura`, { ...datos })
       .pipe(
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+        catchError(this.errorS.handleError)
     );
   }
 
@@ -71,23 +72,24 @@ export class InvRendService {
       catchError(this.errorS.handleError)
     );
   }
+
   productosInventario(): Observable<RespuestaProductos> {
     return this.http.get<RespuestaProductos>(`${this.apiUrl}/inventarios/productosInventario`)
     .pipe(
       catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
       );
-    }
+  }
+  
   obtenerDatosProducto(): Observable<RespuestaDatosProducto> {
     return this.verificarInventario().pipe(
       switchMap((respuesta: invProdHabilitado): Observable<RespuestaDatosProducto> => {
         console.log('invHabilitado: ', respuesta)
         if (respuesta.habilitado) {
           return this.productosInventario().pipe(
-            //map((respuestaProductos: RespuestaProductos): RespuestaDatosProducto => ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })),
-            tap((respuestaProductos:RespuestaProductos)=>{
-              console.log('obtenerProductos: ',respuestaProductos);
-              console.log({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })
-            }),
+            // tap((respuestaProductos:RespuestaProductos)=>{
+            //   console.log('obtenerProductos: ',respuestaProductos);
+            //   console.log({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })
+            // }),
             map((respuestaProductos: RespuestaProductos): RespuestaDatosProducto => {
               return ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })
             })
@@ -99,9 +101,9 @@ export class InvRendService {
     );
   }
 
-  registrarInventario(inventario: any): Observable<any> {
+  registrarInventario(inventario: GuardarInventario): Observable<respuestaMensaje> {
     console.log(inventario)
-    return this.http.post<any>(`${this.apiUrl}/inventarios/registrarInventario`, { ...inventario })
+    return this.http.post<respuestaMensaje>(`${this.apiUrl}/inventarios/registrarInventario`, { ...inventario })
       .pipe(
         catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
     );

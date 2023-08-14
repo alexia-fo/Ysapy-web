@@ -17,7 +17,7 @@
     </div>
 
     <div class="col-12">
-      <div class="text-center" *ngIf="cargando">
+      <div class="text-center" *ngIf="cargandoOperacion">
           <div class="spinner-border text-danger" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
@@ -42,7 +42,9 @@
 
     -->
         <div class="col-12 rounded p-0 e-primer-fondo-claro table-responsive" >
-            <form [formGroup]="form" *ngIf="productos.length>0">
+            <!-- <form [formGroup]="form" *ngIf="productos.length>0"> -->
+            <form [formGroup]="form" *ngIf="invHabilitado">
+
               <div class="outer-wrapper">
                 <div class="table-wrapper">
                 <table datatable [dtOptions]="dtOptions" class="table hover " > 
@@ -86,6 +88,11 @@
             </div>
             </form>
         </div>
+<!-- 
+        <div class="col-12" *ngIf="productos.length<1">
+          <p class="text-danger">No hay productos registrados</p>
+        </div> -->
+
     </div>
 </div>
 

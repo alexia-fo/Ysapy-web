@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TablaItem } from '../../modelos/modal-buscar.model';
+import { TablaItem, TablaItemPipe, definicionColumnas } from '../../modelos/modal-buscar.model';
 
 @Component({
   selector: 'app-tabla-pipe',
@@ -8,11 +8,13 @@ import { TablaItem } from '../../modelos/modal-buscar.model';
 })
 export class TablaPipeComponent<T>  {
   
-  @Input() tabla!: TablaItem<T>;
+  @Input() tabla!: TablaItemPipe<T>;
   @Output() itemSeleccionado: EventEmitter<T> = new EventEmitter<T>();
   @Input() cargandoTabla:boolean=true;
   @Input() dtOpciones!: DataTables.Settings;
 
+  // @Input() pipes: { [key: string]: any } = {}; // Pipes proporcionados por el componente padre
+  
   seleccionarItem(item: T) {
     this.itemSeleccionado.emit(item);
   }
@@ -22,6 +24,13 @@ export class TablaPipeComponent<T>  {
  si tienes objetos con una propiedad 'producto' y dentro de ese objeto deseas obtener la propiedad 'precio',
  puedes hacerlo de esta manera
 */
+getValorConPipe(item: any, columna: definicionColumnas): any {
+  const pipeInstance: any = columna.pipe; // Usar la instancia del pipe proporcionada
+
+  const value = this.getPropiedadValor(item, columna.campo);
+  return pipeInstance ? pipeInstance.transform(value) : value;
+}
+
 
 getPropiedadValor(item: any, propiedad: string): any {
   const propiedades = propiedad.split('.'); // Dividir la propiedad en partes

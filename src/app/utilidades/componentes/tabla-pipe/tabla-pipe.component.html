@@ -13,8 +13,19 @@
           </tr>
         </thead>
         <tbody>
+          <!-- <tr *ngFor="let item of tabla.datos" (dblclick)="seleccionarItem(item)">
+            <td *ngFor="let propiedad of tabla.propiedades">
+              <ng-container *ngIf="!propiedad.pipe; else customPipe">
+                {{ getPropiedadValorPipe(item, propiedad.campo)}}
+              </ng-container>
+              <ng-template #customPipe>
+                {{ getPropiedadValor(item, propiedad.campo) | propiedad.pipe}}
+              </ng-template>
+            </td>
+          </tr> -->
+
           <tr *ngFor="let item of tabla.datos" (dblclick)="seleccionarItem(item)">
-            <td *ngFor="let propiedad of tabla.propiedades">{{ getPropiedadValor(item, propiedad)}}</td>
+            <td *ngFor="let propiedad of tabla.propiedades">{{ getValorConPipe(item, propiedad)}}</td>
           </tr>
         </tbody>
     </table>

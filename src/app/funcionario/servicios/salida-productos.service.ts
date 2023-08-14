@@ -4,15 +4,18 @@ import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/maneja
 import { environment } from 'src/environments/environment.prod';
 import { Observable, catchError, switchMap, tap, map, of, forkJoin } from 'rxjs';
 import { AutentificacionService } from 'src/app/autentificacion/servicios/autentificacion.service';
-import { RespuestaDatos, RespuestaProductos, RespuestaSalidas, salidaCabHabilitado } from '../modelos/salida-productos.model';
+import { GuardarSalida, RespuestaDatos, RespuestaSalidas, salidaCabHabilitado } from '../modelos/salida-productos.model';
 import { ProdRecibido } from '../modelos/recepcion-productos.model';
+import { RespuestaProductos } from '../modelos/inventario.model';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SalidaProductosService {
   //ruta
-private apiUrl = `${environment.API_URL}/api/salidas`;
+// private apiUrl = `${environment.API_URL}/api/salidas`;
+private apiUrl = `${environment.API_URL}/api`;
 
 constructor(
   private http: HttpClient,
@@ -21,7 +24,7 @@ constructor(
 ) { }
 
 
-///////////para almacenar los datos de manera temporal//////////
+ //PARA ALMACENAR LOS DATOS DE MANERA TEMPORAL
   // Obtener datos del localStorage
   getItems() {
     const storedData = localStorage.getItem('productosBaja');
@@ -52,25 +55,31 @@ constructor(
   removerItems() {
     localStorage.removeItem('productosBaja');
   }
-  
-//////////////////////
+//FIN DE METODOS PARA ALMACENAR DATOS DE MANERA LOCAL  
 
+//TODO:AHORA SE UTILIZARA EL MISMO END POINT DE INVENTARIOS
+// productosRecepcion(): Observable<RespuestaProductos> {
+//   return this.http.get<RespuestaProductos>(`${this.apiUrl}/productosSalida`)
+//   .pipe(
+//     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+//     );
+// }
 verExiteApertura(): Observable<salidaCabHabilitado> {
-  return this.http.get<salidaCabHabilitado>(`${this.apiUrl}/verExisteApertura`)
+  return this.http.get<salidaCabHabilitado>(`${this.apiUrl}/salidas/verExisteApertura`)
   .pipe(
     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
   );
 } 
 
-productosRecepcion(): Observable<RespuestaProductos> {
-  return this.http.get<RespuestaProductos>(`${this.apiUrl}/productosSalida`)
+productosSalida(): Observable<RespuestaProductos> {
+  return this.http.get<RespuestaProductos>(`${this.apiUrl}/inventarios/productosInventario`)
   .pipe(
     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
-    );
+  );
 }
 
 tiposSalida(): Observable<RespuestaSalidas> {
-  return this.http.get<RespuestaSalidas>(`${this.apiUrl}/tiposSalida`)
+  return this.http.get<RespuestaSalidas>(`${this.apiUrl}/salidas/tiposSalida`)
   .pipe(
     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
   );
@@ -82,7 +91,7 @@ obtenerDatos(): Observable<RespuestaDatos> {
     switchMap((respuesta: salidaCabHabilitado): Observable<RespuestaDatos> => {
       if (respuesta.habilitado) {
         return forkJoin([
-          this.productosRecepcion(),
+          this.productosSalida(),
           this.tiposSalida()
         ]).pipe(
           map((Respuestas: [RespuestaProductos, RespuestaSalidas]): RespuestaDatos => {
@@ -104,15 +113,12 @@ map te funciona para manipular la respuesta del observable y transformarlo en ot
 //https://www.google.com/search?q=como+puedo+realizar+dos+peticiones+al+mismo+tiempo+en+angular&rlz=1C1UUXU_esPY951PY951&oq=como+puedo+realizar+dos+peticiones+al+mismo+tiempo+en+angular&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRhA0gEONTIyNTg1MDQ5ajBqMTWoAgCwAgA&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:85852525,vid:duxgN9RXO2I
 //https://adrianub.dev/blog/combinando-multiples-flujos-http-con-rxjs-observables-en-angular/
 
-registrarRecepcion(recepcion: any): Observable<any> {
+registrarSalida(recepcion: GuardarSalida): Observable<respuestaMensaje> {
   console.log(recepcion)
-  return this.http.post<any>(`${this.apiUrl}/registrarSalida`, { ...recepcion })
+  return this.http.post<respuestaMensaje>(`${this.apiUrl}/salidas/registrarSalida`, { ...recepcion })
     .pipe(
       catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
   );
 }
-
-
-
 
 }

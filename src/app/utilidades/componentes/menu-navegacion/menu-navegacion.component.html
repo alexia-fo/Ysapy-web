@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top"> 
+<!-- <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">  -->
+<nav class="navbar navbar-expand-lg bg-dark-subtle sticky-top text-white"> 
     <div class="container-fluid">
 
       <a class="navbar-brand" routerLink="/" routerLinkActive="router-link-active" >
@@ -16,6 +17,7 @@
         
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="navbarSupportedContentLabel">Menu</h5>
+          <!--aqui-->
           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
@@ -23,7 +25,9 @@
           <ul class="navbar-nav align-items-lg-center" *ngFor="let item of menuItems">
   
             <li class="nav-item" [routerLink]="item.route" *ngIf="!item.isDropdown; else esDropdown">
-              <a class="nav-link active fs-5" aria-current="page" href="#" routerLinkActive="active">{{ item.title }}</a>
+              <!--agregamos data-bs-dismiss="offcanvas" aria-label="Close" para ocultar el offcanvas-->
+              <!-- <a class="nav-link active fs-5" aria-current="page" href="#" routerLinkActive="active">{{ item.title }}</a> -->
+              <a class="nav-link active fs-5" aria-current="page" href="#" routerLinkActive="active" data-bs-dismiss="offcanvas" aria-label="Close">{{ item.title }}</a>
             </li>
   
             <ng-template #esDropdown>
@@ -31,7 +35,9 @@
                 <a class="nav-link dropdown-toggle fs-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.title }}</a>
                 <ul *ngIf="item.isDropdown" class="dropdown-menu">
                   <li *ngFor="let dropdownItem of item.dropdownItems">
-                    <a [routerLink]="item.route+'/'+dropdownItem.route" class="dropdown-item" routerLinkActive="active">{{ dropdownItem.title }}</a>
+                    <!--agregamos: data-bs-dismiss="offcanvas" aria-label="Close" para ocultar el offcanvas cuando se cambia de ruta-->
+                    <!-- <a [routerLink]="item.route+'/'+dropdownItem.route" class="dropdown-item" routerLinkActive="active" >{{ dropdownItem.title }}</a> -->
+                    <a [routerLink]="item.route+'/'+dropdownItem.route" class="dropdown-item" routerLinkActive="active" data-bs-dismiss="offcanvas" aria-label="Close">{{ dropdownItem.title }}</a>
                   </li>
                 </ul>
               </li>
@@ -40,7 +46,12 @@
           </ul>
 
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item pe-2" routerLink="../autentificacion/perfil">
+            <!--
+              Usando routerLink="../autentificacion/perfil" para la navegación en el menú. Esto implica una navegación relativa, y si te encuentras en una URL como http://localhost:4200/administracion/producto, la navegación relativa irá a http://localhost:4200/administracion/autentificacion/perfil, lo cual podría no ser lo que deseas.
+
+              Para solucionar este problema y asegurarnos de que siempre navegamos a la ruta completa independientemente de la URL actual, podemos utilizar una ruta absoluta. Puedes usar una barra diagonal inicial (/) en la ruta para indicar que debe comenzar desde la raíz del sitio.
+            -->
+            <li class="nav-item pe-2" routerLink="/autentificacion/perfil">
               <a class="nav-link" aria-current="page"><i class="bi bi-person-circle d-none d-lg-block fs-3"></i> <span class="bi d-lg-none fs-5">Perfil</span></a>
             </li>
           </ul>

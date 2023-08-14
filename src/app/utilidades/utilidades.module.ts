@@ -11,6 +11,8 @@ import { MenuRafComponent } from './paginas/menu-raf/menu-raf.component';
 import { RouterModule } from '@angular/router';
 import { DataTablesModule } from 'angular-datatables';
 import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.component';
+import { ActivoInactivoPipe } from './pipes/activo-inactivo.pipe';
+import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 
 
 
@@ -24,7 +26,9 @@ import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.componen
     TablaBasicaComponent,
     TablaEventoComponent,
     MenuRafComponent,
-    TablaPipeComponent
+    TablaPipeComponent,
+    ActivoInactivoPipe,
+    BooleanToStringPipe,
   ],
   imports: [
     CommonModule,
@@ -39,7 +43,9 @@ import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.componen
     TablaServersideComponent,
     TablaBasicaComponent,
     TablaEventoComponent,
-    MenuRafComponent
+    MenuRafComponent,
+
+    TablaPipeComponent
   ],
 })
 export class UtilidadesModule { }

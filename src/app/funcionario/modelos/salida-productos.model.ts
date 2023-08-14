@@ -1,3 +1,5 @@
+import { Producto } from "./inventario.model";
+
 export interface ProdEnBaja{
     idProducto:number;
     nombre:string;
@@ -13,18 +15,18 @@ export interface salidaCabHabilitado{
     descripcion:string;
 }
 
-export interface Producto{
-    idProducto:number;
-    nombre:string;
-    precio:number;
-    descripcion:string;
-    //el resto de los datos no son necesarios
-}
+// export interface Producto{
+//     idProducto:number;
+//     nombre:string;
+//     precio:number;
+//     descripcion:string;
+//     //el resto de los datos no son necesarios
+// }
 
-export interface RespuestaProductos{
-    total:number,
-    producto:Producto[]
-}
+// export interface RespuestaProductos{
+//     total:number,
+//     producto:Producto[]
+// }
 
 
 
@@ -50,3 +52,7 @@ export interface RespuestaSalidas{
     salida:Salida[];
 }
 
+export interface GuardarSalida{
+    observacion:string;
+    productos:ProdEnBaja[];
+}

@@ -3,15 +3,18 @@ import { Injectable } from '@angular/core';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
 import { environment } from 'src/environments/environment.prod';
 import { Observable, catchError, switchMap, tap, map, of } from 'rxjs';
-import { ProdRecibido, RespuestaDatos, RespuestaProductos, recCabHabilitado } from '../modelos/recepcion-productos.model';
+import { GuardarRecepcion, ProdRecibido, RespuestaDatos, recCabHabilitado } from '../modelos/recepcion-productos.model';
 import { AutentificacionService } from 'src/app/autentificacion/servicios/autentificacion.service';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
+import { RespuestaProductos } from '../modelos/inventario.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecepcionProductosService {
 //ruta
-private apiUrl = `${environment.API_URL}/api/recepciones`;
+// private apiUrl = `${environment.API_URL}/api/recepciones`;
+private apiUrl = `${environment.API_URL}/api`;
 
 constructor(
   private http: HttpClient,
@@ -19,8 +22,7 @@ constructor(
   private autService:AutentificacionService
 ) { }
 
-
-///////////para almacenar los datos de manera temporal//////////
+ //PARA ALMACENAR LOS DATOS DE MANERA TEMPORAL
   // Obtener datos del localStorage
   getItems() {
     const storedData = localStorage.getItem('productosRecepcion');
@@ -52,30 +54,46 @@ constructor(
   removerItems() {
     localStorage.removeItem('productosRecepcion');
   }
-//////////////////////
+//FIN DE METODOS PARA ALMACENAR DATOS DE MANERA LOCAL
+
+//TODO:AHORA SE UTILIZARA EL MISMO END POINT DE INVENTARIOS
+
+// productosRecepcion(): Observable<RespuestaProductos> {
+//   return this.http.get<RespuestaProductos>(`${this.apiUrl}/productosRecepcion`)
+//   .pipe(
+//     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+//     );
+// }
 
 verExiteApertura(): Observable<recCabHabilitado> {
-  return this.http.get<recCabHabilitado>(`${this.apiUrl}/verExisteApertura`)
+  return this.http.get<recCabHabilitado>(`${this.apiUrl}/recepciones/verExisteApertura`)
   .pipe(
+    tap((response)=>{
+      console.log("------- ", response)
+    }),
     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
   );
 } 
 
 productosRecepcion(): Observable<RespuestaProductos> {
-  return this.http.get<RespuestaProductos>(`${this.apiUrl}/productosRecepcion`)
+  return this.http.get<RespuestaProductos>(`${this.apiUrl}/inventarios/productosInventario`)
   .pipe(
+    tap((response)=>{
+      console.log("------- ", response)
+    }),
     catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
-    );
+  );
 }
 
+//Si ya existe una detalle de inventario, se obtienen los productos registrados
 obtenerDatos(): Observable<RespuestaDatos> {
   return this.verExiteApertura().pipe(
     switchMap((respuesta: recCabHabilitado): Observable<RespuestaDatos> => {
       if (respuesta.habilitado) {
         return this.productosRecepcion().pipe(
-          //map((respuestaProductos: RespuestaProductos): RespuestaDatosProducto => ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })),
           tap((respuestaProductos: RespuestaProductos)=>{
-            //console.log({ mostrar: true, descripcion:respuesta.descripcion ,producto: respuestaProductos })
+            console.log("-------")
+            console.log({ mostrar: true, descripcion:respuesta.descripcion ,producto: respuestaProductos })
           }),
           map((RespuestaPrs: RespuestaProductos): RespuestaDatos => {
             return ({ mostrar: true, descripcion:respuesta.descripcion ,producto: RespuestaPrs.producto })
@@ -88,9 +106,8 @@ obtenerDatos(): Observable<RespuestaDatos> {
   );
 }
 
-registrarRecepcion(recepcion: any): Observable<any> {
-  console.log(recepcion)
-  return this.http.post<any>(`${this.apiUrl}/registrarRecepcion`, { ...recepcion })
+registrarRecepcion(recepcion: GuardarRecepcion): Observable<respuestaMensaje> {
+  return this.http.post<respuestaMensaje>(`${this.apiUrl}/recepciones/registrarRecepcion`, { ...recepcion })
     .pipe(
       catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
   );

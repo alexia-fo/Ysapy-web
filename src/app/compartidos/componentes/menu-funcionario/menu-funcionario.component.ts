@@ -55,6 +55,36 @@ export class MenuFuncionarioComponent {
             },
           ]
         },
+        {
+          title: 'Rendiciones',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Inventarios',
+              route: '/inventarios',
+              isDropdown: false
+            },
+
+          ]
+        },
+        {
+          title: 'Informes',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'PDF',
+              route: '/pdf',
+              isDropdown: false
+            },
+            {
+              title: 'pdf Inventario',
+              route: '/pdfInventario',
+              isDropdown: false
+            }
+          ]
+        },
         // Agrega más opciones de menú aquí según tus necesidades
       ];
     }else if(this.usuario.Rol.rol=="ADMINISTRACION"){

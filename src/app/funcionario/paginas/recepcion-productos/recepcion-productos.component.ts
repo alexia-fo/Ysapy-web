@@ -1,24 +1,22 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { Dinero, RespuestaDatosDinero } from '../../modelos/inventario.model';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { InvRendService } from '../../servicios/inv-rend.service';
 import { Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
-import { ProdRecibido, Producto, RespuestaDatos } from '../../modelos/recepcion-productos.model';
+import { GuardarRecepcion, ProdRecibido, RespuestaDatos } from '../../modelos/recepcion-productos.model';
 import { RecepcionProductosService } from '../../servicios/recepcion-productos.service';
+import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
+import { Producto } from '../../modelos/inventario.model';
 
 @Component({
   selector: 'app-recepcion-productos',
   templateUrl: './recepcion-productos.component.html',
   styleUrls: ['./recepcion-productos.component.css']
 })
+
 export class RecepcionProductosComponent {
   
-  cargandoT=false; 
-
-  //dtOptions: DataTables.Settings = {};
-  dtOptions = {
+  dtOptionsRecepcion = {
     paging:false,
     info: false,
     responsive:false,
@@ -48,7 +46,6 @@ export class RecepcionProductosComponent {
     paging:false,
     info:false,
     responsive:false,
-
     language: {
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
@@ -69,74 +66,73 @@ export class RecepcionProductosComponent {
   };
 
   formCabecera=this.fb.group({
-    observacion:['', [Validators.required]],
+    observacion:[''],
     nroComprobante:['', [Validators.required]],
   });
 
-  form:FormGroup=this.fb.group({
+  formRecepcion:FormGroup=this.fb.group({
     idProducto:['', [Validators.required]],
     nombre:['', [Validators.required]],
     cantidad:['', [Validators.required, Validators.min(1)]],
   });
 
+  
   invHabilitado:boolean=false;
   descripcion:string='';
-
+  
   productos:Producto[]=[];
   productosRecibidos:ProdRecibido[]=[];/*=[{idProducto:1, nombre:'prueba 1', cantidad:8}, {idProducto:2, nombre:'prueba 2', cantidad:8}, {idProducto:3, nombre:'prueba 3', cantidad:8}];*/
   accion:'Crear' | 'Modificar' | 'Eliminar'='Crear';
   seleccionado!:Producto;
-  cargando=false;
-  cargandoTabla=false; //obteniendo los datos de los productos a buscar
+  cargandoTabRecepcion=false; 
+  cargandoOperacion=false;
+  cargandoProductos=false; //obteniendo los datos de los productos a buscar
 
   constructor(
     private mensajeAlertify: AlertifyService,
     private fb: FormBuilder, 
     private servicioP: RecepcionProductosService,
     private detectorCambio: ChangeDetectorRef,
-    ){}
-
+  ){}
 
   ngOnInit(): void {
-    console.log('longitud ', this.productosRecibidos.length)
-    this.form.get('idProducto')?.disable();//solo mostramos
-    this.form.get('nombre')?.disable();//solo mostramos
 
+    this.formRecepcion.get('idProducto')?.disable();//solo mostramos
+    this.formRecepcion.get('nombre')?.disable();//solo mostramos
     
-    this.cargandoTabla=true;
+    this.cargandoProductos=true;
     //para tabla de pantalla
-    this.cargandoT=true;
+    this.cargandoTabRecepcion=true;
 
     this.servicioP.obtenerDatos()
     .subscribe({
       next:(response:RespuestaDatos)=>{
+        // console.log("response, ", response)
+
         this.invHabilitado=response.mostrar;
         this.descripcion=response.descripcion;
-        if(response.mostrar){//si ya existe una apertura de caja se puede registrar recepciones
+
+        if(response.mostrar){//si ya existe una apertura de caja se puede registrar recepciones   
           this.productos=response.producto!;//se obtienen los productos si existe apertura
-          console.log('response.producto',response.producto)
           //obtenemos datos del local storage
           if(this.servicioP.getItems().items){
             this.productosRecibidos=this.servicioP.getItems().items;//se obtinen los productos ya agregados y no registrados del dia de hoy
-           // console.log(this.servicioP.getItems())
             this.formCabecera.get('observacion')?.setValue(this.servicioP.getItems().observacion);
             this.formCabecera.get('nroComprobante')?.setValue(this.servicioP.getItems().nroComprobante);
           }
         }
-        this.cargandoT=false;
+        this.cargandoTabRecepcion=false;
 
         this.establecerDatos();
 
-        this.cargandoTabla=false;
+        this.cargandoProductos=false;
       },
       error:(errores)=>{
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        console.log(errores);
-        this.cargandoTabla=false;
+        this.cargandoProductos=false;
       }});
-
   }
 
   // ---------- DATATABLE ----------- //
@@ -155,6 +151,7 @@ export class RecepcionProductosComponent {
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
+
   // ------ MODAL DE FORMULARIO ------ //
   mostrarModal(id: string, mostrar:boolean) {
     if(mostrar){
@@ -167,33 +164,36 @@ export class RecepcionProductosComponent {
   //--------//
   agregar(){
 
-    if(!this.form.valid){
-      this.form.markAllAsTouched();
+    //para validar campos dehabilitados
+    if(!(this.formRecepcion.get('idProducto')?.value || this.formRecepcion.get('nombre')?.value)){
+      this.mensajeAlertify.mensajeError('Seleccione el producto');
       return;
     }
 
-    ////datos de la cabecera
+    if(!this.formRecepcion.valid){
+      this.formRecepcion.markAllAsTouched();
+      return;
+    }
+
     let { observacion , nroComprobante } = this.formCabecera.value;
-    /*
-  En este ejemplo, utilizamos el operador de coalescencia nula (??) para 
-  asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.
-    */
+    
+    /*TODO: utilizamos el operador de coalescencia nula (??) para 
+    asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante 
+    en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas 
+    de texto y evitas el error de asignación.*/
+    
     observacion = observacion ?? '';
     nroComprobante = nroComprobante ?? '';
-
-
-    //fin datos de la cabecera
    
-    let producto = this.form.value;
-    //obtenemos los valores de los compos deshabilitados
-    producto.idProducto=this.form.get('idProducto')?.value;
-    producto.nombre=this.form.get('nombre')?.value;
+    let producto = this.formRecepcion.value;
+    //obtenemos los valores de los compos deshabilitados, se puede utilizar solo el metodo this.form.getRawValue()
+    producto.idProducto=this.formRecepcion.get('idProducto')?.value;
+    producto.nombre=this.formRecepcion.get('nombre')?.value;
 
     //let {cantidad}=this.form.value
     let bandera=false;
     if(this.accion=="Crear"){
-      this.cargandoT= true;////
-
+      this.cargandoTabRecepcion= true;
 
       //this.productosRecibidos.push(producto);
       this.productosRecibidos.forEach((p, i) => {
@@ -209,72 +209,83 @@ export class RecepcionProductosComponent {
       
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.destroy();
-        console.log('Destruyendo..');
         this.dtTrigger.next(0);
       })
       
-      this.cargandoT = false;/////
+      this.cargandoTabRecepcion = false;
       
     }else if(this.accion=="Modificar"){
       this.productosRecibidos.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
-          this.productosRecibidos[i]=this.form.value;
+          // this.cargandoTabRecepcion= true;//add
+          this.productosRecibidos[i]=this.formRecepcion.value;
+
+          //add
+          // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+          //   dtInstance.destroy();
+          //   this.dtTrigger.next(0);
+          // })
+          // this.cargandoTabRecepcion= false;
         }
       });
     }
     //this.renderizar();
     //this.establecerDatos();
-    this.form.reset();
+    this.formRecepcion.reset();
 
     this.accion='Crear'
-      ///actualizamos los datos del localStorage
-      this.servicioP.saveItems(this.productosRecibidos, observacion, nroComprobante);
-      
-      ///
+    ///actualizamos los datos del localStorage
+    this.servicioP.saveItems(this.productosRecibidos, observacion, nroComprobante);
   }
 
   nuevo(){
     this.accion='Crear';
+    this.limpiarDetalle();
+  }
+
+  confirmarEliminacion(producto:ProdRecibido){
+    this.mensajeAlertify.mensajeConfirmacion(
+      `Desea quitar el producto ${producto.nombre} ?`,
+      ()=>this.eliminar(producto.idProducto)
+    )
   }
 
   eliminar(id: number){
-    ////datos de la cabecera
+    this.accion='Eliminar';
+
     let { observacion , nroComprobante } = this.formCabecera.value;
     /*
-  En este ejemplo, utilizamos el operador de coalescencia nula (??) para 
-  asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.
+    En este ejemplo, utilizamos el operador de coalescencia nula (??) para 
+    asignar un valor predeterminado de cadena vacía ('') a observacion y nroComprobante en caso de que sean null. De esta manera, te aseguras de que ambos valores sean cadenas de texto y evitas el error de asignación.
     */
     observacion = observacion ?? '';
     nroComprobante = nroComprobante ?? '';
 
-    this.cargandoT=true;
+    this.cargandoTabRecepcion=true;
     this.productosRecibidos.forEach((p, i) => {
       if(p.idProducto==id){
-        console.log("eliminando")
         this.productosRecibidos.splice(i, 1);
        // delete(this.productosRecibidos[i]);
       }
     }); 
-    console.log(this.productosRecibidos)
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
-      console.log('Destruyendo..');
       this.dtTrigger.next(0);
     })
     
-    this.cargandoT = false;/////
+    this.cargandoTabRecepcion = false;
 
 
     this.accion='Crear'
-          ///actualizamos los datos del localStorage
-          this.servicioP.saveItems(this.productosRecibidos, observacion, nroComprobante);
-      
-          ///
+    ///actualizamos los datos del localStorage
+    this.servicioP.saveItems(this.productosRecibidos, observacion, nroComprobante);
+ 
+    ///
   }
 
   modificar(producto:ProdRecibido){
     this.accion='Modificar';
-    this.form.setValue(producto);
+    this.formRecepcion.setValue(producto);
   }
 
   buscar(){
@@ -282,38 +293,30 @@ export class RecepcionProductosComponent {
   }
 
   seleccionarProducto(i: Producto){
-    this.form.get('idProducto')?.setValue(i.idProducto)
-    this.form.get('nombre')?.setValue(i.nombre)
+    this.formRecepcion.get('idProducto')?.setValue(i.idProducto)
+    this.formRecepcion.get('nombre')?.setValue(i.nombre)
     this.mostrarModal('smodal', false); 
   }
-
-  /*
-      this.form = this.fb.group({
-        idProducto:['', [Validators.required]],
-        nombre:['', [Validators.required]],
-        cantidad:['', [Validators.required, Validators.min(1)]],
-      });
-
-  */
 
   //faltan mensajes
   mensaje(field:string){
     let mensaje="";
-    if(this.form.get(field)?.hasError('required')){
-      if(field=="idProducto"){
-        mensaje="El id es requerido..";
-      }
+    if(this.formRecepcion.get(field)?.hasError('required')){
+      //TODO:LOS CAMPOS DESHABILITADOS NO CONTIENEN ERRORES(validar con alertify)
+      // if(field=="idProducto"){
+      //   mensaje="El id es requerido..";
+      // }
 
-      if(field=="nombre"){
-        mensaje="El nombre es requerido..";
-      }
+      // if(field=="nombre"){
+      //   mensaje="El nombre es requerido..";
+      // }
 
       if(field=="cantidad"){
         mensaje="La cantidad es requerida..";
       }
     }
 
-    if(this.form.get(field)?.hasError('min')){
+    if(this.formRecepcion.get(field)?.hasError('min')){
       if(field == "cantidad"){
         mensaje="La cantidad mínima es 0";
       }
@@ -322,11 +325,11 @@ export class RecepcionProductosComponent {
   }
 
   datoInvalido(campo:string){
-    let valido=(this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
+    let valido=(this.formRecepcion.get(campo)?.touched || this.formRecepcion.get(campo)?.dirty) && this.formRecepcion.get(campo)?.invalid;
     let input = document.getElementById(campo);
     if(valido){
       input?.classList.add("is-invalid");
-    }else if((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid){
+    }else if((this.formRecepcion.get(campo)?.touched || this.formRecepcion.get(campo)?.dirty) && this.formRecepcion.get(campo)?.valid){
       input?.classList.remove("is-invalid");
       input?.classList.add("is-valid");
     }else{
@@ -346,46 +349,54 @@ export class RecepcionProductosComponent {
       return;
     }
 
-    let data={
-      ...this.formCabecera.value,
+    if(!this.formCabecera.valid){
+      this.mensajeAlertify.mensajeError(
+        `Agregue el Número de comprobante !!`
+      );
+      return;
+    }
+
+    let data:GuardarRecepcion={
+      nroComprobante: this.formCabecera.value.nroComprobante || "",
+      observacion:this.formCabecera.value.observacion || "",
       productos:this.productosRecibidos,
     }
-    //validar que el nro de comprobante aun no se encuentre registrado en la fecha
-    console.log(data)
 
+    this.cargandoOperacion = false;
     this.servicioP.registrarRecepcion(data).subscribe({
-      next: (respuesta: any) => {
-        this.cargando = false;
+      next: (respuesta: respuestaMensaje) => {
+        this.cargandoOperacion = false;
         this.mensajeAlertify.mensajeExito(
-          `La recepcion se ha registrado correctamente ✓✓`
+          `${respuesta.msg}`
         );
-        this.limpiar();
+        this.borrarDatos();
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        console.log(errores);
-        this.cargando = false;
+        this.cargandoOperacion = false;
       },
     });
   }
 
-  limpiar(){
+  borrarDatos(){
     this.servicioP.removerItems();
     this.formCabecera.reset();
-    this.form.reset();
+    this.formRecepcion.reset();
 
     //para evitar errores del datatable
-    this.cargandoT=true;
+    this.cargandoTabRecepcion=true;
     this.productosRecibidos=[];
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
       console.log('Destruyendo..');
       this.dtTrigger.next(0);
     })
-    this.cargandoT=false;
-   
+    this.cargandoTabRecepcion=false;
+  }
 
+  limpiarDetalle(){
+    this.formRecepcion.reset();
   }
 }

@@ -1,3 +1,4 @@
+import { Producto } from "./inventario.model";
 
 //para el array
 export interface ProdRecibido{
@@ -12,24 +13,28 @@ export interface recCabHabilitado{
     descripcion:string;
 }
 
-export interface Producto{
-    idProducto:number;
-    nombre:string;
-    precio:number;
-    descripcion:string;
-    //el resto de los datos no son necesarios
-}
+// export interface Producto{
+//     idProducto:number;
+//     nombre:string;
+//     precio:number;
+//     descripcion:string;
+//     //el resto de los datos no son necesarios
+// }
 
-export interface RespuestaProductos{
-    total:number,
-    producto:Producto[]
-}
-
-
+// export interface RespuestaProductos{
+//     total:number,
+//     producto:Producto[]
+// }
 
 export interface RespuestaDatos{
     mostrar: boolean;
     descripcion:string;
     producto?: Producto[];
 }
+
 //datos enviados para registrar recepcion
+export interface GuardarRecepcion{
+    nroComprobante:string;
+    observacion:string;
+    productos: ProdRecibido[];
+}
