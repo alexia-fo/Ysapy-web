@@ -45,7 +45,8 @@ import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
     TablaEventoComponent,
     MenuRafComponent,
 
-    TablaPipeComponent
+    TablaPipeComponent,
+    BooleanToStringPipe
   ],
 })
 export class UtilidadesModule { }

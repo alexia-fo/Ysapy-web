@@ -4,41 +4,21 @@ import { EliminadoProducto, Producto, RespuestaProductos } from '../../modelos/p
 import { Clasificacion, RespuestaClasificaciones } from '../../modelos/clasificacion.model';
 import { Validaciones } from 'src/app/validaciones/bd';//por ahora no cuenta con validaciones asincronas
 import { environment } from 'src/environments/environment';
-import { TablaItem, TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
+import { TablaItem } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { ProductoService } from '../../servicios/producto.service';
 import { ClasificacionService } from '../../servicios/clasificacion.service';
 import { ImagenService } from 'src/app/utilidades/servicios/imagenes/imagen.service';
 import { ImagenesService } from 'src/app/utilidades/imagenes.service';
 import { FormatosService } from 'src/app/validaciones/formatos.service';
-import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
-import { DecimalPipe } from '@angular/common';
 
-//!probando moneda
-/*
-import { registerLocaleData } from '@angular/common';
-import localeEsPy from '@angular/common/locales/es-PY';
-// Registra la configuración de localización para 'es-PY'
-registerLocaleData(localeEsPy, 'es-PY');
-//COPIAR EN EL COMPONENTE
-// currencyPipe: CurrencyPipe = new CurrencyPipe('en-US'); // Ajusta la configuración de localización según tus necesidades
-currencyPipe: CurrencyPipe = new CurrencyPipe('es-PY'); // Ajusta la configuración de localización según tus necesidades
-*/
+
 @Component({
-  selector: 'app-product',
-  templateUrl: './producto.component.html',
-  styleUrls: ['./producto.component.css']
+  selector: 'app-abmc-producto',
+  templateUrl: './abmc-producto.component.html',
+  styleUrls: ['./abmc-producto.component.css']
 })
-
-export class ProductoComponent implements OnInit{
-
-    //!intanciar el pipe
-    stringPipe:BooleanToStringPipe= new BooleanToStringPipe();
-    // Instancia el pipe numérico que deseas usar
-    // Instancia el DecimalPipe
-    decimalPipe: DecimalPipe = new DecimalPipe('en-US'); // Puedes ajustar la configuración de localización según tus necesidades
-  
-    //!fin instancias
+export class AbmcProductoComponent {
 
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
   //se puede ocultar un modal y mostrar otro y viceversa
@@ -47,11 +27,7 @@ export class ProductoComponent implements OnInit{
   //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
   //los datos, corresponde al array de informacion que se quiere listar 
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
-  tabla:TablaItemPipe<Producto>={ //propiedades de la tabla para el listado
-    propiedades: [{campo:'idProducto'}, {campo:'nombre'}, {campo: 'precio', pipe:this.decimalPipe}, {campo:'descripcion'}, {campo:'Clasificacion.nombre'}, {campo:'activo', pipe:this.stringPipe}, {campo:'facturable', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
-    datos: [], 
-    campos:['Id', 'Producto', 'Precio', 'Descripcion', 'Clasificacion', 'Activo', 'Facturable', 'Usuario'], 
-  }
+  tabla:Producto[]=[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
   //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a guardar
@@ -324,7 +300,7 @@ export class ProductoComponent implements OnInit{
     this.cargandoTabla=true;
     this.servicioProd.obtenerProductos(100, 1, undefined).subscribe({
       next: (respuesta: RespuestaProductos) => {
-        this.tabla.datos = respuesta.producto;
+        this.tabla = respuesta.producto;
         this.cargandoTabla = false;
       },
       error: (errores) => {
@@ -507,5 +483,5 @@ export class ProductoComponent implements OnInit{
     const nombreControl = this.form.get('nombre');
     return (this.form.pending && nombreControl!.touched);
   }
-}
 
+}

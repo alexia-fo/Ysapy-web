@@ -2,17 +2,14 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { SucursalService } from '../../servicios/sucursal.service';
 import { EliminadoSucursal, RespuestaSucursales, Sucursal } from '../../modelos/sucursal.model';
-import { TablaItem, TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
+import { TablaItem } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
 @Component({
-  selector: 'app-sucursal',
-  templateUrl: './sucursal.component.html',
-  styleUrls: ['./sucursal.component.css']
+  selector: 'app-abmc-sucursal',
+  templateUrl: './abmc-sucursal.component.html',
+  styleUrls: ['./abmc-sucursal.component.css']
 })
-export class SucursalComponent {
-
-  stringPipe:BooleanToStringPipe= new BooleanToStringPipe();
+export class AbmcSucursalComponent {
 
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
   //se puede ocultar un modal y mostrar otro y viceversa
@@ -21,11 +18,7 @@ export class SucursalComponent {
   //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
   //los datos, corresponde al array de informacion que se quiere listar 
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
-  tabla:TablaItemPipe<Sucursal>={ //propiedades de la tabla para el listado
-    propiedades: [{campo:'idSucursal'}, {campo:'nombre'}, {campo:'estado', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
-    datos: [], 
-    campos:['Id', 'Sucursal', 'Estado', 'Usuario'], 
-  }
+  tabla:Sucursal[]=[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
   //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a guardar
@@ -245,7 +238,7 @@ export class SucursalComponent {
     this.servicioSucur.obtenerSucursales(100, 0, undefined).subscribe({
       next: (respuesta: RespuestaSucursales) => {
         console.log(respuesta)
-        this.tabla.datos = respuesta.sucursal;
+        this.tabla = respuesta.sucursal;
         this.cargandoTabla = false;
       },
       error: (errores) => {
@@ -284,4 +277,5 @@ export class SucursalComponent {
       this.seleccionado = { ...$event };
       this.form.patchValue($event);
     }
+
 }

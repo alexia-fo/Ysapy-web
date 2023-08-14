@@ -1,0 +1,251 @@
+<!--PANTALLA-->
+<div class="container">
+    <div class="row">
+      <!--Boton Nuevo-->
+      <div class="col offset-md-9 col-md-3">
+        <div class="d-grid gap-2 my-2">
+          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
+        </div>
+      </div>
+      <!--Tabla Para Listar Datos-->
+      <div class="col-12">
+        <!-- <app-tabla-pipe [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones">
+        </app-tabla-pipe> -->
+        <div class="table-responsive">
+            <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Sucursal</th>
+                    <th>Rol</th>
+                    <th>Activo</th>
+                    <th>Google</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of tabla" (dblclick)="obtenerSeleccionado(item)">
+                    <td>{{item.idUsuario}}</td>
+                    <td>{{item.nombre}}</td>
+                    <td>{{item.nusuario}}</td>
+                    <td>{{item.correo}}</td>
+                    <td>{{item.Sucursal.nombre}}</td>
+                    <td>{{item.Rol.rol}}</td>
+                    <td>{{item.activo | booleanToString}}</td>
+                    <td>{{item.google  | booleanToString}}</td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- MODAL  DE DATOS E IMAGEN-->
+  <app-modal-formulario 
+  [idModal]="modUsuarioId" 
+  [titulo]="'Usuario'" 
+  [accion]="accion" 
+  (guardarClick)="guardar()"
+  (eliminarClick)="eliminar()" 
+  [cargandoOperacion]="cargandoOperacion">
+    <!--Formulario para realizar ABMC de los datos-->
+    <form [formGroup]="form" class="row g-3">
+      <div class="col-12">
+        <h3 class="text-center">Datos del Usuario</h3>
+      </div>
+  
+      <div class="col-12" *ngIf="cargandoComboRol">
+        <div class="text-center">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <!--
+        <div class="text-center text-danger">
+          Obteniendo los Datos...
+        </div>
+        -->
+      </div>
+  
+      <div class="col-md-12">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input formControlName="nombre" type="text" class="form-control" id="nombre" />
+        <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+      </div>
+  
+      <div class="col-md-12">
+        <label for="nusuario" class="form-label">Usuario</label>
+        <input formControlName="nusuario" type="text" id="nusuario" class="form-control"/>
+        <small *ngIf="datoInvalido('nusuario')" class="e-mensaje-error">{{mensaje('nusuario')}}</small>
+        <!--<small *ngIf="formPendiente" class="e-mensaje-error">Validacion de usuario en proceso...</small>-->
+      </div>
+  
+      <div class="col-md-12">
+        <label for="correo" class="form-label">Correo</label>
+        <input formControlName="correo" type="email" class="form-control" id="correo" />
+        <small *ngIf="datoInvalido('correo')" class="e-mensaje-error">{{mensaje('correo')}}</small>
+  
+        <!----->
+        <small *ngIf="formPendiente" class="e-mensaje-error">Validacion de correo en proceso...</small>
+      </div>
+  
+      <div class="col-md-12">
+        <label for="idrol" class="form-label">Rol</label>
+        <select formControlName="idrol" class="form-select" id="idrol">
+          <option *ngFor="let n of roles" [value]="n.idRol">{{ n.rol }}</option>
+        </select>
+        <small *ngIf="datoInvalido('idrol')" class="e-mensaje-error">{{mensaje('idrol')}}</small>
+      </div>
+  
+      <div class="col-md-12">
+        <label for="idsucursal" class="form-label">Sucursal</label>
+        <select formControlName="idsucursal" class="form-select" id="idsucursal">
+          <option *ngFor="let n of sucursales" [value]="n.idSucursal">{{ n.nombre }}</option>
+        </select>
+        <small *ngIf="datoInvalido('idsucursal')" class="e-mensaje-error">{{mensaje('idsucursal')}}</small>
+      </div>
+  
+      <div class="col-md-12">
+        <label for="turno" class="form-label">Turno</label>
+        <div>
+          <div class="form-check form-check-inline">
+            <input formControlName="turno" [value]="'M'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault1">
+            <label class="form-check-label" for="flexRadioDefault1">Mañana</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input formControlName="turno" [value]="'T'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault2">
+            <label class="form-check-label" for="flexRadioDefault2">Tarde</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input formControlName="turno" [value]="'N'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault3">
+            <label class="form-check-label" for="flexRadioDefault3">Noche</label>
+          </div>
+          <small *ngIf="datoInvalido('noche')" class="e-mensaje-error">{{mensaje('noche')}}</small>
+        </div>
+      </div>
+  
+  
+      <div class="col-md-12" *ngIf="accion!='M'">
+        <div class="row">
+          <div class="col-md-12">
+            <label for="contra" class="form-label">Contraseña</label>
+            <input formControlName="contra" type="password" class="form-control"  id="contra"/>
+            <small *ngIf="datoInvalido('contra')" class="e-mensaje-error">{{mensaje('contra')}}</small>   
+          </div>
+        </div>
+        <div class="col-md-12">
+          <label for="contrasena2" class="form-label">Confirmar Contraseña</label>
+          <input formControlName="contrasena2" type="password" class="form-control" id="contrasena2"/>
+          <small *ngIf="datoInvalido('contrasena2')" class="e-mensaje-error">{{mensaje('contrasena2')}}</small>   
+        </div>
+      </div>
+  
+    </form>
+  
+    <!--Formulario de imagen-->
+    <form [formGroup]="formImagen" class="row g-3" *ngIf="accion=='M'">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <h3 class="text-center">Imagen del Usuario</h3>
+          </div>
+  
+          <div class="col-12">
+            <label class="form-label fw-bold">Editar Imagen</label>
+            <div class="input-group my-2">
+              <input type="file" (change)="capturarArchivo($event)" formControlName="imagenControl" class="form-control">
+              <button class="btn btn-warning" type="button" (click)="subirArchivo()"
+                [disabled]="cargandoImagen">{{(cargandoImagen)? 'Cargando':'Guardar'}}</button>
+            </div>
+            <small *ngIf="archivoInvalido('imagenControl')"
+              class="e-mensaje-error">{{mensajeArchivo('imagenControl')}}</small>
+          </div>
+  
+          <div class="col-6">
+            <div class="fw-bold">Imagen Actual</div>
+            <img [src]="apiUrl+seleccionado.idUsuario" alt="" width="100%" height="auto">
+          </div>
+  
+          <div class="col-6">
+            <div class="fw-bold">Imagen Nueva</div>
+            <img [src]="previsualizacion" alt="" width="100%" height="auto">
+          </div>
+  
+        </div>
+      </div>
+    </form>
+  
+    <!----------------------->
+    <br>
+    <br>
+    <hr>
+    <div class="col-12 d-flex justify-content-end">
+      <button *ngIf="accion=='M'" (click)="contrasena()" class="btn e-segundo-boton me-2">Cambiar Contraseña</button>
+    </div>
+  
+  </app-modal-formulario>
+  
+  
+  
+  <!-- MODAL DE CONTRASEÑA-->
+  <app-modal [modalId]="modContrasenaId" [titulo]="'Usuario'">
+    <!--FORMULARIO DE CONTRASENA-->
+  
+  
+    <form [formGroup]="formContra" class="row g-3">
+  
+      <div class="col-12" *ngIf="cargandoOperacion">
+        <div class="text-center">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <!--
+        <div class="text-center text-danger">
+          Modificando...
+        </div>
+        -->
+      </div>
+  
+      <div class="col-12">
+        <h3 class="text-center">Cambiar Contraseña</h3>
+      </div>
+      <!--
+  
+      <div class="col-md-12">
+        <label for="contrasenaActual" class="form-label">Contraseña Actual</label>
+        <input formControlName="contrasenaActual" type="password" class="form-control" id="contrasenaActual" />
+        <small *ngIf="contrasenaInvalida('contrasenaActual')"
+          class="e-mensaje-error">{{mensajeContrasena('contrasenaActual')}}</small>
+      </div>
+  
+    -->
+  
+      <div class="col-md-12">
+        <label for="contrasenaNueva" class="form-label">Contraseña Nueva</label>
+        <input formControlName="contrasenaNueva" type="password" class="form-control" id="contrasenaNueva" />
+        <small *ngIf="contrasenaInvalida('contrasenaNueva')"
+          class="e-mensaje-error">{{mensajeContrasena('contrasenaNueva')}}</small>
+      </div>
+  
+      <div class="col-md-12">
+        <label for="contrasenaConfirm" class="form-label">Confirmar Contraseña</label>
+        <input formControlName="contrasenaConfirm" type="password" class="form-control" id="contrasenaConfirm" />
+        <small *ngIf="contrasenaInvalida('contrasenaConfirm')"
+          class="e-mensaje-error">{{mensajeContrasena('contrasenaConfirm')}}</small>
+      </div>
+  
+      <br>
+      <hr>
+      <div class="col-md-12 d-flex justify-content-end">
+        <button (click)="actualizarContra()" class="btn e-segundo-boton">Actualizar</button>
+      </div>
+    </form>
+  
+  
+  
+  </app-modal>

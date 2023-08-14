@@ -14,6 +14,10 @@ import { VerCalculosRendicionComponent } from './paginas/ver-calculos-rendicion/
 import { VerCabecerasInventarioComponent } from './paginas/ver-cabeceras-inventario/ver-cabeceras-inventario.component';
 import { VerDetalleInventarioComponent } from './paginas/ver-detalle-inventario/ver-detalle-inventario.component';
 import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ver-detalle-rendicion.component';
+import { AbmcUsuarioComponent } from './paginas/abmc-usuario/abmc-usuario.component';
+import { AbmcProductoComponent } from './paginas/abmc-producto/abmc-producto.component';
+import { AbmcSucursalComponent } from './paginas/abmc-sucursal/abmc-sucursal.component';
+import { BooleanToStringPipe } from '../utilidades/pipes/boolean-to-string.pipe';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,9 @@ import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ve
     VerCabecerasInventarioComponent,
     VerDetalleInventarioComponent,
     VerDetalleRendicionComponent,
+    AbmcUsuarioComponent,
+    AbmcProductoComponent,
+    AbmcSucursalComponent,
   ],
   imports: [
     CommonModule,
@@ -33,7 +40,8 @@ import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ve
     DataTablesModule,
     UtilidadesModule,
     CompartidosModule,
-    FormsModule
+    FormsModule,
+    
   ]
 })
 export class AdministracionModule { }

@@ -8,12 +8,27 @@ import { VerCalculosRendicionComponent } from './paginas/ver-calculos-rendicion/
 import { VerCabecerasInventarioComponent } from './paginas/ver-cabeceras-inventario/ver-cabeceras-inventario.component';
 import { VerDetalleInventarioComponent } from './paginas/ver-detalle-inventario/ver-detalle-inventario.component';
 import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ver-detalle-rendicion.component';
+import { AbmcUsuarioComponent } from './paginas/abmc-usuario/abmc-usuario.component';
+import { AbmcProductoComponent } from './paginas/abmc-producto/abmc-producto.component';
+import { AbmcSucursalComponent } from './paginas/abmc-sucursal/abmc-sucursal.component';
 
 const routes: Routes = [
   {
     path: "",
     component: MainComponent,
     children: [
+      {
+        path: 'abmc-sucursal',
+        component: AbmcSucursalComponent
+      },
+      {
+        path: 'abmc-producto',
+        component: AbmcProductoComponent
+      },
+      {
+        path: 'abmc-usuario',
+        component: AbmcUsuarioComponent
+      },
       {
         path: 'usuario',
         component: UsuarioComponent

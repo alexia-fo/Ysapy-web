@@ -9,11 +9,33 @@
       </div>
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <app-tabla-pipe 
+        <!-- <app-tabla-basica 
         [tabla]="tabla" 
         [cargandoTabla]="cargandoTabla" 
         (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones"></app-tabla-pipe>
+        [dtOpciones]="dtOpciones"></app-tabla-basica> -->
+
+        <div class="table-responsive">
+            <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>estado</th>
+                    <th>Usuario</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of tabla" (dblclick)="obtenerSeleccionado(item)">
+                    <td>{{item.idSucursal}}</td>
+                    <td>{{item.nombre}}</td>
+                    <td>{{item.estado | booleanToString}}</td>
+                    <td>{{item.Usuario.nombre}}</td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+
       </div>
     </div>
   </div>
