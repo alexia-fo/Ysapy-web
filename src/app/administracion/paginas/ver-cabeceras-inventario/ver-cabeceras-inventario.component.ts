@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RespuestaCabecera, datosCabecera } from '../../modelos/ver-calculos-rendicion';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
@@ -22,34 +22,63 @@ export class VerCabecerasInventarioComponent implements OnInit{
   
   //cargandoTabla = true; //obteniendo los datos a mostrar en la tabla
   
-  dtOpciones: DataTables.Settings = {//configuracion del datatable
-    paging: true,
-    info: true,
-    pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
-    /*
-    lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
-    */
-   lengthChange: false, // deshabilita el selector de cantidad de registros
-   pageLength: 10, // establece la cantidad de registros por página en 10
+  // dtOpciones: DataTables.Settings = {//configuracion del datatable
+  //   paging:false,
+  //   info:false,
+
+  //   responsive: true,
+
+  //   /*
+  //   paging: true,
+  //   info: true,
+  //   pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
+  //   pageLength: 10, // establece la cantidad de registros por página en 10
+  //   */
+  //   /*
+  //   lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
+  //   */
+  //  lengthChange: false, // deshabilita el selector de cantidad de registros
    
-   language: { //traducimos porque por defecto esta en ingles
-    search: 'Buscar:',
-    zeroRecords: 'No se encontraron resultados',
-    info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
-    infoEmpty: 'Mostrando 0 a 0 de 0 registros',
-    infoFiltered: '(filtrados de _MAX_ registros en total)',
-    lengthMenu: 'Mostrar _MENU_ registros',
-    loadingRecords: 'Cargando...',
-    processing: 'Procesando...',
-      emptyTable: 'No hay datos disponibles en la tabla',
-      paginate: {
-        first: 'Primero',
-        last: 'Último',
-        next: 'Siguiente',
-        previous: 'Anterior',
-      },
+  //  language: { //traducimos porque por defecto esta en ingles
+  //   search: 'Buscar:',
+  //   zeroRecords: 'No se encontraron resultados',
+  //   info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+  //   infoEmpty: 'Mostrando 0 a 0 de 0 registros',
+  //   infoFiltered: '(filtrados de _MAX_ registros en total)',
+  //   lengthMenu: 'Mostrar _MENU_ registros',
+  //   loadingRecords: 'Cargando...',
+  //   processing: 'Procesando...',
+  //     emptyTable: 'No hay datos disponibles en la tabla',
+  //     paginate: {
+  //       first: 'Primero',
+  //       last: 'Último',
+  //       next: 'Siguiente',
+  //       previous: 'Anterior',
+  //     },
+  //   },
+  // };
+  dtOpciones: DataTables.Settings = {
+    paging: false,
+    info: false,
+    responsive: true,
+    lengthChange: false,
+    language: {
+      // ... tu configuración de idioma ...
     },
+    initComplete: () => {
+      $('table').on('click', '[id^="btnCalculos_"]', (event) => {
+        const idCabecera = event.currentTarget.id.split('_')[1];
+        this.verCalculos(idCabecera);
+      });
+  
+      $('table').on('click', '[id^="btnDetalle_"]', (event) => {
+        const idCabecera = event.currentTarget.id.split('_')[1];
+        this.redirigirADetalleRendicion(idCabecera);
+      });
+    }
   };
+  
+
 
   fechaHoy!:Date;
   fechaHace7Dias!:Date;
@@ -144,7 +173,7 @@ export class VerCabecerasInventarioComponent implements OnInit{
 
     // Obtener la fecha hace 7 días
     this.fechaHace7Dias = new Date();
-    this.fechaHace7Dias.setDate(this.fechaHoy.getDate() - 7);
+    this.fechaHace7Dias.setDate(this.fechaHoy.getDate() - 15);
 
   }
 
@@ -178,6 +207,7 @@ export class VerCabecerasInventarioComponent implements OnInit{
     .subscribe({
       next: (respuesta:RespuestaCabecera) => {
         this.cabeceras=respuesta.cabecera
+        console.log(this.cabeceras)
         this.cargandoDatos=false;
       },
       error: (errores) => {
@@ -230,6 +260,10 @@ export class VerCabecerasInventarioComponent implements OnInit{
       }
     }
 
-    
+    //prueba
+    redirigirADetalleRendicion(idCabecera: number) {
+      // this.router.navigate([`./detalleRendicion/${idCabecera}`, idCabecera]);
+      this.router.navigateByUrl(`/administracion/detalleRendicion/${idCabecera}`);
+    }
   
 }

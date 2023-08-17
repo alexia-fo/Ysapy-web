@@ -40,7 +40,45 @@
     </div>
   </div>
   
-    
+  <div class="modal fade" [id]="modSucursalId" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{'Sucursales'}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <!--Spinner-->
+          <div class="text-center" *ngIf="cargandoOperacion">
+            <div class="spinner-border text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <!--Formulario para realizar ABMC de los datos-->
+          <form [formGroup]="form" class="row g-3">
+        
+            <div class="col-12">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="nombre">
+              <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+            </div>
+            
+          </form>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button *ngIf="cargandoOperacion!=true" (click)="guardar()" class="btn e-tercer-boton">{{(accion=='M')?'Actualizar':'Guardar'}}</button>
+          <button *ngIf="accion=='M' && cargandoOperacion!=true" (click)="eliminar()" class="btn e-primer-boton">Eliminar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
      
   <!-- MODAL -->
   <app-modal-formulario

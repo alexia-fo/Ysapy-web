@@ -49,7 +49,7 @@
                 <div class="col-md-6 d-grid">
 
                         <label for="">Filtrar</label>
-                        <button class="btn btn-danger" (click)="buscar()" type="button">Buscar</button>
+                        <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
                     
                 </div>
 
@@ -63,13 +63,6 @@
 <!-- PAGINA PRINCIPAL: LISTADO DE CABECERAS -->
 <div class="container">
     <div class="row">
-        <!--Boton Nuevo-->
-        <!-- <div class="col offset-md-6 col-md-6">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-secondary" (click)="buscar()" type="button" (click)="mostrarModal(modalFiltros,true)">Ver filtros</button>
-                <button class="btn btn-secondary" (click)="buscar()" type="button" (click)="mostrarModal(modalFiltros,true)">Ver filtros</button>
-            </div>
-        </div> -->
 
         <div class="col offset-md-9 col-md-3">
             <div class="d-grid gap-2 my-2">
@@ -80,14 +73,6 @@
     </div>
 
     <div class="row">
-
-
-
-<!-- 
-        <div class="col-12 d-flex justify-content-end">
-            <button class="btn btn-warning me-2" (click)="ver()">Ver</button>
-            <button class="btn btn-secondary me-2" (click)="descargar()">Descargar</button>
-        </div> -->
 
         <div class="col-12" *ngIf="cargandoDatos">
             <div class="text-center">
@@ -101,40 +86,40 @@
         </div>
 
         <div class="col-12">
-            <div class="table-responsive">
+            <!-- <div class="table-responsive"> -->
                 <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
-                    <!--
-                        class="bg-secondary text-white"
-                    -->
-                    <thead>
+
+                    <thead class="bg-warning">
                         <tr> 
                             <th class="text-center">Fecha Apertura</th>
-                            <th class="text-center">Fecha Cierre</th>
+                            <!-- <th class="text-center">Fecha Cierre</th> -->
                             <th class="text-center">Sucursal</th>
                             <th class="text-center">Turno</th>
                             <th class="text-center">Usuario</th>
                             <th class="text-center">Monto Apertura</th>
                             <th class="text-center">Monto Cierre</th>
+                            <th class="text-center">Monto Salida</th>
                             <th class="text-center">Monto Diferencia</th>
-                            <th class="text-center">Detalle</th>
+                            <th class="text-center">Detalle</th> 
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let i of cabeceras">
-                            <td  class="text-start">{{i.fechaApertura | date}}</td>
-                            <td  class="text-start">{{i.fechaCierre | date}}</td>
+                            <td  class="text-start">{{i.fechaApertura | date }}</td>
+                            <!-- <td  class="text-start">{{i.fechaCierre | date }}</td> -->
                             <td class="text-start">{{i.Sucursal.nombre}}</td>
                             <td  class="text-center">{{i.turno}}</td>
                             <td  class="text-start">{{i.Usuario.nombre}}</td>
                             <td class="text-end">{{i.montoApertura |number}}</td>
                             <td class="text-end">{{i.montoCierre |number}}</td>
+                            <td class="text-end">{{i.montoSalida |number}}</td>
                             <td class="text-end">{{i.montoDiferencia |number}}</td>
-                            <td  class="text-center" *ngIf="i.estado==='CC'"><button (click)="verCalculos(i.idCabecera)" class="btn btn-warning"><i class="bi bi-calculator"></i></button></td> 
-                            <td  class="text-center" *ngIf="i.estado!=='CC'"><button [routerLink]="'../detalleRendicion/'+i.idCabecera" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td>                          
+                            <td  class="text-center" *ngIf="i.estado==='CC'"><button id="btnCalculos_{{i.idCabecera}}" class="btn btn-danger"><i class="bi bi-calculator"></i></button></td> <!-- (click)="verCalculos(i.idCabecera)" -->
+                            <td  class="text-center" *ngIf="i.estado!=='CC'"><button id="btnDetalle_{{i.idCabecera}}" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            <!-- </div> -->
         </div>
     </div>
 </div>

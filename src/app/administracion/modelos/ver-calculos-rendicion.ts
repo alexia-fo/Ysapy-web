@@ -41,6 +41,7 @@ export interface datosCabecera{
     fechaCierre:Date;
     montoApertura:number;
     montoCierre:number;
+    montoSalida:number;
     montoDiferencia:number;
     idsucursal:number;
     idusuario:number;
