@@ -15,7 +15,7 @@
         (itemSeleccionado)="obtenerSeleccionado($event)"
         [dtOpciones]="dtOpciones"></app-tabla-basica> -->
 
-        <div class="table-responsive">
+        <!-- <div class="table-responsive"> -->
             <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
                 <thead>
                   <tr>
@@ -27,10 +27,11 @@
                     <th>Activo</th>
                     <th>Facturable</th>
                     <th>Usuario</th>
+                    <th>Detalle</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of tabla" (dblclick)="obtenerSeleccionado(item)">
+                  <tr *ngFor="let item of tabla"><!-- (dblclick)="obtenerSeleccionado(item)" -->
                     <td>{{item.idProducto}}</td>
                     <td>{{item.nombre}}</td>
                     <td>{{item.precio | number}}</td>
@@ -39,10 +40,11 @@
                     <td>{{item.activo | booleanToString}}</td>
                     <td>{{item.facturable | booleanToString}}</td>
                     <td>{{item.Usuario.nombre}}</td>
+                    <td  class="text-center"><button id="btnDetalle_{{item.idProducto}}" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
                   </tr>
                 </tbody>
             </table>
-        </div>
+        <!-- </div> -->
       </div>
     </div>
 

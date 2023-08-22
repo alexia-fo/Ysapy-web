@@ -16,13 +16,21 @@ export interface TablaItemPag<T> {//para modal buscar
 }
 
 //PARA PRUEBA DE TABLAS CON PIPE
+// export interface TablaItemPipe<T> {//para modal buscar y tabla basica
+//     campos:string[];
+//     propiedades: definicionColumnas[];
+//     datos: T[];
+// }
 export interface TablaItemPipe<T> {//para modal buscar y tabla basica
     campos:string[];
     propiedades: definicionColumnas[];
     datos: T[];
+    // alineaciones?: ('left' | 'center' | 'right')[];
 }
 
 export interface definicionColumnas{
     campo:string;
     pipe?:any;
 }
+
+//: 1. tabla basica 2. tabla pipe 3. tabla boton y con alineacion

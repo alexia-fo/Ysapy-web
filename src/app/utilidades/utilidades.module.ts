@@ -13,6 +13,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.component';
 import { ActivoInactivoPipe } from './pipes/activo-inactivo.pipe';
 import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
+import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.component';
 
 
 
@@ -29,6 +30,7 @@ import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
     TablaPipeComponent,
     ActivoInactivoPipe,
     BooleanToStringPipe,
+    TablaBotonComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +48,10 @@ import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
     MenuRafComponent,
 
     TablaPipeComponent,
-    BooleanToStringPipe
+    BooleanToStringPipe,
+
+    //prueba
+    TablaBotonComponent
   ],
 })
 export class UtilidadesModule { }

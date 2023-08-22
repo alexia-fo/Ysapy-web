@@ -44,38 +44,40 @@
     <form [formGroup]="form" *ngIf="invHabilitado">
     <div formArrayName="dineroControles">
   
-      <table datatable [dtOptions]="dtOptions" class="table hover">
+      <div class="table-responsive">
+        <table  class="table hover">
   
-        <thead *ngIf="!cargandoTabla">
-          <tr>
-            <th>Nombre</th>
-            <th>Monto</th>
-            <th>Cantidad</th>
-            <th>Observacion</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="!cargandoTabla" >
-
-<tr *ngFor="let dinero of dineros; let i = index;" [formGroupName]="i">
-  <td>{{ dinero.nombreBillete | titlecase }}</td>
-  <td>{{ dinero.monto }}</td>
-  <td class="col-2">
-    <div>
-      <input type="number" class="form-control" formControlName="cantidad">
-      <span *ngIf="datoInvalido('cantidad', 'dineroControles', i)" class="e-mensaje-error">
-        {{ mensajeValidacion('cantidad', form.get('dineroControles')!.get(i.toString())!) }}
-      </span>
-    </div>
-  </td>
-  <td class="col-2">
-    <div>
-      <input type="text" class="form-control" formControlName="observacion">
-    </div>
-  </td>
-</tr>
-
-        </tbody>
-      </table>
+          <thead *ngIf="!cargandoTabla">
+            <tr>
+              <!-- <th>Nombre</th> -->
+              <th>Monto</th>
+              <th>Cantidad</th>
+              <th>Observacion</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="!cargandoTabla" >
+  
+            <tr *ngFor="let dinero of dineros; let i = index;" [formGroupName]="i">
+              <!-- <td>{{ dinero.nombreBillete | titlecase }}</td> -->
+              <td>{{ dinero.monto | number}}</td><!--number:'1.2-2'-->
+              <td class="col-2">
+                <div>
+                  <input type="number" class="form-control" formControlName="cantidad">
+                  <span *ngIf="datoInvalido('cantidad', 'dineroControles', i)" class="e-mensaje-error">
+                    {{ mensajeValidacion('cantidad', form.get('dineroControles')!.get(i.toString())!) }}
+                  </span>
+                </div>
+              </td>
+              <td class="col-2">
+                <div>
+                  <input type="text" class="form-control" formControlName="observacion">
+                </div>
+              </td>
+            </tr>
+  
+          </tbody>
+        </table>
+      </div>
     </div>
   
     </form>

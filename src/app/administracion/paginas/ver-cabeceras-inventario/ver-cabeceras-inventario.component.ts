@@ -8,6 +8,11 @@ import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 import { SucursalService } from '../../servicios/sucursal.service';
 import { RespuestaSucursales, Sucursal } from '../../modelos/sucursal.model';
 import { forkJoin } from 'rxjs';
+import { JspdfAutotableService } from 'src/app/utilidades/servicios/pdf/jspdf-autotable.service';
+
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable'
+import { format } from 'date-fns'; // Importa la función de formateo
 
 @Component({
   selector: 'app-ver-cabeceras-inventario',
@@ -62,6 +67,7 @@ export class VerCabecerasInventarioComponent implements OnInit{
     info: false,
     responsive: true,
     lengthChange: false,
+    order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
     language: {
       // ... tu configuración de idioma ...
     },
@@ -77,8 +83,6 @@ export class VerCabecerasInventarioComponent implements OnInit{
       });
     }
   };
-  
-
 
   fechaHoy!:Date;
   fechaHace7Dias!:Date;
@@ -94,7 +98,8 @@ export class VerCabecerasInventarioComponent implements OnInit{
     private mensajeAlertify: AlertifyService,
     private servicioC: VerCalculosRendicionService,
     private router: Router,
-    private servicioS:SucursalService
+    private servicioS:SucursalService,
+    private pdfService:JspdfAutotableService
   ){
     this.obtenerFechas();
   }
@@ -218,6 +223,8 @@ export class VerCabecerasInventarioComponent implements OnInit{
       },
     });
 
+    this.mostrarModal(this.modalFiltros, false);
+
   }
 
 
@@ -265,5 +272,68 @@ export class VerCabecerasInventarioComponent implements OnInit{
       // this.router.navigate([`./detalleRendicion/${idCabecera}`, idCabecera]);
       this.router.navigateByUrl(`/administracion/detalleRendicion/${idCabecera}`);
     }
+
+
+    mostrarPDF() {
+      // const encabezado = ['ID', 'Fecha Apertura', 'Fecha Cierre', 'Monto Apertura', 'Monto Cierre', 'Monto Salida', 'Monto Diferencia', 'ID Sucursal', 'ID Usuario', 'Observación', 'Estado', 'Turno', 'Creado en', 'Actualizado en', 'Nombre Usuario', 'Nombre Sucursal'];
+      const encabezado = ['Fecha Apertura', 'Fecha Cierre', 'Sucursal', 'Turno', 'Usuario', 'Apertura', 'Cierre', 'Salida', 'Diferencia'];
+      const cuerpo = this.cabeceras.map(item => [
+        // item.fechaApertura,
+        format(new Date(item.fechaApertura), 'yyyy/MM/dd'), // Formatea la fecha
+        format(new Date(item.fechaCierre), 'yyyy/MM/dd'), // Formatea la fecha
+        item.Sucursal.nombre,
+        item.turno,
+        item.Usuario.nombre,
+        item.montoApertura,
+        item.montoCierre,
+        item.montoSalida,
+        
+
+
+        // item.fechaApertura.toISOString(),
+        // item.Sucursal.nombre,
+        // item.turno,
+        // item.Usuario.nombre,
+        // item.montoApertura.toString(),
+        // item.montoCierre.toString(),
+        // item.montoSalida.toString(),
+        // item.montoDiferencia.toString(),
+
+        
+        
+        // item.idCabecera.toString(),
+        // item.fechaCierre.toISOString(),
+        // item.idsucursal.toString(),
+        // item.idusuario.toString(),
+        // item.observacion,
+        // item.estado,
+        // item.createdAt.toISOString(),
+        // item.updatedAt.toISOString(),
+      ]);
+
+      const titulo = 'Datos de Cabecera';
+      
+      // this.pdfService.imprimir(encabezado, cuerpo, titulo, false);
+      this.pdfService.imprimir(encabezado, cuerpo, titulo, false);
+    }
+
+    // mostrar2(){
+    //   console.log("ha ejecutado 1")
+    //   const doc= new jsPDF({
+    //     orientation:"portrait",
+    //     unit:"px",
+    //     format:"letter"
+    //   });
+      
+    //   // doc.autoTable({ html: '#my-table' })
+    //   // doc.save('table.pdf')
+    //   autoTable(doc, { html: '#my-table' })
+    //   console.log("ha ejecutado 2")
+
+    //   const pdfBlob = doc.output('blob');
+      
+    //   // Llama al método para visualizar el PDF
+    //   ObtenerPDF.visualizarPDF(pdfBlob);
+    // }
   
 }

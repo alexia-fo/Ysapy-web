@@ -11,12 +11,17 @@ import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ve
 import { AbmcUsuarioComponent } from './paginas/abmc-usuario/abmc-usuario.component';
 import { AbmcProductoComponent } from './paginas/abmc-producto/abmc-producto.component';
 import { AbmcSucursalComponent } from './paginas/abmc-sucursal/abmc-sucursal.component';
+import { PruebaTablaBotonComponent } from './paginas/prueba-tabla-boton/prueba-tabla-boton.component';
 
 const routes: Routes = [
   {
     path: "",
     component: MainComponent,
     children: [
+      {
+        path:'pruebaBoton',
+        component:PruebaTablaBotonComponent
+      },
       {
         path: 'abmc-sucursal',
         component: AbmcSucursalComponent

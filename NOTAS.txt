@@ -94,5 +94,27 @@ https://stackoverflow.com/questions/27064176/typeerror-modal-is-not-a-function-w
 	import * as bootstrap from "bootstrap";
 
 
+---------jspdf
+1. INSTALACIONES 1
+https://www.youtube.com/watch?v=d9Twmd2QKh0&t=265s
+npm install jspdf@1.5.3 html2canvas(version instalada:jspdf @2.5.1 html2canvas@1.4.1)
+npm install @types/jspdf @types/html2canvas -D
+
+2. en angular.json
+
+    "node_modules/html2canvas/dist/html2canvas.min.js",(para la version 2.5.1 no es necesario)
+    "node_modules/jspdf/dist/jspdf.es.min.js", (para la version 2.5.1 no es necesario)
+
+3. en tsconfig.json
+dentro de compilerOptions establecer
+"allowSyntheticDefaultImports": true
+
+4. OTRAS INSTALACIONES
+npm install jspdf-autotable@3.5.28
+
+-----formato de fechas
+
+npm install date-fns@2.30.0
+
 /////// DESARROLLO  ////////
 

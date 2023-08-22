@@ -18,6 +18,7 @@ import { AbmcUsuarioComponent } from './paginas/abmc-usuario/abmc-usuario.compon
 import { AbmcProductoComponent } from './paginas/abmc-producto/abmc-producto.component';
 import { AbmcSucursalComponent } from './paginas/abmc-sucursal/abmc-sucursal.component';
 import { BooleanToStringPipe } from '../utilidades/pipes/boolean-to-string.pipe';
+import { PruebaTablaBotonComponent } from './paginas/prueba-tabla-boton/prueba-tabla-boton.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { BooleanToStringPipe } from '../utilidades/pipes/boolean-to-string.pipe'
     AbmcUsuarioComponent,
     AbmcProductoComponent,
     AbmcSucursalComponent,
+    PruebaTablaBotonComponent,
   ],
   imports: [
     CommonModule,
