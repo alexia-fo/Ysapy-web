@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
@@ -22,36 +22,23 @@ export class ClasificacionService {
     private errorS: ManejarErrorService
   ) { }
 
-  obtenerClasificaciones(limite: number = -1, desde: number = -1, activo: number = -1): Observable<RespuestaClasificaciones> {
+  //para abmc de productos en modulo administracion
+  obtenerClasificaciones(limite: number = -1, desde: number = -1): Observable<RespuestaClasificaciones> {
 
-    if (limite != -1 && desde != -1) {
-
-      if (activo != -1) {
-        this.params = {
-          limite,
-          desde,
-          activo
-        }
-      } else {
-        this.params = {
-          limite,
-          desde
-        }
-      }
-    }
-
-    if (activo != -1) {
+    if (desde > 0  && limite > desde) {
       this.params = {
-        activo
+        limite,
+        desde
       }
     }
+  
 
     return this.http.get<RespuestaClasificaciones>(`${this.apiUrl}`, {
       params: this.params
     })
-      .pipe(
-        catchError(this.errorS.handleError)
-      );
+    .pipe(
+      catchError(this.errorS.handleError)
+    );
   }
 
 }

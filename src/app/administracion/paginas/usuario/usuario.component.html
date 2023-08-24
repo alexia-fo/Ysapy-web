@@ -1,4 +1,4 @@
-<!--PANTALLA-->
+<!--PANTALLA PRINCIPAL-->
 <div class="container">
     <div class="row">
       <!--Boton Nuevo-->
@@ -13,14 +13,22 @@
           [dtOpciones]="dtOpciones">
         </app-tabla-basica> -->
 
-        <app-tabla-pipe [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
+        <!-- <app-tabla-pipe [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
         [dtOpciones]="dtOpciones">
-      </app-tabla-pipe>
+        </app-tabla-pipe> -->
+
+        <app-tabla-boton
+        [tabla]="tabla" 
+        [cargandoTabla]="cargandoTabla" 
+        (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones"
+        [alineaciones]="['left','left','left','left','left','left','center','center',]"
+        ></app-tabla-boton>
       </div>
     </div>
   </div>
   
-  <!-- MODAL  DE DATOS E IMAGEN-->
+  <!-- MODAL DE DATOS E IMAGEN-->
   <app-modal-formulario 
   [idModal]="modUsuarioId" 
   [titulo]="'Usuario'" 
@@ -32,19 +40,6 @@
     <form [formGroup]="form" class="row g-3">
       <div class="col-12">
         <h3 class="text-center">Datos del Usuario</h3>
-      </div>
-  
-      <div class="col-12" *ngIf="cargandoComboRol">
-        <div class="text-center">
-          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-        <!--
-        <div class="text-center text-danger">
-          Obteniendo los Datos...
-        </div>
-        -->
       </div>
   
       <div class="col-md-12">
@@ -119,6 +114,19 @@
           <small *ngIf="datoInvalido('contrasena2')" class="e-mensaje-error">{{mensaje('contrasena2')}}</small>   
         </div>
       </div>
+
+      <div class="col-12" *ngIf="cargandoComboRol">
+        <div class="text-center">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <!--
+        <div class="text-center text-danger">
+          Obteniendo los Datos...
+        </div>
+        -->
+      </div>
   
     </form>
   
@@ -155,7 +163,7 @@
       </div>
     </form>
   
-    <!----------------------->
+    <!-----------Boton cambiar contraseña------------>
     <br>
     <br>
     <hr>
@@ -165,41 +173,15 @@
   
   </app-modal-formulario>
   
-  
-  
-  <!-- MODAL DE CONTRASEÑA-->
+  <!-- MODAL PARA CAMBIAR CONTRASEÑA-->
+  <!--No cuenta con ningun sppiner-->
   <app-modal [modalId]="modContrasenaId" [titulo]="'Usuario'">
     <!--FORMULARIO DE CONTRASENA-->
-  
-  
     <form [formGroup]="formContra" class="row g-3">
-  
-      <div class="col-12" *ngIf="cargandoOperacion">
-        <div class="text-center">
-          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-        <!--
-        <div class="text-center text-danger">
-          Modificando...
-        </div>
-        -->
-      </div>
   
       <div class="col-12">
         <h3 class="text-center">Cambiar Contraseña</h3>
       </div>
-      <!--
-  
-      <div class="col-md-12">
-        <label for="contrasenaActual" class="form-label">Contraseña Actual</label>
-        <input formControlName="contrasenaActual" type="password" class="form-control" id="contrasenaActual" />
-        <small *ngIf="contrasenaInvalida('contrasenaActual')"
-          class="e-mensaje-error">{{mensajeContrasena('contrasenaActual')}}</small>
-      </div>
-  
-    -->
   
       <div class="col-md-12">
         <label for="contrasenaNueva" class="form-label">Contraseña Nueva</label>
@@ -213,6 +195,19 @@
         <input formControlName="contrasenaConfirm" type="password" class="form-control" id="contrasenaConfirm" />
         <small *ngIf="contrasenaInvalida('contrasenaConfirm')"
           class="e-mensaje-error">{{mensajeContrasena('contrasenaConfirm')}}</small>
+      </div>
+
+      <div class="col-12" *ngIf="cargandoOperacion">
+        <div class="text-center">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <!--
+        <div class="text-center text-danger">
+          Modificando...
+        </div>
+        -->
       </div>
   
       <br>

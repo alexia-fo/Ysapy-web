@@ -1,25 +1,37 @@
-<!--PANTALLA-->
+<!--PANTALLA PRINCIPAL-->
 <div class="container">
-    <div class="row">
-      <!--Boton Nuevo-->
-      <div class="col offset-md-9 col-md-3">
-        <div class="d-grid gap-2 my-2">
-          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
-        </div>
+  <div class="row">
+    <!--Boton Nuevo-->
+    <div class="col offset-md-9 col-md-3">
+      <div class="d-grid gap-2 my-2">
+        <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
       </div>
-      <!--Tabla Para Listar Datos-->
-      <div class="col-12">
-        <app-tabla-pipe 
+    </div>
+    <!--Tabla Para Listar Datos-->
+    <div class="col-12">
+      <!-- <app-tabla-pipe 
         [tabla]="tabla" 
         [cargandoTabla]="cargandoTabla" 
         (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones"></app-tabla-pipe>
-      </div>
+        [dtOpciones]="dtOpciones">
+      </app-tabla-pipe> -->
+
+      <!-- Ya cuenta con un sppiner -->
+      <app-tabla-boton 
+      [tabla]="tabla"
+      [cargandoTabla]="cargandoTabla" 
+      (itemSeleccionado)="obtenerSeleccionado($event)"
+      [dtOpciones]="dtOpciones"
+      [alineaciones]="['left','left','right','left','left','center','center','left',]"
+      [idNombre]="'idProducto'"
+      ></app-tabla-boton>
     </div>
   </div>
+</div>
   
   
   <!-- MODAL DATOS E IMAGEN -->
+  <!-- ya cuenta con el sppiner para cuando se realice las operaciones ABM -->
   <app-modal-formulario 
   [idModal]="modProductoId" 
   [titulo]="'Producto'" 
@@ -67,10 +79,12 @@
             <input formControlName="facturable" [value]="true" class="form-check-input" type="radio" name="facturable" id="flexRadioDefault1" checked>
             <label class="form-check-label" for="flexRadioDefault1">SI</label>
           </div>
+
           <div class="form-check form-check-inline">
             <input formControlName="facturable" [value]="false" class="form-check-input" type="radio" name="facturable" id="flexRadioDefault2">
             <label class="form-check-label" for="flexRadioDefault2">NO</label>
           </div>
+
           <small *ngIf="datoInvalido('facturable')" class="e-mensaje-error">{{mensaje('facturable')}}</small>
         </div>
       </div>
@@ -81,9 +95,9 @@
             <span class="visually-hidden">Loading...</span>
           </div>
         </div>
-        <div class="text-center text-danger">
+        <!-- <div class="text-center text-danger">
           Obteniendo los Datos...
-        </div>
+        </div> -->
       </div>
     </form>
   

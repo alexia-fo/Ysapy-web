@@ -143,6 +143,7 @@ export class AbmcProductoComponent {
  
   guardar() {
     
+    
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
@@ -230,9 +231,9 @@ export class AbmcProductoComponent {
         mensaje="El precio es requerido..";
       }
 
-      if(campo=="descripcion"){
-        mensaje="La descripción es requerida..";
-      }
+      // if(campo=="descripcion"){
+      //   mensaje="La descripción es requerida..";
+      // }
 
       if(campo=="idclasificacion"){
         mensaje="La clasificación es requerida..";
@@ -243,18 +244,18 @@ export class AbmcProductoComponent {
       if(campo == "nombre"){
         mensaje="Nombre: min 5 caracteres";
       }
-      if(campo == "descripcion"){
-        mensaje="Nombre: min 5 caracteres";
-      }
+      // if(campo == "descripcion"){
+      //   mensaje="Nombre: min 5 caracteres";
+      // }
     }
 
     if(this.form.get(campo)?.hasError('maxlength')){
       if(campo == "nombre"){
         mensaje="Nombre: max 100 caracteres";
       }
-      if(campo == "descripcion"){
-        mensaje="Nombre: max 200 caracteres";
-      }
+      // if(campo == "descripcion"){
+      //   mensaje="Nombre: max 200 caracteres";
+      // }
     }
 
     if(this.form.get(campo)?.hasError('min')){
@@ -425,7 +426,7 @@ export class AbmcProductoComponent {
           updateOn:"blur"
         }],    
         precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:['',[Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+        descripcion:[''],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
         idclasificacion:['',[Validators.required,Validators.min(0)]],
         facturable:['',[Validators.required]],
       });
@@ -439,7 +440,7 @@ export class AbmcProductoComponent {
           updateOn:"blur"
         }],
         precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:['',[Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+        descripcion:[''],//,[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
         idclasificacion:['',[Validators.required,Validators.min(0)]],
       });
     }
@@ -454,6 +455,8 @@ export class AbmcProductoComponent {
           this.clasificaciones=response.clasificacion;
           this.cargandoComboClasif=false;
           this.form.patchValue(this.seleccionado);
+          //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
+          this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
         },
         error:(errores)=>{
           errores.forEach((error: string) => {

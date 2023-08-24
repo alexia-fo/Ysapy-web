@@ -80,6 +80,7 @@ export class ProductoComponent implements OnInit{
 
   dtOpciones: DataTables.Settings = {//configuracion del datatable
     paging: true,
+    responsive:true,
     info: true,
     pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
@@ -447,7 +448,7 @@ export class ProductoComponent implements OnInit{
           updateOn:"blur"
         }],    
         precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:['',[Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+        descripcion:[''],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
         idclasificacion:['',[Validators.required,Validators.min(0)]],
         facturable:['',[Validators.required]],
       });
@@ -461,7 +462,7 @@ export class ProductoComponent implements OnInit{
           updateOn:"blur"
         }],
         precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:['',[Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+        descripcion:[''],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
         idclasificacion:['',[Validators.required,Validators.min(0)]],
       });
     }
@@ -476,6 +477,9 @@ export class ProductoComponent implements OnInit{
           this.clasificaciones=response.clasificacion;
           this.cargandoComboClasif=false;
           this.form.patchValue(this.seleccionado);
+          //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
+          this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
+
         },
         error:(errores)=>{
           errores.forEach((error: string) => {

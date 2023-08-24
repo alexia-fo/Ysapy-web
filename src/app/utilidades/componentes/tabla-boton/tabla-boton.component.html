@@ -3,6 +3,9 @@
     <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
+    <!-- <div class="text-center text-danger">
+      Obteniendo los Datos...
+    </div> -->
 </div>
   
   <!-- <div class="table-responsive"> -->
@@ -16,7 +19,9 @@
         <tbody>
           <tr *ngFor="let item of tabla.datos; let index=index" ><!--(dblclick)="seleccionarItem(item)"-->
             <td *ngFor="let propiedad of tabla.propiedades; let i=index" [ngClass]="getAlineacionClase(alineaciones[i])">{{ getValorConPipe(item, propiedad)}}</td>
-            <td><button id="btnDetalle_{{index}}">Seleccionar {{index}}</button></td><!--(click)="seleccionarItem(item)"-->
+            <!-- <td class="text-center"><button id="btnDetalle_{{index}}" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> [routerLink]="'../detalleRendicion/'+i.idCabecera" (click)="redirigirADetalleRendicion(i.idCabecera)"       -->
+            <!-- <td><button id="btnDetalle_{{index}}" class="">Seleccionar {{index}}</button></td> -->
+            <td><button id="btnDetalle_{{getValorConPropiedad(item, idNombre)}}" class="">Seleccionar {{index}}</button></td>
           </tr>
         </tbody>
     </table>

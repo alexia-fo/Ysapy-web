@@ -1,4 +1,4 @@
-<!--PANTALLA-->
+<!--PANTALLA PRINCIPAL-->
 <div class="container">
     <div class="row">
       <!--Boton Nuevo-->
@@ -9,37 +9,41 @@
       </div>
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <app-tabla-pipe 
+        <!-- <app-tabla-pipe 
         [tabla]="tabla" 
         [cargandoTabla]="cargandoTabla" 
         (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones"></app-tabla-pipe>
+        [dtOpciones]="dtOpciones"></app-tabla-pipe> -->
+        <app-tabla-boton 
+        [tabla]="tabla" 
+        [cargandoTabla]="cargandoTabla" 
+        (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones"
+        [alineaciones]="['left','left','center','left']"
+        ></app-tabla-boton>
       </div>
     </div>
   </div>
-  
-    
-     
-  <!-- MODAL -->
-  <app-modal-formulario
-  [idModal]="modSucursalId"
-  [titulo]="'Sucursales'"
-  [accion]="accion"
-  (guardarClick)="guardar()" 
-  (eliminarClick)="eliminar()"
-  [cargandoOperacion]="cargandoOperacion"
-  >
-    <!--Formulario para realizar ABMC de los datos-->
-    <form [formGroup]="form" class="row g-3">
-  
-      <div class="col-12">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="nombre">
-        <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
-      </div>
-      
-    </form>
-  </app-modal-formulario>
+ 
+<!-- MODAL DATOS E IMAGEN -->
+<!-- ya cuenta con el sppiner para cuando se realice las operaciones ABM -->
+<app-modal-formulario
+[idModal]="modSucursalId"
+[titulo]="'Sucursales'"
+[accion]="accion"
+(guardarClick)="guardar()" 
+(eliminarClick)="eliminar()"
+[cargandoOperacion]="cargandoOperacion"
+>
+  <!--Formulario para realizar ABMC de los datos-->
+  <form [formGroup]="form" class="row g-3">
+    <div class="col-12">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="nombre">
+      <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+    </div>
+  </form>
+</app-modal-formulario>
     
     
     

@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ActualizarProducto, EliminadoProducto, GuardarProducto, Producto, RespuestaProducto, RespuestaProductos } from './../modelos/producto.model';
+import { ActualizarProducto, EliminadoProducto, GuardarProducto, Producto, RespuestaProductos } from './../modelos/producto.model';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
 
 @Injectable({
@@ -11,7 +11,10 @@ import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/maneja
 })
 export class ProductoService {
 
+  //ruta
   private apiUrl = `${environment.API_URL}/api/productos`;
+
+  //para enviar parametros de filtrado de los get's
 
   params = {};
 
@@ -20,7 +23,7 @@ export class ProductoService {
     private errorS:ManejarErrorService
   ) { }
 
-  ////PARA VALIDACIONES ASINCRONAS - POR AHORA NO SE USA
+  //para validaciones asincronas de nombre de productos
   productoHabilitado(nombre: string) {
     return this.http.get(`${this.apiUrl}`, {
       params: {
@@ -34,18 +37,10 @@ export class ProductoService {
       );
   }
 
-  
-
   crear(producto: GuardarProducto): Observable<Producto> {
-    console.log('servicio p ', producto)
     return this.http.post<Producto>(`${this.apiUrl}`, { ...producto })
       .pipe(
-        /*
-        catchError((response: HttpErrorResponse) => {
-          return throwError(() => new Error(response.error.msg))
-        })
-        */
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+        catchError(this.errorS.handleError)
       );
   }
 
@@ -77,47 +72,21 @@ export class ProductoService {
       params: this.params
     })
       .pipe(
-        /*
-        catchError((response: HttpErrorResponse) => {
-          return throwError(() => new Error(response.error.msg))
-        })*/
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
-
-      );
-  }
-
-  obtenerProducto(id: number): Observable<RespuestaProducto> {
-    return this.http.get<RespuestaProducto>(`${this.apiUrl}/${id}`)
-      .pipe(
-        /*
-        catchError((response: HttpErrorResponse) => {
-          return throwError(() => new Error(response.error.msg))
-        })*/
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+        catchError(this.errorS.handleError)
       );
   }
 
   actualizar(id: number, producto: ActualizarProducto): Observable<Producto> {
     return this.http.put<Producto>(`${this.apiUrl}/${id}`, { ...producto })
       .pipe(
-        /*
-        catchError((response: HttpErrorResponse) => {
-          return throwError(() => new Error(response.error.msg))
-        })
-        */
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+        catchError(this.errorS.handleError)
       );
   }
 
   eliminar(id: number): Observable<EliminadoProducto> {
     return this.http.delete<EliminadoProducto>(`${this.apiUrl}/${id}`)
       .pipe(
-        /*
-        catchError((response: HttpErrorResponse) => {
-          return throwError(() => new Error(response.error.msg))
-        })
-        */
-        catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
+        catchError(this.errorS.handleError)
       )
   }
 

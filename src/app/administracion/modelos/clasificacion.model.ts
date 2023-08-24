@@ -1,21 +1,22 @@
 //-----inicio clasificacion-------
 
-//clasificacion del producto
+//datos de las clasificaciones de un productos
 export interface Clasificacion {
     idClasificacion:number;
     nombre:string;    
-    img:string,
-    activo:boolean,
 }
 
-//para listar clasificaciones de productos
+//para abmc de productos en modulo administracion (combo)
 export interface RespuestaClasificaciones{
     total:number,
     clasificacion:Clasificacion[]
 }
 
-//para mostrar los datos de la clasificacion referenciada en un producto
+//-----fin clasificacion-------
+
+// PARA ACCEDER A LOS DATOS DE CLASIFICACIONES (CUANDO SON LLAVES FORANEAS) 
+// para ver el nombre de la clasificacion al listar el producto en la tabla
+
 export interface datoClasificacion{
     nombre:string;
 }
-//-----fin clasificacion-------

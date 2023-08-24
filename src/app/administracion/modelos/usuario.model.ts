@@ -63,11 +63,13 @@ export interface EliminadoUsuario{
 
 //------ fin usuario ------
 
-//Se usa cuando se obtnien datos de usuarios que corresponden a un FK
+// PARA ACCEDER A LOS DATOS DE USUARIOS (QUE CORRESPONDEN A LLAVES FORANEAS) - Producto
+//abmc-producto
 export interface datoUsuario{
     nombre:string;
 }
 
+///////////
 //se usa para obtener los datos al mismo tiempo con switchMap
 export interface RolSucursal{
     roles: Rol[];
