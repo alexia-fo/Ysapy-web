@@ -9,17 +9,13 @@
       </div>
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <!-- <app-tabla-pipe 
-        [tabla]="tabla" 
-        [cargandoTabla]="cargandoTabla" 
-        (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones"></app-tabla-pipe> -->
         <app-tabla-boton 
         [tabla]="tabla" 
         [cargandoTabla]="cargandoTabla" 
         (itemSeleccionado)="obtenerSeleccionado($event)"
         [dtOpciones]="dtOpciones"
         [alineaciones]="['left','left','center','left']"
+        [idNombre]="'idSucursal'"
         ></app-tabla-boton>
       </div>
     </div>

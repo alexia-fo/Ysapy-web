@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { SucursalService } from '../../servicios/sucursal.service';
 import { EliminadoSucursal, RespuestaSucursales, Sucursal } from '../../modelos/sucursal.model';
-import { TablaItem } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 @Component({
   selector: 'app-abmc-sucursal',
@@ -15,9 +14,7 @@ export class AbmcSucursalComponent {
   //se puede ocultar un modal y mostrar otro y viceversa
   modSucursalId='modalSucursal';
 
-  //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
-  //los datos, corresponde al array de informacion que se quiere listar 
-  //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
+  //listado de sucursales que se van a mostrar en la tabla
   tabla:Sucursal[]=[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
@@ -31,9 +28,8 @@ export class AbmcSucursalComponent {
   form!: FormGroup; 
   //formInstanciado: boolean = false; // no es necesario pq el fomulario se instancia una sola vez pq no requiere de validaciones asincronas
 
-  //crear-modificar-eliminar (se le envia como parametro al modal para habilitar o deshabilitar botones)
-  //tambien se utiliza al momento de guardar para verificar si se insertara un nuevo registro o se actualizara uno existenete
-  accion!: string; 
+  // se utiliza al momento de guardar para verificar si se insertara un nuevo registro o se actualizara uno existenete
+  accion!: 'C' | 'M' | 'E'; 
 
   //para verificar si la operacion crud esta en proceso (se utiliza para habilitar o deshabilitar botones, mostrar u ocultar el loading)
   cargandoOperacion!: boolean; 
@@ -48,6 +44,8 @@ export class AbmcSucursalComponent {
   dtOpciones: DataTables.Settings = {//configuracion del datatable
     paging: true,
     info: true,
+    //desactivar la responsividad del datatable
+    responsive:false,
     pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
     lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
@@ -77,14 +75,14 @@ export class AbmcSucursalComponent {
   
   constructor(
     private formulario: FormBuilder,
-    private detectorCambio: ChangeDetectorRef,
     private mensajeAlertify: AlertifyService,
     private servicioSucur: SucursalService
   ) {}
 
   ngOnInit(): void {
-
+    //el formulario solo se instancia una vez, para las acciones crear y modificar solo se modifica
     this.instanciarFormulario();
+    //las sucusales solo se obtinen una vez al inicializar el componente
     this.obtenerSucursales();
   }
 
@@ -93,28 +91,15 @@ export class AbmcSucursalComponent {
     this.limpiarFormulario();
     this.mostrarModal(this.modSucursalId, true);
   }
-/*
-  modificar(sucursal: Sucursal) {
-    this.accion = 'M';
-    this.formInstanciado = false;
-    this.seleccionado = { ...sucursal };
 
-    this.form = this.formulario.group({
-      nombre: ['', Validators.required],
-    });
-
-    this.form.patchValue(sucursal);
-    this.formInstanciado = true;
-    this.mostrarModal('modal');
-  }
-*/
   guardar() {
     if (!this.form.valid) {
+      //los mensajes de error se visualizaran al marcar los input como tocados
       this.form.markAllAsTouched();
       return;
     }
 
-    this.cargandoOperacion = true;
+    this.cargandoOperacion = true; //empieza la operacion de registro
     let { ...sucursal } = this.form.value;
 
     if (this.accion == 'C') {
@@ -131,7 +116,6 @@ export class AbmcSucursalComponent {
           errores.forEach((error: string) => {
             this.mensajeAlertify.mensajeError(error);
           });
-          console.log(errores);
           this.cargandoOperacion = false;
         },
       });
@@ -162,27 +146,24 @@ export class AbmcSucursalComponent {
   eliminar() {
     this.cargandoOperacion=true;
     this.mostrarModal(this.modSucursalId, false);
-    this.mensajeAlertify.mensajeConfirmacion(
-      `Confirma la anulacion de la sucursal ${this.seleccionado.nombre}`,
-      () => {
-        this.servicioSucur
-          .eliminar(this.seleccionado.idSucursal)
-          .subscribe({
-            next: (respuesta: EliminadoSucursal) => {
-              this.cargandoOperacion=false;
-              this.obtenerSucursales();
-              this.mensajeAlertify.mensajeExito(
-                `${respuesta.sucursal.nombre} se ha anulado correctamente ✓✓`
-              );
-            },
-            error: (errores) => {
-              errores.forEach((error: string) => {
-                this.mensajeAlertify.mensajeError(error);
-              });
-              console.log(errores);
-              this.cargandoOperacion = false;
-            },
-          });
+    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion de la sucursal ${this.seleccionado.nombre}`,() => {
+      this.servicioSucur
+        .eliminar(this.seleccionado.idSucursal)
+        .subscribe({
+          next: (respuesta: EliminadoSucursal) => {
+            this.cargandoOperacion=false;
+            this.obtenerSucursales();
+            this.mensajeAlertify.mensajeExito(
+              `${respuesta.sucursal.nombre} se ha anulado correctamente ✓✓`
+            );
+          },
+          error: (errores) => {
+            errores.forEach((error: string) => {
+              this.mensajeAlertify.mensajeError(error);
+            });
+            this.cargandoOperacion = false;
+          },
+        });
       }
     );
   }
@@ -195,10 +176,9 @@ export class AbmcSucursalComponent {
       }
     }
 
-    /*
     if (this.form.get(field)?.hasError('minlength')) {
       if (field == 'nombre') {
-        mensaje = 'Nombre: min 3 caracteres';
+        mensaje = 'Nombre: min 5 caracteres';
       }
     }
 
@@ -207,22 +187,17 @@ export class AbmcSucursalComponent {
         mensaje = 'Nombre: max 100 caracteres';
       }
     }
-    */
-
+    
     return mensaje;
   }
 
+  //para agregar clases que marquen los inputs validos y no validos
   datoInvalido(campo: string) {
-    let valido =
-      (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) &&
-      this.form.get(campo)?.invalid;
+    let valido = (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
     let input = document.getElementById(campo);
     if (valido) {
       input?.classList.add('is-invalid');
-    } else if (
-      (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) &&
-      this.form.get(campo)?.valid
-    ) {
+    } else if ((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid) {
       input?.classList.remove('is-invalid');
       input?.classList.add('is-valid');
     } else {
@@ -235,9 +210,8 @@ export class AbmcSucursalComponent {
   // -- PARA RECARGAR TABLA --//
   obtenerSucursales() {
     this.cargandoTabla=true;
-    this.servicioSucur.obtenerSucursales(100, 0, undefined).subscribe({
+    this.servicioSucur.obtenerSucursales().subscribe({
       next: (respuesta: RespuestaSucursales) => {
-        console.log(respuesta)
         this.tabla = respuesta.sucursal;
         this.cargandoTabla = false;
       },
@@ -259,6 +233,14 @@ export class AbmcSucursalComponent {
     }
   }
 
+  obtenerSeleccionado($event: Sucursal){
+    this.limpiarFormulario();
+    this.accion='M';
+    this.mostrarModal(this.modSucursalId, true);
+    this.seleccionado = { ...$event };
+    this.form.patchValue($event);
+  }
+
   instanciarFormulario(){
     this.form = this.formulario.group({
       nombre: ['', Validators.required],
@@ -268,14 +250,5 @@ export class AbmcSucursalComponent {
   limpiarFormulario(){
     this.form.reset();
   }
-
-    //--------- OBTENER REGISTRO SELECCIONADO PARA EDITAR ------//
-    obtenerSeleccionado($event: Sucursal){
-      this.limpiarFormulario();
-      this.accion='M';
-      this.mostrarModal(this.modSucursalId, true);
-      this.seleccionado = { ...$event };
-      this.form.patchValue($event);
-    }
 
 }

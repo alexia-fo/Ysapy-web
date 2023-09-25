@@ -1,46 +1,18 @@
-import { Producto } from "./inventario.model";
+import { Producto } from "./inv-rend.model";
 
-export interface ProdEnBaja{
-    idProducto:number;
-    nombre:string;
-    cantidad:number;
-    salida:Salida;
-}
-
-
-///respuestas del backend
-
+//verificacion de habilitacion
 export interface salidaCabHabilitado{
     habilitado:boolean;
     descripcion:string;
 }
 
-// export interface Producto{
-//     idProducto:number;
-//     nombre:string;
-//     precio:number;
-//     descripcion:string;
-//     //el resto de los datos no son necesarios
-// }
-
-// export interface RespuestaProductos{
-//     total:number,
-//     producto:Producto[]
-// }
-
-
-
+//combinacion de datos de verificacion de habilitacion y si es que esta habilitado se obtienen productos, si no, no se obtienen los productos
 export interface RespuestaDatos{
     mostrar: boolean;
     descripcion:string;
-    producto?: Producto[];
-    salida?:Salida[];
+    producto?: Producto[];//se utilizan los mismos productos que se utilizan en inventario de productos
+    salida?:Salida[];//tipos de salida
 }
-//datos enviados para registrar recepcion
-
-
-
-///para el combo
 
 export interface Salida{
     idSalida:number;
@@ -52,6 +24,14 @@ export interface RespuestaSalidas{
     salida:Salida[];
 }
 
+//para agregar productos a la tabla de salidas
+export interface ProdEnBaja{
+    idProducto:number;
+    nombre:string;
+    cantidad:number;
+    salida:Salida;
+}
+//datos enviados para registrar el listado de salidas
 export interface GuardarSalida{
     observacion:string;
     productos:ProdEnBaja[];

@@ -1,38 +1,9 @@
-export interface DatosDetalleInventario{
-    idproducto:number;
-    cantidadApertura:number;
-    cantidadCierre:number;
-    cantidadRecepcion:number;
-    cantidadSalida:number;
-    precio:number;
-    cantidadTotal:number;
-    totalMultiplicado:number;
-    Producto:{
-        nombre:String;
-    }
-}
+import { Sucursal } from "./sucursal.model";
+import { Usuario } from "./usuario.model";
 
-export interface DatosDetalleRendicion{
-    cantidadApertura:number;
-    cantidadCierre:number;
-    totalApertura:number;
-    totalCierre:number;
-    montoTotal:number;
-    Dinero:{
-        nombreBillete:string;
-    }
-}
-
-export interface RespuestaCalculosRendicion{
-    detalleInventario:DatosDetalleInventario[];
-    detalleRendicion:DatosDetalleRendicion[];
-    totalVenta:number;
-    totalAperturaDinero:number;
-    totalCierreDinero:number;
-    totalDiferenciaDinero:number;
-    totalSalida:number;
-    diferenciaVentaCaja:number;
-    descVentaCaja:string;
+export interface RespuestaFiltros{
+    usuarios:Usuario[];
+    sucursales:Sucursal[];
 }
 
 export interface datosCabecera{
@@ -41,8 +12,10 @@ export interface datosCabecera{
     fechaCierre:Date;
     montoApertura:number;
     montoCierre:number;
-    montoSalida:number;
     montoDiferencia:number;
+    montoPendiente:number;
+    //TODO:PROBANDO COBROS POR CREDITOS
+    montoOtrosCobros: number;
     idsucursal:number;
     idusuario:number;
     observacion:string;
@@ -63,14 +36,74 @@ export interface RespuestaCabecera{
     cabecera:datosCabecera[];
 }
 
-////////////////////////// para detalle de inventario
-export interface datosDetInventario extends DatosDetalleInventario{
+//para obtenerCalculoRendicion
+export interface DatosDetalleInventario{
     idproducto:number;
+    cantidadApertura:number;
+    cantidadCierre:number;
+    cantidadRecepcion:number;
+    cantidadSalida:number;
+    precio:number;
+    cantidadTotal:number; // para inventarios cerrados
+    totalMultiplicado:number; // para inventarios cerrados
+    Producto:{
+        nombre:String;
+    }
 }
 
-export interface RespuestaDetInventario{
-    detalleInventario:datosDetInventario[];
+//para obtenerCalculoRendicion
+export interface DatosDetalleRendicion{
+    cantidadApertura:number;
+    cantidadCierre:number;
+    totalApertura:number;
+    totalCierre:number;
+    montoTotal:number; // para inventarios cerrados
+    Dinero:{
+        nombreBillete:string;
+        monto:number;
+    }
 }
+
+
+//FIXME:para obtener todos los datos de una vez (mostrar las tablas en modales)
+export interface RespuestaCalculosRendicion{
+    detalleInventario:DatosDetalleInventario[];
+    detalleRendicion:DatosDetalleRendicion[];
+    totalVenta:number;
+    totalAperturaDinero:number;
+    totalCierreDinero:number;
+    totalDiferenciaDinero:number;
+    totalPendiente:number;
+    diferenciaVentaCaja:number;
+    descVentaCaja:string;
+}
+
+export interface RespuestaCalculos{
+    totalVenta:number;
+    totalAperturaDinero:number;
+    totalCierreDinero:number;
+    totalDiferenciaDinero:number;
+    totalPendiente:number;
+    //TODO:PROBANDO COBROS POR CREDITOS
+    totalOtrosCobros:number;
+    diferenciaVentaCaja:number;
+    descVentaCaja:string;
+}
+
+//FIXME:para obtener todos los datos de por separado (mostrar las tablas en paginas)
+
+export interface RespuestaDetalleInventario{
+    detalleInventario:DatosDetalleInventario[];
+}
+
+export interface RespuestaDetalleRendicion{
+    detalleRendicion:DatosDetalleRendicion[];
+}
+//FIXME:
+
+
+
+
 
 export interface DatosDetRecepcion{
     idcrecepcion: number;
@@ -84,7 +117,7 @@ export interface DatosDetRecepcion{
         idusuario: number;
         nroComprobante: number;
         estado: boolean;
-        idsucursal:number;
+        idSucursal:number;
         idcabinventario: number;
         createdAt: Date;
         updatedAt: Date;
@@ -94,7 +127,8 @@ export interface DatosDetRecepcion{
     },
     Producto:{
         nombre:string;
-    }
+    },
+
 }
 
 export interface RespuestaDetRecepcion{
@@ -156,7 +190,7 @@ export interface DineroRendicion{
     }
 }
 
-export interface RespuestaDetallesRendicion{
+export interface RespuestaRendicion{
     detalleInventario:ProductoInventario[];
     detalleRendicion:DineroRendicion[];
 }

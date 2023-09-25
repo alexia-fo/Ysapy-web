@@ -52,9 +52,28 @@
 
               Para solucionar este problema y asegurarnos de que siempre navegamos a la ruta completa independientemente de la URL actual, podemos utilizar una ruta absoluta. Puedes usar una barra diagonal inicial (/) en la ruta para indicar que debe comenzar desde la raíz del sitio.
             -->
-            <li class="nav-item pe-2" routerLink="/autentificacion/perfil">
+
+            <!-- <li class="nav-item pe-2" routerLink="/autentificacion/perfil">
               <a class="nav-link" aria-current="page"><i class="bi bi-person-circle d-none d-lg-block fs-3"></i> <span class="bi d-lg-none fs-5">Perfil</span></a>
-            </li>
+            </li> -->
+
+
+            <!-- Default dropstart button -->
+            <div class="btn-group dropstart">
+              <li class="nav-item pe-2" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link" aria-current="page"><i class="bi bi-person-circle d-none d-lg-block fs-3"></i> <span class="bi d-lg-none fs-5">Usuario</span></a>
+              </li>
+              <!-- <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropstart
+              </button> -->
+              <ul class="dropdown-menu">
+                <!-- Dropdown menu links -->
+                <li><a class="dropdown-item" routerLink="/autentificacion/perfil">Perfil</a></li>
+                <li><a class="dropdown-item" routerLink="/autentificacion/login">Autentificacion</a></li>
+                <li><a class="dropdown-item" (click)="cerrarSesion()">Cerrar Sesion</a></li>
+              </ul>
+            </div>
+
           </ul>
 
         </div>

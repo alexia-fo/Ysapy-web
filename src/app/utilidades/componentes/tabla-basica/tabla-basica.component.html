@@ -18,7 +18,7 @@
 
   - Se puede construir tablas con los mismos datos en el mismo componente pero ambos tienen que tener en común tanto la propiedad cargandoTabla
   y la tabla para evitar los errores descritos anteriormente, cada vez que se actualiza el array se reconstruye mediante la misma propiedad cargandoTabla
-  (cargandoTabla iguales - tabla iguales)
+  (cargandoTabla iguales - tablas iguales)
 -->
 
   <div class="text-center mt-3" *ngIf="cargandoTabla">
@@ -32,11 +32,13 @@
         <thead>
           <tr>
             <th *ngFor="let campo of tabla.campos">{{ campo }}</th>
+            <th>Seleccionar</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of tabla.datos" (dblclick)="seleccionarItem(item)">
+          <tr *ngFor="let item of tabla.datos"><!--(dblclick)="seleccionarItem(item)"-->
             <td *ngFor="let propiedad of tabla.propiedades">{{ getPropiedadValor(item, propiedad)}}</td>
+            <td><button class="btn btn-warning" (click)="seleccionarItem(item)">Seleccionar</button></td>
           </tr>
         </tbody>
     </table>

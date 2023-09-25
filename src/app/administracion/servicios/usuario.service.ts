@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { Observable, throwError,switchMap, map, of } from 'rxjs';
+import { Observable, throwError, switchMap, map, forkJoin } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ActualizarUsuario, EliminadoUsuario, GuardarUsuario, RespuestaUsuarios, RolSucursal, Usuario } from '../modelos/usuario.model';
 import { RolService } from './rol.service';
@@ -24,10 +24,8 @@ export class UsuarioService {
     private errorS:ManejarErrorService,
     private servicioRol:RolService,
     private servicioSucursal:SucursalService
-
   ) { }
 
-  ////PARA VALIDACIONES ASINCRONAS - POR AHORA NO SE USA
   correoHabilitado(correo: string) {
     return this.http.get(`${this.apiUrl}/`, {
       params: {
@@ -47,29 +45,19 @@ export class UsuarioService {
         catchError(this.errorS.handleError)//cuando existen diferentes tipos de respuestas
       );
   }
-                                                          //0: inactivo 1: activo -1:todos
-  obtenerUsuarios(limite: number = -1, desde: number = -1, activo: 0 | 1 |-1 = -1): Observable<RespuestaUsuarios> {
-    //if (limite != -1 && desde != -1) {
+
+  
+  //listar en tabla de abmc de usuarios
+  //para listar usuarios en la ventana de filtro del listado de cabeceras de inventario
+  obtenerUsuarios(limite: number = -1, desde: number = -1): Observable<RespuestaUsuarios> {
+    // if (limite != -1 && desde != -1) {
     if (limite >=desde && desde >=0) {
 
-      if (activo != -1 ) {
-        this.params = {
-          limite,
-          desde,
-          activo
-        }
-      }else{
-        this.params = {
-          limite,
-          desde
-        }
-      }
-    }
-
-    if (activo != -1 ) {
       this.params = {
-        activo
+        limite,
+        desde
       }
+      
     }
 
     return this.http.get<RespuestaUsuarios>(`${this.apiUrl}`, {
@@ -101,28 +89,45 @@ export class UsuarioService {
       )
   }
 
-  //PARA OBTENER ROLES Y SUCURSALES
-  obtenerRolesYSucursales(): Observable<RolSucursal> {
-    const obtenerRoles$ = this.servicioRol.obtenerRoles(undefined, undefined, undefined, 'F'); //todos los roles de tipo F
-    const obtenerSucursales$ = this.servicioSucursal.obtenerSucursales();//todas las sucursales
+  //PARA OBTENER ROLES Y SUCURSALES AL MISMO TIEMPO
+  //REALIZAR LAS PETICIONES EN SERIE
+  // obtenerRolesYSucursales(): Observable<RolSucursal> {
+  //   const obtenerRoles$ = this.servicioRol.obtenerRoles(undefined, undefined, "F"); //todos los roles de tipo F
+  //   const obtenerSucursales$ = this.servicioSucursal.obtenerSucursales();//todas las sucursales
   
-    return obtenerRoles$.pipe(
-      switchMap((roles: RespuestaRoles) => {
-        return obtenerSucursales$.pipe(
-          map((sucursales: RespuestaSucursales) => {
-            return { roles: roles.rol, sucursales: sucursales.sucursal };
-          })
-        );
+  //   return obtenerRoles$.pipe(
+  //     switchMap((roles: RespuestaRoles) => {
+  //       return obtenerSucursales$.pipe(
+  //         map((sucursales: RespuestaSucursales) => {
+  //           return { roles: roles.rol, sucursales: sucursales.sucursal };
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
+  
+  //REALIZAR LAS PETICIONES EN PARALELO 
+  obtenerRolesYSucursales(): Observable<RolSucursal> {
+    const obtenerRoles$ = this.servicioRol.obtenerRoles(undefined, undefined, "F"); //todos los roles de tipo F
+    const obtenerSucursales$ = this.servicioSucursal.obtenerSucursales();//todas las sucursales
+    
+    return forkJoin({
+      roles: obtenerRoles$,
+      sucursales: obtenerSucursales$
+    }).pipe(
+      map((responses: { roles: RespuestaRoles, sucursales: RespuestaSucursales }) => {
+        return { roles: responses.roles.rol, sucursales: responses.sucursales.sucursal };
       })
     );
   }
+  
 
   cambiarContrasena(id: number, nuevaContrasena: string): Observable<Usuario> {
     return this.http.put<Usuario>(`${this.apiUrl}/cambiarContra/${id}`, { nuevaContrasena })
       .pipe(
         catchError(this.errorS.handleError)
       );
-  }
+    }
   
   
 }

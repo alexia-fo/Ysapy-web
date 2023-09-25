@@ -1,111 +1,68 @@
 import { Component, OnInit } from '@angular/core';
+import { DatosDetalleRendicion, RespuestaDetalleRendicion } from '../../modelos/inventariosRegistrados';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { VerCalculosRendicionService } from '../../servicios/ver-calculos-rendicion.service';
-import { DatosDetRecepcion, DatosDetSalida, RespuestaDetRecepcion, RespuestaDetSalida, RespuestaDetallesRendicion } from '../../modelos/ver-calculos-rendicion';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { switchMap } from 'rxjs';
-import { UsuarioService } from '../../servicios/usuario.service';
+import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
 
 @Component({
   selector: 'app-ver-detalle-rendicion',
   templateUrl: './ver-detalle-rendicion.component.html',
   styleUrls: ['./ver-detalle-rendicion.component.css']
 })
-export class VerDetalleRendicionComponent {
+export class VerDetalleRendicionComponent implements OnInit{
+  //id de cabecera de inventario
   idCabecera!:number;
-  detalleRendicion!:RespuestaDetallesRendicion;
-
-  modDetalleI='detalleI';
-  modDetalleR='detalleR';
-
-  //temporal
-  modDetalleRec='detalleRecep';
-  modDetalleSalida='detalleSalida';
-  detalleRecepcion!:DatosDetRecepcion[];
-  detalleSalida!:DatosDetSalida[];
+  
+  detalles:DatosDetalleRendicion[]=[]; //para el listado de cabeceras en la tabla
+  
+  cargandoDatos=true; //cargando datos de cabecera
+  
+  dtOpciones: DataTables.Settings = {
+    paging: false,
+    info: false,
+    responsive: true,
+    lengthChange: false,
+    order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
+    language: {
+  
+    },
+  };
 
   constructor(
     private mensajeAlertify: AlertifyService,
-    private servicioC: VerCalculosRendicionService,
+    private servicioC: InventariosRegistradosService,
     private route: ActivatedRoute,
-    private servicioU: UsuarioService
-  ){
-  }
-
+    private router: Router,
+  ){}
+  
   ngOnInit(): void {
-    this.route.params
-      .pipe(
-        switchMap(params => {
-          this.idCabecera = params['idCabecera'];
-          return this.servicioC.obtenerDetallesRendicion(this.idCabecera);
-        })
-      )
-      .subscribe({
-        next: (respuesta: RespuestaDetallesRendicion) => {
-          this.detalleRendicion=respuesta;
-        },
-        error: (errores) => {
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-        },
-      });
+    this.cargandoDatos=true;
+    this.route.params // obtenemos el id de la cabecera desde la url
+    .pipe(
+      switchMap(params => {
+        this.idCabecera = params['idCabecera'];
+        return this.servicioC.obtenerDetalleRendicion(this.idCabecera); // una vez que obtenemos el id se realiza la consulta
+      })
+    )
+    .subscribe({
+      next: (respuesta: RespuestaDetalleRendicion) => {
+        this.detalles=respuesta.detalleRendicion;
+        console.log(respuesta)
+        this.cargandoDatos=false;
+      },
+      error: (errores) => {
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+        this.cargandoDatos=false;
+      },
+    });
   }
 
-  verDetalleI(){
-    this.mostrarModal(this.modDetalleI, true);
+  paginaAnterior(){
+    this.router.navigateByUrl(`/administracion/calculoRendicion/${this.idCabecera}`);
   }
-
-  verDetalleR(){
-    this.mostrarModal(this.modDetalleR, true);
-  }
-
-    // ------ MODAL DE FORMULARIO ------ //
-
-    mostrarModal(id: string, mostrar:boolean) {
-      if(mostrar){
-        $(`#${id}`).modal('show');
-      }else{
-        $(`#${id}`).modal('hide');
-      }
-    }
-
-    ///temporal 
-    
-    verDetalleRecep(idProducto:number){
-      console.log('recepcion')
-      this.servicioC.obtenerDetalleRecepcion(this.idCabecera, idProducto).subscribe({
-        next: (respuesta: RespuestaDetRecepcion) => {
-          this.detalleRecepcion=respuesta.dRecepcion;
-          this.mostrarModal(this.modDetalleRec, true);
-          console.log(respuesta)
-          //this.cargandoOperacion = false;
-        },
-        error: (errores: string[]) => {
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-          //this.cargandoOperacion = false;
-        },
-      });
-    }
-  
-    verDetalleSalida(idProducto:number){
-      console.log('salida')
-  
-      this.servicioC.obtenerDetalleSalida(this.idCabecera, idProducto).subscribe({
-        next: (respuesta: RespuestaDetSalida) => {
-          this.detalleSalida=respuesta.dSalida;
-          this.mostrarModal(this.modDetalleSalida, true);
-          //this.cargandoOperacion = false;
-        },
-        error: (errores: string[]) => {
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-          //this.cargandoOperacion = false;
-        },
-      });
-    }
 
 }

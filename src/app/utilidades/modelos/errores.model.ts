@@ -1,4 +1,4 @@
-//tipado de error al validar campos obligatorios
+//tipado de errores al validar campos obligatorios
 export interface errorCampo{
     value: any,
     msg: string,

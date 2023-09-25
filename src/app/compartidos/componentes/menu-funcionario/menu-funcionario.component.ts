@@ -69,29 +69,47 @@ export class MenuFuncionarioComponent {
           ]
         },
         {
-          title: 'Informes',
+          title: 'ABMC NoReut.',
           route: '/administracion',
           isDropdown: true,
           dropdownItems: [
             {
-              title: 'PDF',
-              route: '/pdf',
+              title: 'Usuario',
+              route: '/abmc-usuario',
               isDropdown: false
             },
             {
-              title: 'pdf Inventario',
-              route: '/pdfInventario',
+              title: 'Producto',
+              route: '/abmc-producto',
               isDropdown: false
-            }
+            },
+            {
+              title: 'Sucursal',
+              route: '/abmc-sucursal',
+              isDropdown: false
+            },
           ]
         },
-        // Agrega más opciones de menú aquí según tus necesidades
+
+        {
+          title: 'Rendiciones No Reut',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Cabeceras',
+              route: '/listar-cabeceras',
+              isDropdown: false
+            },
+
+          ]
+        },
       ];
-    }else if(this.usuario.Rol.rol=="ADMINISTRACION"){
-      this.menuOptions = [
+    }else if(this.usuario.Rol.rol=="ADMINISTRADOR"){
+      this.menuOptions= [
         {
           title: 'Inicio',
-          route: '/inicio',
+          route: '',
           isDropdown: false
         },
         {
@@ -116,7 +134,55 @@ export class MenuFuncionarioComponent {
             },
           ]
         },
-        // Agrega más opciones de menú aquí según tus necesidades
+        {
+          title: 'Rendiciones',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Inventarios',
+              route: '/inventarios',
+              isDropdown: false
+            },
+
+          ]
+        },
+        {
+          title: 'ABMC NoReut.',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Usuario',
+              route: '/abmc-usuario',
+              isDropdown: false
+            },
+            {
+              title: 'Producto',
+              route: '/abmc-producto',
+              isDropdown: false
+            },
+            {
+              title: 'Sucursal',
+              route: '/abmc-sucursal',
+              isDropdown: false
+            },
+          ]
+        },
+
+        {
+          title: 'Rendiciones No Reut',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Cabeceras',
+              route: '/listar-cabeceras',
+              isDropdown: false
+            },
+
+          ]
+        },
       ];
     }else if(this.usuario.Rol.rol=="FUNCIONARIO"){
       this.menuOptions= [

@@ -1,29 +1,19 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import {Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 import { EliminadoProducto, Producto, RespuestaProductos } from '../../modelos/producto.model';
 import { Clasificacion, RespuestaClasificaciones } from '../../modelos/clasificacion.model';
-import { Validaciones } from 'src/app/validaciones/bd';//por ahora no cuenta con validaciones asincronas
-import { environment } from 'src/environments/environment';
-import { TablaItem, TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
-import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { ProductoService } from '../../servicios/producto.service';
 import { ClasificacionService } from '../../servicios/clasificacion.service';
-import { ImagenService } from 'src/app/utilidades/servicios/imagenes/imagen.service';
-import { ImagenesService } from 'src/app/utilidades/imagenes.service';
 import { FormatosService } from 'src/app/validaciones/formatos.service';
+import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
+import { ImagenService } from 'src/app/utilidades/servicios/imagenes/imagen.service';
+import { ImagenesService } from 'src/app/utilidades/servicios/imagenes/imagenes.service';
+import { TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
 import { DecimalPipe } from '@angular/common';
+import { Validaciones } from 'src/app/validaciones/bd';
 
-//!probando moneda
-/*
-import { registerLocaleData } from '@angular/common';
-import localeEsPy from '@angular/common/locales/es-PY';
-// Registra la configuración de localización para 'es-PY'
-registerLocaleData(localeEsPy, 'es-PY');
-//COPIAR EN EL COMPONENTE
-// currencyPipe: CurrencyPipe = new CurrencyPipe('en-US'); // Ajusta la configuración de localización según tus necesidades
-currencyPipe: CurrencyPipe = new CurrencyPipe('es-PY'); // Ajusta la configuración de localización según tus necesidades
-*/
 @Component({
   selector: 'app-product',
   templateUrl: './producto.component.html',
@@ -32,14 +22,10 @@ currencyPipe: CurrencyPipe = new CurrencyPipe('es-PY'); // Ajusta la configuraci
 
 export class ProductoComponent implements OnInit{
 
-    //!intanciar el pipe
-    stringPipe:BooleanToStringPipe= new BooleanToStringPipe();
-    // Instancia el pipe numérico que deseas usar
-    // Instancia el DecimalPipe
-    decimalPipe: DecimalPipe = new DecimalPipe('en-US'); // Puedes ajustar la configuración de localización según tus necesidades
+  //Instanciar los pipes para la tabla
+  stringPipe:BooleanToStringPipe= new BooleanToStringPipe();
+  decimalPipe: DecimalPipe = new DecimalPipe('en-US'); // Puedes ajustar la configuración de localización según tus necesidades
   
-    //!fin instancias
-
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
   //se puede ocultar un modal y mostrar otro y viceversa
   modProductoId='modalProducto';
@@ -47,6 +33,15 @@ export class ProductoComponent implements OnInit{
   //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
   //los datos, corresponde al array de informacion que se quiere listar 
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
+  
+  //TODO:tabla sin pipes
+  // tabla:TablaItem<Producto>={ //propiedades de la tabla para el listado
+  //   propiedades: ['idProducto','nombre', 'precio', 'descripcion', 'activo', 'facturable', 'Usuario.nombre'], 
+  //   datos: [], 
+  //   campos:['Id', 'Producto', 'Precio', 'Descripcion', 'Clasificacion', 'Activo', 'Facturable', 'Usuario'], 
+  // }
+
+  //utilizar pipes instanciados para formatear los datos
   tabla:TablaItemPipe<Producto>={ //propiedades de la tabla para el listado
     propiedades: [{campo:'idProducto'}, {campo:'nombre'}, {campo: 'precio', pipe:this.decimalPipe}, {campo:'descripcion'}, {campo:'Clasificacion.nombre'}, {campo:'activo', pipe:this.stringPipe}, {campo:'facturable', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
     datos: [], 
@@ -54,7 +49,7 @@ export class ProductoComponent implements OnInit{
   }
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
-  //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a guardar
+  //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a actualiar
   seleccionado!: Producto; 
 
   //formulario para crear y modificar registros (en este caso se instancia más de una vez, se instancia cuando se va a ralizar una creacion
@@ -66,10 +61,10 @@ export class ProductoComponent implements OnInit{
 
   //crear-modificar-eliminar (se le envia como parametro al modal para habilitar o deshabilitar botones)
   //tambien se utiliza al momento de guardar para verificar si se insertara un nuevo registro o se actualizara uno existenete
-  accion!: string; 
+  accion!: 'C' | 'M' | 'E'; 
 
   //para verificar si la operacion crud esta en proceso (se utiliza para habilitar o deshabilitar botones, mostrar u ocultar el loading)
-  cargandoOperacion!: boolean; 
+  cargandoOperacion: boolean = false; 
 
   //La propiedad "cargandoTabla" evita que en el datatable haya errores si se retrasa la obtencion de datos;
   //si la tabla no utiliza el ngIf para validar que ya se cuenta con los datos, la misma igual se construye y muestra el mensaje "No hay datos 
@@ -127,12 +122,12 @@ export class ProductoComponent implements OnInit{
   
   formImagen!:FormGroup; //formulario independiente para guardar las imagenes, sin el resto de los datos
 
+  //TODO:
   //ya no es necesario pq al instaciar en el ngOnInit una vez como "crear" se evita el error
   //formInstanciado=false; //ya que al modificar o crear nuevo, recien se instancia el formulario, el html genera error pq ya se requiere al visualizar el modal 
 
   constructor(
     private formulario:FormBuilder,
-    private detectorCambio: ChangeDetectorRef,
     private mensajeAlertify: AlertifyService,
     private servicioProd: ProductoService,
     private servicioClasif:ClasificacionService,
@@ -143,9 +138,10 @@ export class ProductoComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
+    //para evitar errores se inicializan los formularios, luego se volveran a inicializar por cada accion
     this.instanciarFormularioDatos(false);
     this.instanciarFormularioImagen();
+
     this.obtenerProductos();
   }
 
@@ -153,29 +149,29 @@ export class ProductoComponent implements OnInit{
   //requiere de validaciones asincronas por eso requiere que el formulario se instancia al crear 
   //nuevo y al modificar un producto
   nuevo() {
-    
+    //instanciar el formulario y luego cargar el combo de clasificaciones
     this.accion="C";
-
     this.instanciarFormularioDatos(false);
-    
     this.obtenerClasificaciones(false);
-   
+
+    //mostrar el modal
     this.mostrarModal(this.modProductoId, true);
-    
   }
  
   guardar() {
     
     if (!this.form.valid) {
+      //los mensajes de error se visualizaran al marcar los input como tocados
       this.form.markAllAsTouched();
       return;
     }
 
     if(this.formPendiente){
+      //no se registraran mientras la validacion asincrona no finalice
       return;
     }
 
-    this.cargandoOperacion = true; 
+    this.cargandoOperacion = true; //coienza la operacion de insercion
     let { ...producto } = this.form.value;
 
     if (this.accion == 'C') {
@@ -213,14 +209,12 @@ export class ProductoComponent implements OnInit{
             });
             this.cargandoOperacion = false;
           },
-        });
+      });
     }
-    
-
   }
     
   eliminar() {
-    this.cargandoOperacion=true;
+    this.cargandoOperacion=true; //empieza la operacion
     this.mostrarModal(this.modProductoId, false);
     this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion del producto ${this.seleccionado.nombre}`,()=>{
       this.servicioProd.eliminar(this.seleccionado.idProducto).subscribe({
@@ -246,19 +240,21 @@ export class ProductoComponent implements OnInit{
     let mensaje="";
     if(this.form.get(campo)?.hasError('required')){
       if(campo=="nombre"){
-        mensaje="El nombre es requerido..";
+        mensaje="El nombre es requerido";
       }
       
       if(campo=="precio"){
-        mensaje="El precio es requerido..";
-      }
-
-      if(campo=="descripcion"){
-        mensaje="La descripción es requerida..";
+        mensaje="El precio es requerido";
       }
 
       if(campo=="idclasificacion"){
-        mensaje="La clasificación es requerida..";
+        mensaje="La clasificación es requerida";
+      }
+
+      if(this.accion=='M'){
+        if(campo=="facturable"){
+          mensaje="Facturable requerido";
+        }
       }
     }
 
@@ -266,9 +262,7 @@ export class ProductoComponent implements OnInit{
       if(campo == "nombre"){
         mensaje="Nombre: min 5 caracteres";
       }
-      if(campo == "descripcion"){
-        mensaje="Nombre: min 5 caracteres";
-      }
+
     }
 
     if(this.form.get(campo)?.hasError('maxlength')){
@@ -284,16 +278,6 @@ export class ProductoComponent implements OnInit{
       if(campo == "precio"){
         mensaje="Precio: mínimo = 0";
       }
-
-      if(campo=="idclasificacion"){
-        mensaje="idClasificación: mínimo = 0";
-      }
-    }
-    
-    if(this.form.get(campo)?.hasError('max')){
-      if(campo == "precio"){
-        mensaje="Precio: máximo = 1000000";
-      }
     }
 
     // validacion asincrona
@@ -304,6 +288,7 @@ export class ProductoComponent implements OnInit{
     return mensaje;
   }
 
+  //para agregar clases que marquen los inputs validos y no validos
   datoInvalido(campo:string){
     let valido=(this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
     let input = document.getElementById(campo);
@@ -323,7 +308,7 @@ export class ProductoComponent implements OnInit{
   // -- PARA RECARGAR TABLA --//
   obtenerProductos() {
     this.cargandoTabla=true;
-    this.servicioProd.obtenerProductos(100, 1, undefined).subscribe({
+    this.servicioProd.obtenerProductos().subscribe({
       next: (respuesta: RespuestaProductos) => {
         this.tabla.datos = respuesta.producto;
         this.cargandoTabla = false;
@@ -351,13 +336,81 @@ export class ProductoComponent implements OnInit{
 
     //para limpiar la imagen anteriormente seleccionada
     this.limpiarArchivo();
-
     this.accion="M";
     this.seleccionado = {...producto};
-
+    //se debe instanciar el formulario una vez que se establece el valor de this.seleccionado, para permitir la validacion asincrona
     this.instanciarFormularioDatos(true);
-    this.obtenerClasificaciones(true)
+    //si es modificacion, se agrega el valor del producto una vez que se obtienen las clasificaciones
+    this.obtenerClasificaciones(true); 
     this.mostrarModal(this.modProductoId, true);
+  }
+
+  instanciarFormularioDatos(esModificar:boolean){
+    if(esModificar){
+      this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
+        nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
+        {
+          validators:[Validators.required, Validators.minLength(5), Validators.maxLength(100)],
+          asyncValidators:[Validaciones.validacionProducto(this.servicioProd, this.seleccionado.nombre)],
+          updateOn:"blur"
+        }],    
+        precio:['',[Validators.required, Validators.min(0)]],
+        descripcion:['', [Validators.maxLength(200)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
+        idclasificacion:['',[Validators.required]],
+        facturable:['',[Validators.required]],
+      });
+
+    }else{
+      this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
+        nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
+            {
+          validators:[Validators.required, Validators.minLength(5), Validators.maxLength(100)],
+          asyncValidators:[Validaciones.validacionProducto(this.servicioProd, undefined)],
+          updateOn:"blur"
+        }],
+        precio:['',[Validators.required, Validators.min(0)]],
+        descripcion:['', [Validators.maxLength(200)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
+        idclasificacion:['',[Validators.required]],
+      });
+    }
+  }
+
+
+  obtenerClasificaciones(esModificacion:boolean){
+    if(esModificacion && this.seleccionado!=undefined){
+      this.cargandoComboClasif=true;
+      this.servicioClasif.obtenerClasificaciones()
+      .subscribe({
+        next:(response:RespuestaClasificaciones)=>{
+          this.clasificaciones=response.clasificacion;
+          this.cargandoComboClasif=false;
+          this.form.patchValue(this.seleccionado);
+          //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
+          this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
+
+        },
+        error:(errores)=>{
+          errores.forEach((error: string) => {
+            this.mensajeAlertify.mensajeError(error);
+          });
+        }
+
+      });
+    }else{
+      this.cargandoComboClasif=true;
+      this.servicioClasif.obtenerClasificaciones()
+      .subscribe({
+        next:(response:RespuestaClasificaciones)=>{
+          this.clasificaciones=response.clasificacion;
+          this.cargandoComboClasif=false;
+        },
+        error:(errores)=>{
+          errores.forEach((error: string) => {
+            this.mensajeAlertify.mensajeError(error);
+          });
+        }
+      });
+    }
   }
 
   // -------- imagen -----------------// 
@@ -374,6 +427,7 @@ export class ProductoComponent implements OnInit{
 
   subirArchivo(){
 
+    //para verificar si se ha seleccionado una imagen
     if (!this.formImagen.valid) {
       this.formImagen.markAllAsTouched();
       return;
@@ -388,6 +442,19 @@ export class ProductoComponent implements OnInit{
       this.servicioImagen.crear(this.seleccionado.idProducto, "productos", formularioDeDatos)
       .subscribe({
         next:(response)=>{
+          
+          // Llama a la función para recargar la página, pq si no se recarga la url sigue siendo la misma y el navegador sigue mostrando la misma imagen
+          //si se vuelve a ver la misma imagen sin recargar          
+          this.mostrarModal(this.modProductoId, false);
+          this.mensajeAlertify.mensajeExito('Imagen actualizada');
+          // Continuar con la recarga de la página después de mostrar el mensaje
+          setTimeout(() => {
+            /*window.location.reload(), se recarga la página por completo, lo que significa 
+            que se recargará todo el HTML, CSS, JavaScript y se reiniciarán las solicitudes 
+            de red, incluyendo las consultas a servidores o API.*/
+            window.location.reload();
+          }, 1000); // Esperar 1 segundo antes de recargar la página
+
           this.cargandoImagen=false;
           this.limpiarArchivo();
         },
@@ -395,7 +462,6 @@ export class ProductoComponent implements OnInit{
           errores.forEach((error: string) => {
             this.mensajeAlertify.mensajeError(error);
           });
-          console.log(errores);
           this.cargandoImagen = false;
         }
       })
@@ -438,78 +504,20 @@ export class ProductoComponent implements OnInit{
     });
   }
 
-  instanciarFormularioDatos(esModificar:boolean){
-    if(esModificar){
-      this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
-        nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
-        {
-          validators:[Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-          asyncValidators:[Validaciones.validacionProducto(this.servicioProd, this.seleccionado.nombre)],
-          updateOn:"blur"
-        }],    
-        precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:[''],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
-        idclasificacion:['',[Validators.required,Validators.min(0)]],
-        facturable:['',[Validators.required]],
-      });
-
-    }else{
-      this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
-        nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
-            {
-          validators:[Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-          asyncValidators:[Validaciones.validacionProducto(this.servicioProd, undefined)],
-          updateOn:"blur"
-        }],
-        precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:[''],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
-        idclasificacion:['',[Validators.required,Validators.min(0)]],
-      });
-    }
-  }
-
-  obtenerClasificaciones(esModificacion:boolean){
-    if(esModificacion && this.seleccionado!=undefined){
-      this.cargandoComboClasif=true;
-      this.servicioClasif.obtenerClasificaciones()
-      .subscribe({
-        next:(response:RespuestaClasificaciones)=>{
-          this.clasificaciones=response.clasificacion;
-          this.cargandoComboClasif=false;
-          this.form.patchValue(this.seleccionado);
-          //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
-          this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
-
-        },
-        error:(errores)=>{
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-          console.log(errores);
-        }
-
-      });
-    }else{
-      this.cargandoComboClasif=true;
-      this.servicioClasif.obtenerClasificaciones()
-      .subscribe({
-        next:(response:RespuestaClasificaciones)=>{
-          this.clasificaciones=response.clasificacion;
-          this.cargandoComboClasif=false;
-        },
-        error:(errores)=>{
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-          console.log(errores);
-        }
-      });
-    }
-  }
-  
   get formPendiente(){
     const nombreControl = this.form.get('nombre');
     return (this.form.pending && nombreControl!.touched);
   }
 }
 
+
+//!probando moneda
+/*
+import { registerLocaleData } from '@angular/common';
+import localeEsPy from '@angular/common/locales/es-PY';
+// Registra la configuración de localización para 'es-PY'
+registerLocaleData(localeEsPy, 'es-PY');
+//COPIAR EN EL COMPONENTE
+// currencyPipe: CurrencyPipe = new CurrencyPipe('en-US'); // Ajusta la configuración de localización según tus necesidades
+currencyPipe: CurrencyPipe = new CurrencyPipe('es-PY'); // Ajusta la configuración de localización según tus necesidades
+*/

@@ -6,8 +6,6 @@
             <div class="d-grid gap-2 my-2">
                 <button class="btn btn-danger" type="button" (click)="mostrarModal(modalFiltros,true)">Ver filtros</button>
                 <button class="btn btn-danger" type="button" (click)="mostrarPDF()">Ver PDF</button>
-                <!-- <button class="btn btn-warning" type="button" (click)="mostrar2()">Ver 2</button> -->
-            
             </div>
         </div>
 
@@ -21,14 +19,13 @@
                 <span class="visually-hidden">Loading...</span>
               </div>
             </div>
-            <div class="text-center text-danger">
+            <!-- <div class="text-center text-danger">
               Obteniendo los Datos...
-            </div>
+            </div> -->
         </div>
 
         <div class="col-12">
-            <!-- <div class="table-responsive"> -->
-                <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos" id="my-table">
+                <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
 
                     <thead class="bg-warning">
                         <tr> 
@@ -36,10 +33,9 @@
                             <th class="text-center">Fecha Cierre</th>
                             <th class="text-center">Sucursal</th>
                             <th class="text-center">Turno</th>
-                            <th class="text-center">Usuario</th>
                             <th class="text-center">Monto Apertura</th>
                             <th class="text-center">Monto Cierre</th>
-                            <th class="text-center">Monto Salida</th>
+                            <th class="text-center">Monto Pendiente</th>
                             <th class="text-center">Monto Diferencia</th>
                             <th class="text-center">Detalle</th> 
                         </tr>
@@ -48,19 +44,17 @@
                         <tr *ngFor="let i of cabeceras">
                             <td  class="text-start">{{i.fechaApertura | date: 'dd/MM/yyyy' }}</td>
                             <td  class="text-start">{{i.fechaCierre | date: 'dd/MM/yyyy' }}</td>
-                            <td class="text-start">{{i.Sucursal.nombre}}</td>
+                            <td class="text-start">{{i.Sucursal.nombre | titlecase}}</td>
                             <td  class="text-center">{{i.turno}}</td>
-                            <td  class="text-start">{{i.Usuario.nombre}}</td>
                             <td class="text-end">{{i.montoApertura |number}}</td>
                             <td class="text-end">{{i.montoCierre |number}}</td>
-                            <td class="text-end">{{i.montoSalida |number}}</td>
+                            <td class="text-end">{{i.montoPendiente |number}}</td>
                             <td class="text-end">{{i.montoDiferencia |number}}</td>
                             <td  class="text-center" *ngIf="i.estado==='CC'"><button id="btnCalculos_{{i.idCabecera}}" class="btn btn-danger"><i class="bi bi-calculator"></i></button></td> <!-- (click)="verCalculos(i.idCabecera)" -->
                             <td  class="text-center" *ngIf="i.estado!=='CC'"><button id="btnDetalle_{{i.idCabecera}}" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
                         </tr>
                     </tbody>
                 </table>
-            <!-- </div> -->
         </div>
     </div>
 </div>
@@ -115,8 +109,8 @@
 
                 <div class="col-md-6 d-grid">
 
-                        <label for="">Filtrar</label>
-                        <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
+                    <label for="">Filtrar</label>
+                    <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
                     
                 </div>
 

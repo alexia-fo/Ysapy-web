@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MenuRafComponent } from './menu-raf.component';
+import { VerRendicionComponent } from './ver-rendicion.component';
 
-describe('MenuRafComponent', () => {
-  let component: MenuRafComponent;
-  let fixture: ComponentFixture<MenuRafComponent>;
+describe('VerRendicionComponent', () => {
+  let component: VerRendicionComponent;
+  let fixture: ComponentFixture<VerRendicionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MenuRafComponent ]
+      declarations: [ VerRendicionComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MenuRafComponent);
+    fixture = TestBed.createComponent(VerRendicionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

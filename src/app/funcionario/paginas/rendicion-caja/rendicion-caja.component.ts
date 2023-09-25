@@ -1,35 +1,35 @@
 import { Component } from '@angular/core';
-import { Dinero, RespuestaDatosDinero } from '../../modelos/inventario.model';
+import { Dinero, GuardarRendicion, RespuestaDatosDinero } from '../../modelos/inv-rend.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InvRendService } from '../../servicios/inv-rend.service';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { formatNumber } from '@angular/common';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 
 @Component({
   selector: 'app-rendicion-caja',
   templateUrl: './rendicion-caja.component.html',
   styleUrls: ['./rendicion-caja.component.css'],
-  
+
 })
 export class RendicionCajaComponent {
-  dineros: Dinero[]=[];//lista para la tabla
-  invHabilitado:boolean=false;
-  descripcion:string='';
-  cargandoTabla:boolean = false; //obteniendo los datos a mostrar en la tabla
-  
-  form!: FormGroup;
-  //mod1
-  //form = new FormGroup({}); //formulario
-  cargando!: boolean; //registro de rendicion en proceso
+  dineros: Dinero[] = [];//lista para la tabla
+  cargandoTabla: boolean = false; //obteniendo los datos a mostrar en la tabla
+
+  invHabilitado: boolean = false;
+  descripcion: string = '';
+
+  form!: FormGroup;//formulario para ingresar cantidades de productos y observaciones
+  cargandoOperacion!: boolean; //registro de rendicion en proceso
+  dineroControles!: FormArray;
 
   dtOptions = {
-    paging:false,
-    info:false,
-    responsive:false,
-    // ordering: false, // Deshabilitar la ordenación por defecto
+    paging: false,
+    info: false,
+    responsive: true,
+    searching: false,
+    // ordering: false, // Deshabilitar el ordenamiento por defecto
     order: [[1, 'asc']], // Ordenar por el segundo campo (índice 1) en forma ascendente
-    
+
     language: {
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
@@ -55,160 +55,163 @@ export class RendicionCajaComponent {
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      dineroControles: this.fb.array([]) // FormArray para los FormGroup de cantidad y monto
+      dineroControles: this.fb.array([]) // FormArray para los FormGroup de cantidad y observacion
     });
   }
-
-  dineroControles!: FormArray;
-  
 
   ngOnInit(): void {
     this.consultarDetalle();
   }
 
-  mensaje(campo:string){
-    let mensaje="";
-    if(this.form.get(campo)?.hasError('min')){
-      mensaje='Minimo 0'
+  /*
+    "control" seria el formArray especifico en el cual se buscara el controlador con nombre "campo"
+    el cual se verificará si cuenta con errores, para devolver los mensajes de error si son necesario
+  */
+  mensajeValidacion(campo: string, control: AbstractControl): string {
+    let mensaje = '';
+    if (control.get(campo)?.invalid && (control.get(campo)?.touched || control.get(campo)?.dirty)) {
+      if (control.get(campo)?.errors?.['required']) {
+        mensaje = 'Es requerido';
+      }
+      if (control.get(campo)?.errors?.['min']) {
+        mensaje = 'Mínimo 0';
+      }
     }
-
-    if(this.form.get(campo)?.hasError('required')){
-      mensaje='Es requerido'
-    }
-
     return mensaje;
   }
 
-/* */
-
-mensajeValidacion(campo: string, control: AbstractControl): string {
-  let mensaje = '';
-  if (control.get(campo)?.invalid && (control.get(campo)?.touched || control.get(campo)?.dirty)) {
-    if (control.get(campo)?.errors?.['required']) {
-      mensaje = 'Es requerido';
+  /*FIXME:
+    datoInvalido(campo: string, formArrayName: string, index: number): boolean {: Esta función toma tres parámetros:
+  
+    campo: El nombre del campo que se desea validar dentro de un elemento de dinero.
+    formArrayName: El nombre del formArray que contiene los elementos de dinero.
+    index: El índice del elemento de dinero dentro del formArray que se está validando.
+    const control = this.form.get(formArrayName)?.get(${index}.${campo});: En esta línea, se obtiene una referencia al control específico del campo dentro del formulario. Se utiliza this.form.get(formArrayName) para acceder al formArray y luego get(${index}.${campo}) para acceder al control del campo dentro del elemento de dinero específico.
+  
+    const valido = (control?.touched || control?.dirty) && control?.invalid;: Se verifica si el campo es válido o no utilizando tres condiciones:
+  
+    control?.touched || control?.dirty: Verifica si el campo ha sido tocado (interactuado por el usuario) o si ha sido modificado (dirty). Esto indica que el campo ha tenido alguna interacción.
+    control?.invalid: Verifica si el campo tiene un estado de "inválido" según las reglas de validación definidas en el formulario.
+    const input = document.getElementById(${formArrayName}-${index}-${campo});: Se obtiene una referencia al elemento del DOM correspondiente al campo del formulario utilizando un id que sigue una convención específica. Este id se forma concatenando los valores de formArrayName, index y campo.
+  
+    if (valido) { ... }: Si la variable valido es true, significa que el campo es inválido según las condiciones establecidas. En este caso:
+  
+    Se agrega la clase "is-invalid" al elemento del DOM asociado al campo. Esto es tilizado en CSS para aplicar estilos visuales que indiquen que el campo es inválido.
+    else if ((control?.touched || control?.dirty) && control?.valid) { ... }: Si el campo no es inválido, pero ha sido tocado o modificado por el usuario y es válido, se realiza lo siguiente:
+  
+    Se quita la clase "is-invalid" del elemento del DOM asociado al campo (si estaba presente).
+    Se agrega la clase "is-valid" al elemento del DOM asociado al campo. Esto es utilizado en CSS para aplicar estilos visuales que indiquen que el campo es válido.
+    else { ... }: Si ninguna de las condiciones anteriores se cumple, se ejecuta este bloque:
+  
+    Se quita la clase "is-invalid" del elemento del DOM asociado al campo (si estaba presente).
+    Se quita la clase "is-valid" del elemento del DOM asociado al campo (si estaba presente).
+    return valido ? valido : false;: La función devuelve el valor de valido (que es un valor booleano que indica si el campo es inválido según las condiciones de validación) como resultado. Si valido es true, se devuelve true, y si es false, se devuelve false.
+  */
+  datoInvalido(campo: string, formArrayName: string, index: number): boolean {
+    const control = this.form.get(formArrayName)?.get(`${index}.${campo}`);
+    const valido = (control?.touched || control?.dirty) && control?.invalid;
+    const input = document.getElementById(`${formArrayName}-${index}-${campo}`);
+    if (valido) {
+      input?.classList.add('is-invalid');
+    } else if ((control?.touched || control?.dirty) && control?.valid) {
+      input?.classList.remove('is-invalid');
+      input?.classList.add('is-valid');
+    } else {
+      input?.classList.remove('is-invalid');
+      input?.classList.remove('is-valid');
     }
-    if (control.get(campo)?.errors?.['min']) {
-      mensaje = 'Mínimo 0';
-    }
+    return valido ? valido : false;
   }
-  return mensaje;
-}
 
-datoInvalido(campo: string, formArrayName: string, index: number): boolean {
-  const control = this.form.get(formArrayName)?.get(`${index}.${campo}`);
-  const valido = (control?.touched || control?.dirty) && control?.invalid;
-  const input = document.getElementById(`${formArrayName}-${index}-${campo}`);
-  if (valido) {
-    input?.classList.add('is-invalid');
-  } else if ((control?.touched || control?.dirty) && control?.valid) {
-    input?.classList.remove('is-invalid');
-    input?.classList.add('is-valid');
-  } else {
-    input?.classList.remove('is-invalid');
-    input?.classList.remove('is-valid');
-  }
-  return valido?valido:false;
-}
-
-  //falta
-  enviar(){
+  enviar() {
+    //Para mostrar error en las cantidades no establecidas de los billetes 
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    // console.log(this.form.getRawValue())
-    
-    // let rendicion = {dineros:this.form.value } ;
-    this.cargando = true;
+    this.cargandoOperacion = true;
+    let rendicion: GuardarRendicion = this.form.getRawValue();
 
-    this.servicioR.registrarRendicion(this.form.getRawValue()).subscribe({
-    //this.servicioR.registrarRendicion(rendicion).subscribe({
-    
+    this.servicioR.registrarRendicion(rendicion).subscribe({
       next: (respuesta: respuestaMensaje) => {
-        this.cargando = false;
-        $('#modal').modal('hide');
+        this.cargandoOperacion = false;
         this.mensajeAlertify.mensajeExito(
           `${respuesta.msg}`
         );
+        //Luego de la apertura de caja; en caso de que el inventario de productos ya se haya registrado se mostrara el cierre de inventario con
+        //los controladores resetados 
         this.consultarDetalle();
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        this.cargando = false;
+        this.cargandoOperacion = false;
       },
     });
 
   }
 
-  consultarDetalle(){
-    this.form.reset();//para limpiar al volver a mostrar luego de guardar
-    this.cargandoTabla=true;
+  /*FIXME:en caso que se cargue la pagina se crean los controladores
+  en caso de de que se recargue la tabla se limpian los controladores existentes*/
+  consultarDetalle() {
+    this.cargandoTabla = true;
     this.servicioR.obtenerDatosDinero()
-    .subscribe({
-      next:(respuesta:RespuestaDatosDinero)=>{
+      .subscribe({
+        next: (respuesta: RespuestaDatosDinero) => {
 
-        this.descripcion=respuesta.descripcion;
-        if(respuesta.mostrar){
-          this.invHabilitado=true;
-          this.dineros=respuesta.dineros!;
+          this.descripcion = respuesta.descripcion;
+          if (respuesta.mostrar) {
+            this.invHabilitado = true;
+            this.dineros = respuesta.dineros!;
 
-          this.dineroControles = this.form.get('dineroControles') as FormArray;
+            this.dineroControles = this.form.get('dineroControles') as FormArray;
+
             this.dineros.forEach((dinero: Dinero) => {
+              const controlName = dinero.idBillete.toString();
+              /*FIXME:
+              Se verifica cada formGroup del formulario para ver si contiene un controlador que tiene como nombre el idBillete
+              si es que existe se obtiene el formGroup en existingControl y se limpia,
+              si es que no se crean los controladores
+              */
+              const existingControl = this.dineroControles.controls.find((control: AbstractControl) => {
+                return (control as FormGroup).get('idBillete')?.value === dinero.idBillete;
+              });
 
-            const group = this.fb.group({
-              cantidad: [0, [Validators.required, Validators.min(0)]],
-              observacion: [''],
-              idBillete: [dinero.idBillete]
+              if (existingControl instanceof FormGroup) {
+                // existingControl.reset();
+
+                existingControl.get('cantidad')?.setValue(0);// Establece el valor a 0
+                existingControl.get('observacion')?.setValue('');
+                existingControl.markAsUntouched(); // Marca como no tocado
+                existingControl.markAsPristine(); // Marca como no modificado
+                existingControl.updateValueAndValidity(); // Actualiza la validez
+              } else {
+                const group = this.fb.group({
+                  cantidad: [0, [Validators.required, Validators.min(0)]],
+                  observacion: [''],
+                  idBillete: [dinero.idBillete]
+                });
+                // Agrega un nuevo array de controladores si no existe un controlador con el nombre idBillete
+
+                this.dineroControles.push(group);
+              }
             });
-            this.dineroControles.push(group);
-        });
-         
-        }else{
-          this.invHabilitado=false;
-        }
-        this.cargandoTabla = false;
-      },
-      error:(errores)=>{
-        errores.forEach((error: string) => {
-          this.mensajeAlertify.mensajeError(error);
-        });
-        
-        this.cargandoTabla = false;      }
-    });
-  }
-  //CON NG MODEL
-  
-  /*
-  productos: Producto[]=[];//lista para listar en la tabla
-  
-  actualizarCantidad(producto: Producto){
-    if (producto.cantidad) {
-      producto.total=producto.precio*producto.cantidad;
-    }
 
+          } else {
+            this.invHabilitado = false;
+          }
+          this.cargandoTabla = false;
+        },
+        error: (errores) => {
+          errores.forEach((error: string) => {
+            this.mensajeAlertify.mensajeError(error);
+          });
+
+          this.cargandoTabla = false;
+        }
+      });
   }
-  
-  mostrar(){
-    console.log(this.productos);
-  }
-  */
-  
-  // formatMonto(event: any) {
-  //   const input = event.target;
-  //   const value = input.value;
-  
-  //   // Remueve los separadores de miles existentes
-  //   const numberValue = Number(value.replace(/,/g, ''));
-  
-  //   if (!isNaN(numberValue)) {
-  //     // Formatea el número con separadores de miles y lo asigna nuevamente al input
-  //     const formattedValue = new Intl.NumberFormat('en-US').format(numberValue);
-  //     input.value = formattedValue;
-  //   }
-  // }
-  
-  
+
 }

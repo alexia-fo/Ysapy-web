@@ -124,18 +124,27 @@
                   <label for="turno" class="form-label">Turno</label>
                   <div>
                     <div class="form-check form-check-inline">
+                      <input formControlName="turno" [value]="''" class="form-check-input" type="radio" name="turno" id="flexRadioDefault1">
+                      <label class="form-check-label" for="flexRadioDefault1">Sin turno</label>
+                    </div>
+                    
+                    <div class="form-check form-check-inline">
                       <input formControlName="turno" [value]="'M'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault1">
                       <label class="form-check-label" for="flexRadioDefault1">Mañana</label>
                     </div>
+
                     <div class="form-check form-check-inline">
                       <input formControlName="turno" [value]="'T'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault2">
                       <label class="form-check-label" for="flexRadioDefault2">Tarde</label>
                     </div>
+
                     <div class="form-check form-check-inline">
                       <input formControlName="turno" [value]="'N'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault3">
                       <label class="form-check-label" for="flexRadioDefault3">Noche</label>
                     </div>
+
                     <small *ngIf="datoInvalido('noche')" class="e-mensaje-error">{{mensaje('noche')}}</small>
+                  
                   </div>
                 </div>
             

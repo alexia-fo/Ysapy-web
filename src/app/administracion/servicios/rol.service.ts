@@ -19,28 +19,15 @@ export class RolService {
     private http: HttpClient,
     private errorS: ManejarErrorService
   ) { }
-  obtenerRoles(limite: number = -1, desde: number = -1, activo: number = -1, tipo: '' | 'F' | 'C' = ''): Observable<RespuestaRoles> {
+  obtenerRoles(limite: number = -1, desde: number = -1, tipo: '' | 'F' | 'C' = ''): Observable<RespuestaRoles> {
 
-    if (limite != -1 && desde != -1) {
+    if (desde > 0  && limite > desde) {
 
-      if (activo != -1) {
-        this.params = {
-          limite,
-          desde,
-          activo
-        }
-      } else {
-        this.params = {
-          limite,
-          desde
-        }
-      }
-    }
-
-    if (activo != -1) {
       this.params = {
-        activo
+        limite,
+        desde
       }
+      
     }
 
     if (tipo != '') {

@@ -6,7 +6,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { GuardarRecepcion, ProdRecibido, RespuestaDatos } from '../../modelos/recepcion-productos.model';
 import { RecepcionProductosService } from '../../servicios/recepcion-productos.service';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
-import { Producto } from '../../modelos/inventario.model';
+import { Producto } from '../../modelos/inv-rend.model';
 
 @Component({
   selector: 'app-recepcion-productos',
@@ -39,6 +39,20 @@ export class RecepcionProductosComponent {
       },
     },
   };
+
+  /*FIXME:
+
+    @ViewChild: Es un decorador Angular que se utiliza para acceder a elementos del DOM, componentes, directivas o instancias de componentes hijos dentro del componente actual.
+    DataTableDirective: Esto es el primer argumento pasado al @ViewChild. Indica que estamos buscando una instancia de la directiva DataTableDirective.
+    {static: false}: Es un objeto de configuración opcional que se puede proporcionar al decorador. En este caso, {static: false} significa que la referencia a la directiva se obtendrá de manera perezosa, es decir, después de que Angular haya inicializado las vistas y las directivas del componente.
+    dtElement!: DataTableDirective;: Esto declara una propiedad llamada dtElement en el componente. Esta propiedad se inicializará con una referencia a la instancia de la directiva DataTableDirective.
+    Entonces, ¿para qué sirve este código?
+
+    El código @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective; se utiliza para obtener acceso a la instancia de la directiva DataTableDirective que está asociada a una tabla DataTable en el componente actual. Esto permite al componente interactuar con la tabla DataTable, realizar operaciones en ella (como destruirla) o configurar su comportamiento.
+
+    En resumen, este código es esencial para tener control sobre la tabla DataTable y poder manipularla desde el componente de Angular en el que se encuentra. La propiedad dtElement contendrá la referencia a la directiva DataTableDirective, lo que facilita la interacción con la tabla dentro del componente.
+
+  */
   dtTrigger: Subject<any> = new Subject<any>();
   @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective;
 
@@ -65,6 +79,7 @@ export class RecepcionProductosComponent {
     },
   };
 
+  //los formularios para cabecera y detalle son independientes
   formCabecera=this.fb.group({
     observacion:[''],
     nroComprobante:['', [Validators.required]],
@@ -76,17 +91,20 @@ export class RecepcionProductosComponent {
     cantidad:['', [Validators.required, Validators.min(1)]],
   });
 
+  invHabilitado:boolean=false;//estado de inventarios (se encuentra algun inventario disponible para agregarle recepciones ?)
+  descripcion:string='';//detalle del estado de inventarios
   
-  invHabilitado:boolean=false;
-  descripcion:string='';
+  productos:Producto[]=[];//Productos disponibles para buscar y seleccionar en el modal
   
-  productos:Producto[]=[];
-  productosRecibidos:ProdRecibido[]=[];/*=[{idProducto:1, nombre:'prueba 1', cantidad:8}, {idProducto:2, nombre:'prueba 2', cantidad:8}, {idProducto:3, nombre:'prueba 3', cantidad:8}];*/
+  productosRecibidos:ProdRecibido[]=[];//productos agregados a la tabla de recepciones
+  
   accion:'Crear' | 'Modificar' | 'Eliminar'='Crear';
-  seleccionado!:Producto;
-  cargandoTabRecepcion=false; 
-  cargandoOperacion=false;
-  cargandoProductos=false; //obteniendo los datos de los productos a buscar
+  
+  cargandoTabRecepcion=false; //agregando-actualizando-quitando registros del datatable
+
+  cargandoOperacion=false;//guardando la recepcion
+
+  cargandoProductos=false; //obteniendo los datos de los productos a seleccionar
 
   constructor(
     private mensajeAlertify: AlertifyService,
@@ -97,35 +115,40 @@ export class RecepcionProductosComponent {
 
   ngOnInit(): void {
 
+    //deshabilitar edicion de campos
     this.formRecepcion.get('idProducto')?.disable();//solo mostramos
     this.formRecepcion.get('nombre')?.disable();//solo mostramos
     
     this.cargandoProductos=true;
     //para tabla de pantalla
     this.cargandoTabRecepcion=true;
-
+    
     this.servicioP.obtenerDatos()
     .subscribe({
       next:(response:RespuestaDatos)=>{
-        // console.log("response, ", response)
-
+        this.cargandoProductos=false;
+        
         this.invHabilitado=response.mostrar;
         this.descripcion=response.descripcion;
-
-        if(response.mostrar){//si ya existe una apertura de caja se puede registrar recepciones   
-          this.productos=response.producto!;//se obtienen los productos si existe apertura
-          //obtenemos datos del local storage
-          if(this.servicioP.getItems().items){
-            this.productosRecibidos=this.servicioP.getItems().items;//se obtinen los productos ya agregados y no registrados del dia de hoy
-            this.formCabecera.get('observacion')?.setValue(this.servicioP.getItems().observacion);
-            this.formCabecera.get('nroComprobante')?.setValue(this.servicioP.getItems().nroComprobante);
+        
+        if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar recepciones   
+          this.productos=response.producto!;//se obtienen los productos si existe la apertura de inventario
+          
+            //si ya se han agregado productos recepcionados y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
+            //esos productos ya que estan almacenados en el localStorage(que sean del usuario activo, y que sean de la fecha)
+            let datosAlmacenados=this.servicioP.getItems();
+            if(datosAlmacenados.items){
+              this.productosRecibidos=datosAlmacenados.items;//se obtinen los productos ya agregados y no registrados del dia de hoy
+              this.formCabecera.get('observacion')?.setValue(datosAlmacenados.observacion);
+              this.formCabecera.get('nroComprobante')?.setValue(datosAlmacenados.nroComprobante);
+            }
           }
-        }
-        this.cargandoTabRecepcion=false;
-
-        this.establecerDatos();
-
-        this.cargandoProductos=false;
+          
+          this.cargandoProductos=false;
+          //una vez que se obtuvieron las recpciones del localStorage, si es que existen, se formatea el datatable
+          //para evitar errores en la tabla al modificar el array al obtener los que fueron agregados previamente
+          this.establecerDatos();
+          this.cargandoTabRecepcion=false;
       },
       error:(errores)=>{
         errores.forEach((error: string) => {
@@ -137,17 +160,39 @@ export class RecepcionProductosComponent {
 
   // ---------- DATATABLE ----------- //
 
+  /*FIXME:
+
+  TODO:this.detectorCambio.detectChanges();: Esta línea invoca el método detectChanges() del servicio ChangeDetectorRef
+  Este método fuerza a Angular a verificar si ha habido cambios en el 
+  componente y, si es necesario, realizar una actualización de la vista.
+
+  this.dtTrigger.next(0);: EstA relacionado con el uso de Angular DataTable. this.dtTrigger es un objeto 
+  Observable que se utiliza para notificar a la tabla de que debe actualizarse. Llamar al método next(0) notifica a la tabla que se deben cargar los datos.
+  Es posible que esto sea necesario después de que los datos se hayan actualizado en el componente para asegurarse de que la tabla refleje esos cambios.
+  */
   establecerDatos() {
     this.detectorCambio.detectChanges();
     this.dtTrigger.next(0);
   }
 
+  /*FIXME:
+  Esta función se utiliza para destruir y desmontar la instancia de la DataTable actual, lo que puede ser útil si necesitas reemplazar o reinicializar la tabla.
+  this.dtElement.dtInstance.then((dtInstancia: DataTables.Api) => { dtInstancia.destroy(); });: En esta línea, this.dtElement es una referencia a un elemento 
+  DataTable en el componente. Luego, se accede a la instancia de DataTable usando dtElement.dtInstance. Después, se llama al método destroy() de la instancia de DataTable 
+  para destruir la tabla actual y liberar los recursos asociados.
+  */
   renderizar() {
     this.dtElement.dtInstance.then((dtInstancia: DataTables.Api) => {
       dtInstancia.destroy();
     });
   }
 
+  /*FIXME:
+    Esta es una función del ciclo de vida de Angular que se llama cuando se destruye el componente. En este caso, se utiliza para realizar limpieza y desvincular el observador de 
+    cambios en la tabla DataTable.
+    this.dtTrigger.unsubscribe();: Aquí, se llama al método unsubscribe() en this.dtTrigger para desvincular el observador que podría estar escuchando cambios en la tabla DataTable. 
+    Esto es importante para evitar posibles problemas de memoria o fugas de observables cuando el componente se destruye.
+  */
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
@@ -161,15 +206,20 @@ export class RecepcionProductosComponent {
     }
   }
 
-  //--------//
+  /*FIXME:
+  Al agregar se verificará si se crea o modifica una recepcion, si se crea y se agrega el producto, en caso de que aun no exista se añade, si se vuelve a agregar un producto
+  que ya se agrego previamente se suma la cantidad que se vuelve a agregar.
+  En caso de que sea una modificacion se actualiza con la nueva cantidad
+  */
   agregar(){
 
-    //para validar campos dehabilitados
+    //para validar campos dehabilitados pq no se incluyen en el formRecepcion.valid
     if(!(this.formRecepcion.get('idProducto')?.value || this.formRecepcion.get('nombre')?.value)){
       this.mensajeAlertify.mensajeError('Seleccione el producto');
       return;
     }
 
+    //para validar la cantidad del producto que es campo habilitado o editable
     if(!this.formRecepcion.valid){
       this.formRecepcion.markAllAsTouched();
       return;
@@ -185,7 +235,7 @@ export class RecepcionProductosComponent {
     observacion = observacion ?? '';
     nroComprobante = nroComprobante ?? '';
    
-    let producto = this.formRecepcion.value;
+    let producto: ProdRecibido = this.formRecepcion.value;
     //obtenemos los valores de los compos deshabilitados, se puede utilizar solo el metodo this.form.getRawValue()
     producto.idProducto=this.formRecepcion.get('idProducto')?.value;
     producto.nombre=this.formRecepcion.get('nombre')?.value;
@@ -210,28 +260,18 @@ export class RecepcionProductosComponent {
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.destroy();
         this.dtTrigger.next(0);
-      })
+      });
       
       this.cargandoTabRecepcion = false;
-      
+
     }else if(this.accion=="Modificar"){
       this.productosRecibidos.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
-          // this.cargandoTabRecepcion= true;//add
           this.productosRecibidos[i]=this.formRecepcion.value;
-
-          //add
-          // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-          //   dtInstance.destroy();
-          //   this.dtTrigger.next(0);
-          // })
-          // this.cargandoTabRecepcion= false;
         }
       });
     }
-    //this.renderizar();
-    //this.establecerDatos();
-    this.formRecepcion.reset();
+    this.limpiarDetalle();
 
     this.accion='Crear'
     ///actualizamos los datos del localStorage
@@ -243,6 +283,9 @@ export class RecepcionProductosComponent {
     this.limpiarDetalle();
   }
 
+  /*FIXME:
+    Muestra un mensaje para confirmar la eliminacion, en caso de que se presione aceptar se ejecuta la funcion de eliminar()
+  */
   confirmarEliminacion(producto:ProdRecibido){
     this.mensajeAlertify.mensajeConfirmacion(
       `Desea quitar el producto ${producto.nombre} ?`,
@@ -275,13 +318,10 @@ export class RecepcionProductosComponent {
     
     this.cargandoTabRecepcion = false;
 
-
     this.accion='Crear'
     ///actualizamos los datos del localStorage
     this.servicioP.saveItems(this.productosRecibidos, observacion, nroComprobante);
- 
-    ///
-  }
+   }
 
   modificar(producto:ProdRecibido){
     this.accion='Modificar';
@@ -293,16 +333,16 @@ export class RecepcionProductosComponent {
   }
 
   seleccionarProducto(i: Producto){
+    //settear los campos deshabilitados del formulario
     this.formRecepcion.get('idProducto')?.setValue(i.idProducto)
     this.formRecepcion.get('nombre')?.setValue(i.nombre)
     this.mostrarModal('smodal', false); 
   }
 
-  //faltan mensajes
   mensaje(field:string){
     let mensaje="";
     if(this.formRecepcion.get(field)?.hasError('required')){
-      //TODO:LOS CAMPOS DESHABILITADOS NO CONTIENEN ERRORES(validar con alertify)
+      //FIXME:LOS CAMPOS DESHABILITADOS NO CONTIENEN ERRORES(validar con alertify)
       // if(field=="idProducto"){
       //   mensaje="El id es requerido..";
       // }
@@ -324,6 +364,34 @@ export class RecepcionProductosComponent {
     return mensaje;
   }
 
+    /*FIXME:
+
+    datoInvalido(campo: string) {: Esta línea define la función datoInvalido que toma un parámetro llamado campo, 
+    que es una cadena de texto que representa el nombre de un campo en un formulario Y ademas se utiliza el mismo para establecer el valor del id en los inputs, es decir,
+    que el campo del this.form y el id del input en el html son el mismo.
+
+    let valido = (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;: 
+    En esta línea, se evalúa si el campo es válido o no. Esto se hace verificando tres condiciones:
+
+    this.form.get(campo)?.touched || this.form.get(campo)?.dirty: Se verifica si el campo ha sido tocado (interactuado por el usuario) o si ha sido modificado (dirty). Esto indica que el campo ha tenido alguna interacción.
+    this.form.get(campo)?.invalid: Se verifica si el campo tiene un estado de "inválido" según las reglas de validación definidas para el formulario.
+    let input = document.getElementById(campo);: Se obtiene una referencia al elemento del DOM (Documento de Objeto Modelo) correspondiente al campo del formulario utilizando el id proporcionado en el parámetro campo.
+
+    if (valido) { ... }: Si la variable valido es true, significa que el campo es inválido según las condiciones establecidas. En este caso:
+
+    Se agrega la clase "is-invalid" al elemento del DOM asociado al campo aplicar estilos visuales que indiquen que el campo es inválido.
+    else if ((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid) { ... }: Si el campo no es inválido, pero ha sido tocado o modificado por el usuario y es válido, se realiza lo siguiente:
+
+    Se quita la clase "is-invalid" del elemento del DOM asociado al campo (si estaba presente).
+    Se agrega la clase "is-valid" al elemento del DOM asociado al campo para aplicar estilos visuales que indiquen que el campo es válido.
+    else { ... }: Si ninguna de las condiciones anteriores se cumple, se ejecuta este bloque:
+    Se quita la clase "is-invalid" del elemento del DOM asociado al campo (si estaba presente).
+    Se quita la clase "is-valid" del elemento del DOM asociado al campo (si estaba presente).
+    return valido;: La función devuelve el valor de valido, que indica si el campo es inválido según las condiciones de validación definidas.
+
+    En resumen, esta función datoInvalido se utiliza para gestionar la validación de un campo en un formulario HTML. Agrega o quita clases CSS ("is-invalid" y "is-valid") al elemento del DOM correspondiente al campo para reflejar su estado de validez. 
+    Luego, devuelve un valor booleano que indica si el campo es inválido según las condiciones establecidas.
+  */
   datoInvalido(campo:string){
     let valido=(this.formRecepcion.get(campo)?.touched || this.formRecepcion.get(campo)?.dirty) && this.formRecepcion.get(campo)?.invalid;
     let input = document.getElementById(campo);
@@ -362,7 +430,7 @@ export class RecepcionProductosComponent {
       productos:this.productosRecibidos,
     }
 
-    this.cargandoOperacion = false;
+    this.cargandoOperacion = true;
     this.servicioP.registrarRecepcion(data).subscribe({
       next: (respuesta: respuestaMensaje) => {
         this.cargandoOperacion = false;
@@ -380,6 +448,7 @@ export class RecepcionProductosComponent {
     });
   }
 
+  //FIXME: se limpian todos los formularios y tabla para que la pagina se limpie sin recargar
   borrarDatos(){
     this.servicioP.removerItems();
     this.formCabecera.reset();

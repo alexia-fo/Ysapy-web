@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { SucursalService } from '../../servicios/sucursal.service';
 import { EliminadoSucursal, RespuestaSucursales, Sucursal } from '../../modelos/sucursal.model';
-import { TablaItem, TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
+import { SucursalService } from '../../servicios/sucursal.service';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
+import { TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
 @Component({
   selector: 'app-sucursal',
@@ -12,6 +12,7 @@ import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.
 })
 export class SucursalComponent {
 
+  //Instanciar los pipes para la tabla
   stringPipe:BooleanToStringPipe= new BooleanToStringPipe();
 
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
@@ -40,10 +41,10 @@ export class SucursalComponent {
 
   //crear-modificar-eliminar (se le envia como parametro al modal para habilitar o deshabilitar botones)
   //tambien se utiliza al momento de guardar para verificar si se insertara un nuevo registro o se actualizara uno existenete
-  accion!: string; 
+  accion!: 'C' | 'M' | 'E'; 
 
   //para verificar si la operacion crud esta en proceso (se utiliza para habilitar o deshabilitar botones, mostrar u ocultar el loading)
-  cargandoOperacion!: boolean; 
+  cargandoOperacion: boolean=false; 
 
   //La propiedad "cargandoTabla" evita que en el datatable haya errores si se retrasa la obtencion de datos;
   //si la tabla no utiliza el ngIf para validar que ya se cuenta con los datos, la misma igual se construye y muestra el mensaje "No hay datos 
@@ -54,6 +55,7 @@ export class SucursalComponent {
 
   dtOpciones: DataTables.Settings = {//configuracion del datatable
     paging: true,
+    responsive:true,
     info: true,
     pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
@@ -84,14 +86,14 @@ export class SucursalComponent {
   
   constructor(
     private formulario: FormBuilder,
-    private detectorCambio: ChangeDetectorRef,
     private mensajeAlertify: AlertifyService,
     private servicioSucur: SucursalService
   ) {}
 
   ngOnInit(): void {
-
+    //el formulario solo se instancia una vez, para las acciones crear y modificar solo se modifica
     this.instanciarFormulario();
+    //las sucusales solo se obtinen una vez al inicializar el componente
     this.obtenerSucursales();
   }
 
@@ -100,28 +102,15 @@ export class SucursalComponent {
     this.limpiarFormulario();
     this.mostrarModal(this.modSucursalId, true);
   }
-/*
-  modificar(sucursal: Sucursal) {
-    this.accion = 'M';
-    this.formInstanciado = false;
-    this.seleccionado = { ...sucursal };
 
-    this.form = this.formulario.group({
-      nombre: ['', Validators.required],
-    });
-
-    this.form.patchValue(sucursal);
-    this.formInstanciado = true;
-    this.mostrarModal('modal');
-  }
-*/
   guardar() {
     if (!this.form.valid) {
+      //los mensajes de error se visualizaran al marcar los input como tocados
       this.form.markAllAsTouched();
       return;
     }
 
-    this.cargandoOperacion = true;
+    this.cargandoOperacion = true; //empieza la operacion de registro
     let { ...sucursal } = this.form.value;
 
     if (this.accion == 'C') {
@@ -150,7 +139,6 @@ export class SucursalComponent {
             this.mostrarModal(this.modSucursalId, false);
             this.cargandoOperacion=false;
             this.obtenerSucursales();
-            $('#modal').modal('hide');
             this.mensajeAlertify.mensajeExito(
               `${respuesta.nombre} se ha actualizado correctamente ✓✓`
             );
@@ -159,7 +147,6 @@ export class SucursalComponent {
             errores.forEach((error: string) => {
               this.mensajeAlertify.mensajeError(error);
             });
-            console.log(errores);
             this.cargandoOperacion = false;
           },
         });
@@ -169,27 +156,24 @@ export class SucursalComponent {
   eliminar() {
     this.cargandoOperacion=true;
     this.mostrarModal(this.modSucursalId, false);
-    this.mensajeAlertify.mensajeConfirmacion(
-      `Confirma la anulacion de la sucursal ${this.seleccionado.nombre}`,
-      () => {
-        this.servicioSucur
-          .eliminar(this.seleccionado.idSucursal)
-          .subscribe({
-            next: (respuesta: EliminadoSucursal) => {
-              this.cargandoOperacion=false;
-              this.obtenerSucursales();
-              this.mensajeAlertify.mensajeExito(
-                `${respuesta.sucursal.nombre} se ha anulado correctamente ✓✓`
-              );
-            },
-            error: (errores) => {
-              errores.forEach((error: string) => {
-                this.mensajeAlertify.mensajeError(error);
-              });
-              console.log(errores);
-              this.cargandoOperacion = false;
-            },
-          });
+    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion de la sucursal ${this.seleccionado.nombre}`,() => {
+      this.servicioSucur
+        .eliminar(this.seleccionado.idSucursal)
+        .subscribe({
+          next: (respuesta: EliminadoSucursal) => {
+            this.cargandoOperacion=false;
+            this.obtenerSucursales();
+            this.mensajeAlertify.mensajeExito(
+              `${respuesta.sucursal.nombre} se ha anulado correctamente ✓✓`
+            );
+          },
+          error: (errores) => {
+            errores.forEach((error: string) => {
+              this.mensajeAlertify.mensajeError(error);
+            });
+            this.cargandoOperacion = false;
+          },
+        });
       }
     );
   }
@@ -202,10 +186,9 @@ export class SucursalComponent {
       }
     }
 
-    /*
     if (this.form.get(field)?.hasError('minlength')) {
       if (field == 'nombre') {
-        mensaje = 'Nombre: min 3 caracteres';
+        mensaje = 'Nombre: min 5 caracteres';
       }
     }
 
@@ -214,22 +197,16 @@ export class SucursalComponent {
         mensaje = 'Nombre: max 100 caracteres';
       }
     }
-    */
-
+    
     return mensaje;
   }
 
   datoInvalido(campo: string) {
-    let valido =
-      (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) &&
-      this.form.get(campo)?.invalid;
+    let valido =(this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
     let input = document.getElementById(campo);
     if (valido) {
       input?.classList.add('is-invalid');
-    } else if (
-      (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) &&
-      this.form.get(campo)?.valid
-    ) {
+    } else if ((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid) {
       input?.classList.remove('is-invalid');
       input?.classList.add('is-valid');
     } else {
@@ -242,9 +219,8 @@ export class SucursalComponent {
   // -- PARA RECARGAR TABLA --//
   obtenerSucursales() {
     this.cargandoTabla=true;
-    this.servicioSucur.obtenerSucursales(100, 0, undefined).subscribe({
+    this.servicioSucur.obtenerSucursales().subscribe({
       next: (respuesta: RespuestaSucursales) => {
-        console.log(respuesta)
         this.tabla.datos = respuesta.sucursal;
         this.cargandoTabla = false;
       },
@@ -266,9 +242,17 @@ export class SucursalComponent {
     }
   }
 
+  obtenerSeleccionado($event: Sucursal){
+    this.limpiarFormulario();
+    this.accion='M';
+    this.mostrarModal(this.modSucursalId, true);
+    this.seleccionado = { ...$event };
+    this.form.patchValue($event);
+  }
+
   instanciarFormulario(){
     this.form = this.formulario.group({
-      nombre: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
     });
   }
 
@@ -276,12 +260,4 @@ export class SucursalComponent {
     this.form.reset();
   }
 
-    //--------- OBTENER REGISTRO SELECCIONADO PARA EDITAR ------//
-    obtenerSeleccionado($event: Sucursal){
-      this.limpiarFormulario();
-      this.accion='M';
-      this.mostrarModal(this.modSucursalId, true);
-      this.seleccionado = { ...$event };
-      this.form.patchValue($event);
-    }
 }

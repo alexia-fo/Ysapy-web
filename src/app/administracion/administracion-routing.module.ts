@@ -6,12 +6,17 @@ import { ProductoComponent } from './paginas/producto/producto.component';
 import { SucursalComponent } from './paginas/sucursal/sucursal.component';
 import { VerCalculosRendicionComponent } from './paginas/ver-calculos-rendicion/ver-calculos-rendicion.component';
 import { VerCabecerasInventarioComponent } from './paginas/ver-cabeceras-inventario/ver-cabeceras-inventario.component';
-import { VerDetalleInventarioComponent } from './paginas/ver-detalle-inventario/ver-detalle-inventario.component';
 import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ver-detalle-rendicion.component';
 import { AbmcUsuarioComponent } from './paginas/abmc-usuario/abmc-usuario.component';
 import { AbmcProductoComponent } from './paginas/abmc-producto/abmc-producto.component';
 import { AbmcSucursalComponent } from './paginas/abmc-sucursal/abmc-sucursal.component';
-import { PruebaTablaBotonComponent } from './paginas/prueba-tabla-boton/prueba-tabla-boton.component';
+import { VerRendicionComponent } from './paginas/ver-rendicion/ver-rendicion.component';
+import { VerDetalleInventarioComponent } from './paginas/ver-detalle-inventario/ver-detalle-inventario.component';
+import { VerDetalleRecepcionComponent } from './paginas/ver-detalle-recepcion/ver-detalle-recepcion.component';
+import { VerDetalleSalidaComponent } from './paginas/ver-detalle-salida/ver-detalle-salida.component';
+import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rendicion.component';
+import { ListarCalculosRendicionComponent } from './paginas/listar-calculos-rendicion/listar-calculos-rendicion.component';
+import { ListarCabecerasInventarioComponent } from './paginas/listar-cabeceras-inventario/listar-cabeceras-inventario.component';
 
 const routes: Routes = [
   {
@@ -19,20 +24,32 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
-        path:'pruebaBoton',
-        component:PruebaTablaBotonComponent
+        path: 'detalleSalida/:idCabecera/:idProducto',
+        component: VerDetalleSalidaComponent
       },
       {
-        path: 'abmc-sucursal',
-        component: AbmcSucursalComponent
+        path: 'detalleRecepcion/:idCabecera/:idProducto',
+        component: VerDetalleRecepcionComponent
       },
       {
-        path: 'abmc-producto',
-        component: AbmcProductoComponent
+        path: 'detalleRendicion/:idCabecera',
+        component: VerDetalleRendicionComponent
       },
       {
-        path: 'abmc-usuario',
-        component: AbmcUsuarioComponent
+        path: 'detalleInvetario/:idCabecera',
+        component: VerDetalleInventarioComponent
+      },
+      {
+        path: 'calculoRendicion/:idCabecera',
+        component: VerCalculosRendicionComponent
+      },
+      {
+        path: 'verRendicion/:idCabecera',
+        component: VerRendicionComponent
+      },
+      {
+        path: 'inventarios',
+        component: VerCabecerasInventarioComponent
       },
       {
         path: 'usuario',
@@ -46,27 +63,37 @@ const routes: Routes = [
         path: 'sucursal',
         component: SucursalComponent
       },
+
+      //////////////SIN COMPONENTES DE REUTILIZACION/////////////////
+
       {
-        path: 'calculoRendicion/:idCabecera',
-        component: VerCalculosRendicionComponent
+        path: 'abmc-sucursal',
+        component: AbmcSucursalComponent
       },
       {
-        path: 'detalleRendicion/:idCabecera',
-        component: VerDetalleRendicionComponent
+        path: 'abmc-producto',
+        component: AbmcProductoComponent
       },
       {
-        path: 'detalleInventario/:idCabecera',
-        component: VerDetalleInventarioComponent
+        path: 'abmc-usuario',
+        component: AbmcUsuarioComponent
       },
       {
-        path: 'inventarios',
-        component: VerCabecerasInventarioComponent
+        path: 'listar-cabeceras',
+        component: ListarCabecerasInventarioComponent
+      },
+      {
+        path: 'listar-calculosRendicion/:idCabecera',
+        component: ListarCalculosRendicionComponent
+      },
+      {
+        path: 'listar-Rendicion/:idCabecera',
+        component: ListarRendicionComponent
       },
       {
         path: '**',
         redirectTo: 'usuario'
       }
-      
     ]
   }
 ];

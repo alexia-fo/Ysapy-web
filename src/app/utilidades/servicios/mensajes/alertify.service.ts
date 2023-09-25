@@ -4,9 +4,15 @@ import * as alertify from 'alertifyjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AlertifyService {
 
   constructor() { }
+  //!Se utilizan en todos los componentes
+  /*
+  Esta clase se utiliza para mostrar notificaciones o mensajes al usuario utilizando la biblioteca externa alertifyjs.
+  Cada uno de estos métodos toma un parámetro mensaje, que es la cadena de texto que se mostrará como mensaje al usuario.
+  */
 
   mensajeNormal(mensaje: string){
     alertify.message(mensaje);
@@ -23,14 +29,7 @@ export class AlertifyService {
   mensajeExito(mensaje:string){
     alertify.success(mensaje);
   }
-                                  //parametros a aceptar
-  //aun no esta                   // (evento, valor)
-  mensajeConInput(mensaje:string, aceptado:Function, cancelado:Function){
-    //mensaje - valor por defecto
-    alertify.prompt(mensaje, "", aceptado, cancelado)
-  }
 
-  //aun no esta
   mensajeConfirmacion(mensaje:string, aceptado:any){    
     alertify.confirm(mensaje, 
       aceptado, 
@@ -38,11 +37,6 @@ export class AlertifyService {
         alertify.error('Operación Cancelada');
       })
       
-  }
-
-  mensajeConOk(mensaje:string, aceptado:Function){
-    alertify
-    .alert(mensaje, aceptado);
   }
 
 }

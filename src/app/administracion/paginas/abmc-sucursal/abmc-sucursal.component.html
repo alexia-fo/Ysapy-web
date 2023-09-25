@@ -7,14 +7,21 @@
           <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
         </div>
       </div>
+
+      <!--Spinner de la tabla-->
+      <div class="col-12">
+        <div class="text-center mt-3" *ngIf="cargandoTabla">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <!-- <div class="text-center text-danger">
+            Obteniendo los Datos...
+          </div> -->
+        </div>
+      </div>
+
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <!-- <app-tabla-basica 
-        [tabla]="tabla" 
-        [cargandoTabla]="cargandoTabla" 
-        (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones"></app-tabla-basica> -->
-
         <div class="table-responsive">
             <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
                 <thead>
@@ -40,6 +47,7 @@
     </div>
   </div>
   
+  <!-- MODAL DATOS E IMAGEN -->
   <div class="modal fade" [id]="modSucursalId" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
@@ -57,15 +65,13 @@
             </div>
           </div>
 
-          <!--Formulario para realizar ABMC de los datos-->
+             <!--FORMULARIO PARA REALIZAR ABM DE DATOS-->
           <form [formGroup]="form" class="row g-3">
-        
             <div class="col-12">
               <label for="nombre" class="form-label">Nombre</label>
               <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="nombre">
               <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
             </div>
-            
           </form>
 
         </div>
@@ -79,28 +85,6 @@
     </div>
   </div>
 
-     
-  <!-- MODAL -->
-  <app-modal-formulario
-  [idModal]="modSucursalId"
-  [titulo]="'Sucursales'"
-  [accion]="accion"
-  (guardarClick)="guardar()" 
-  (eliminarClick)="eliminar()"
-  [cargandoOperacion]="cargandoOperacion"
-  >
-    <!--Formulario para realizar ABMC de los datos-->
-    <form [formGroup]="form" class="row g-3">
-  
-      <div class="col-12">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="nombre">
-        <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
-      </div>
-      
-    </form>
-  </app-modal-formulario>
-    
     
     
     

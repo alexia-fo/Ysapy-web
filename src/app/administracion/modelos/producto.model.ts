@@ -54,6 +54,9 @@ export interface EliminadoProducto{
 
 //-----fin producto-------
 
+// PARA ACCEDER A LOS DATOS DE PRODUCTOS (CUANDO SON LLAVES FORANEAS) 
+// para ver el nombre del producto al listar el producto en la tabla de inventarios
+
 export interface datoProducto{
     nombre:string;
 }

@@ -4,25 +4,20 @@
       <!--Boton Nuevo-->
       <div class="col offset-md-9 col-md-3">
         <div class="d-grid gap-2 my-2">
-          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
+          <button class="btn e-segundo-boton" (click)="nuevo()" *ngIf="usuarioRoot">Nuevo</button>
         </div>
       </div>
+      <!-- La tabla ya cuenta con un sppiner -->
+
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <!-- <app-tabla-basica [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
-          [dtOpciones]="dtOpciones">
-        </app-tabla-basica> -->
-
-        <!-- <app-tabla-pipe [tabla]="tabla" [cargandoTabla]="cargandoTabla" (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones">
-        </app-tabla-pipe> -->
-
         <app-tabla-boton
         [tabla]="tabla" 
         [cargandoTabla]="cargandoTabla" 
         (itemSeleccionado)="obtenerSeleccionado($event)"
         [dtOpciones]="dtOpciones"
         [alineaciones]="['left','left','left','left','left','left','center','center',]"
+        [idNombre]="'idUsuario'"
         ></app-tabla-boton>
       </div>
     </div>
@@ -35,7 +30,9 @@
   [accion]="accion" 
   (guardarClick)="guardar()"
   (eliminarClick)="eliminar()" 
-  [cargandoOperacion]="cargandoOperacion">
+  [cargandoOperacion]="cargandoOperacion"
+  [modalTamaño]="'extraLargo'"
+  >
     <!--Formulario para realizar ABMC de los datos-->
     <form [formGroup]="form" class="row g-3">
       <div class="col-12">
@@ -84,6 +81,10 @@
         <label for="turno" class="form-label">Turno</label>
         <div>
           <div class="form-check form-check-inline">
+            <input formControlName="turno" [value]="''" class="form-check-input" type="radio" name="turno" id="flexRadioDefault1">
+            <label class="form-check-label" for="flexRadioDefault1">Sin turno</label>
+          </div>
+          <div class="form-check form-check-inline">
             <input formControlName="turno" [value]="'M'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault1">
             <label class="form-check-label" for="flexRadioDefault1">Mañana</label>
           </div>
@@ -95,7 +96,8 @@
             <input formControlName="turno" [value]="'N'" class="form-check-input" type="radio" name="turno" id="flexRadioDefault3">
             <label class="form-check-label" for="flexRadioDefault3">Noche</label>
           </div>
-          <small *ngIf="datoInvalido('noche')" class="e-mensaje-error">{{mensaje('noche')}}</small>
+
+          <small *ngIf="datoInvalido('turno')" class="e-mensaje-error">{{mensaje('turno')}}</small>
         </div>
       </div>
   
@@ -130,7 +132,7 @@
   
     </form>
   
-    <!--Formulario de imagen-->
+    <!--FORMULARIO DE IMAGEN-->
     <form [formGroup]="formImagen" class="row g-3" *ngIf="accion=='M'">
       <div class="col-12">
         <div class="row">
@@ -142,11 +144,9 @@
             <label class="form-label fw-bold">Editar Imagen</label>
             <div class="input-group my-2">
               <input type="file" (change)="capturarArchivo($event)" formControlName="imagenControl" class="form-control">
-              <button class="btn btn-warning" type="button" (click)="subirArchivo()"
-                [disabled]="cargandoImagen">{{(cargandoImagen)? 'Cargando':'Guardar'}}</button>
+              <button class="btn btn-warning" type="button" (click)="subirArchivo()" [disabled]="cargandoImagen">{{(cargandoImagen)? 'Cargando':'Guardar'}}</button>
             </div>
-            <small *ngIf="archivoInvalido('imagenControl')"
-              class="e-mensaje-error">{{mensajeArchivo('imagenControl')}}</small>
+            <small *ngIf="archivoInvalido('imagenControl')" class="e-mensaje-error">{{mensajeArchivo('imagenControl')}}</small>
           </div>
   
           <div class="col-6">
@@ -168,7 +168,7 @@
     <br>
     <hr>
     <div class="col-12 d-flex justify-content-end">
-      <button *ngIf="accion=='M'" (click)="contrasena()" class="btn e-segundo-boton me-2">Cambiar Contraseña</button>
+      <button *ngIf="accion=='M'" (click)="contrasena()" class="btn btn-secondary me-2">Cambiar Contraseña</button>
     </div>
   
   </app-modal-formulario>

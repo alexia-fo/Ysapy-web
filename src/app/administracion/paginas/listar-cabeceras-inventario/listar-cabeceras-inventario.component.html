@@ -1,0 +1,128 @@
+<!-- PAGINA PRINCIPAL: LISTADO DE CABECERAS -->
+<div class="container">
+    <div class="row">
+
+        <div class="col offset-md-9 col-md-3">
+            <div class="d-grid gap-2 my-2">
+                <button class="btn btn-danger" type="button" (click)="mostrarModal(modalFiltros,true)">Ver filtros</button>
+                <button class="btn btn-danger" type="button" (click)="mostrarPDF()">Ver PDF</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-12" *ngIf="cargandoDatos">
+            <div class="text-center">
+              <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <!-- <div class="text-center text-danger">
+              Obteniendo los Datos...
+            </div> -->
+        </div>
+
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
+
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Fecha Apertura</th>
+                            <th class="text-center">Fecha Cierre</th>
+                            <th class="text-center">Sucursal</th>
+                            <th class="text-center">Turno</th>
+                            <th class="text-center">Monto Apertura</th>
+                            <th class="text-center">Monto Cierre</th>
+                            <th class="text-center">Monto Pendiente</th>
+                            <th class="text-center">Monto Diferencia</th>
+                            <th class="text-center">Detalle</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of cabeceras">
+                            <td  class="text-start">{{i.fechaApertura | date: 'dd/MM/yyyy' }}</td>
+                            <td  class="text-start">{{i.fechaCierre | date: 'dd/MM/yyyy' }}</td>
+                            <td class="text-start">{{i.Sucursal.nombre | titlecase}}</td>
+                            <td  class="text-center">{{i.turno}}</td>
+                            <td class="text-end">{{i.montoApertura |number}}</td>
+                            <td class="text-end">{{i.montoCierre |number}}</td>
+                            <td class="text-end">{{i.montoPendiente |number}}</td>
+                            <td class="text-end">{{i.montoDiferencia |number}}</td>
+                            <td  class="text-center" *ngIf="i.estado==='CC'"><button class="btn btn-danger" (click)="verCalculos(i.idCabecera)"><i class="bi bi-calculator"></i></button></td>
+                            <td  class="text-center" *ngIf="i.estado!=='CC'"><button class="btn btn-secondary" (click)="verDetalle(i.idCabecera)"><i class="bi bi-arrow-up-right-square"></i></button></td>      
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA APLICAR FILTROS -->
+<div class="modal fade"  [id]="modalFiltros" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{'Filtros de Inventario'}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!--no hace falta sppiner pq los datos de filtrado y las cabeceras se obtienen al mismo tiempo-->
+
+                <form [formGroup]="form" class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="desde" class="form-label">Desde</label>
+                        <input formControlName="desde" type="date" id="desde" class="form-control">
+                    </div>
+                
+                    <div class="col-md-6">
+                        <label for="hasta" class="form-label">Hasta</label>
+                        <input formControlName="hasta" type="date" id="hasta" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Estado</label>
+                        <select formControlName="estado" class="form-select">
+                            <option value="todos">Todos</option>
+                            <option value="cerrados">Cerrados</option>
+                            <option value="abiertos">Abiertos</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-5">
+                        <label class="form-label">Sucursal</label>
+                        <select formControlName="sucursal" class="form-select">
+                            <option value="todos">Todos</option>
+                            <option *ngFor="let s of sucursales" [value]="s.idSucursal">{{s.nombre}}</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-md-6">
+                        <label class="form-label">Turno</label>
+                        <select formControlName="turno" class="form-select">
+                            <option value="todos">Todos</option>
+                            <option value="manana">Mañana</option>
+                            <option value="tarde">Tarde</option>
+                            <option value="noche">Noche</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 d-grid">
+
+                        <label for="">Filtrar</label>
+                        <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
+                        
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

@@ -6,7 +6,9 @@
             <div class="d-flex justify-content-center">
                 <i class="bi bi-person-fill-lock" id="iconoLogin"></i>
             </div>
-            <h1 class="text-center fs-1 fw-bold e-texto-marron">Login</h1>
+            <!-- <h1 class="text-center fs-1 fw-bold e-texto-marron">Login</h1> -->
+            <h1 class="text-center fs-1 fw-bold text-dark-emphasis">Login</h1>
+            <!-- <h1 class="text-center fs-1 fw-bold text-secondary">Login</h1> -->
             <br>
             <form [formGroup]="form">
          
@@ -38,11 +40,13 @@
   
                 <div id="alerta" class="mt-2"></div>
     
-                <button type="button" (click)="login()" class="btn text-white w-100 mt-2 fw-semibold shadow-sm" id="btnIngresar">Ingresar</button>
+                <!-- <button type="button" (click)="login()" class="btn text-white w-100 mt-2 fw-semibold shadow-sm" id="btnIngresar">Ingresar</button> -->
+                <button type="button" (click)="login()" class="btn text-white w-100 mt-2 fw-semibold shadow-sm btn-secondary">Ingresar</button>
     
                 <div class="d-flex gap-1 justify-content-center mt-1">
                   <div>No tienes una cuenta ?</div>
-                  <a routerLink="/" class="text-decoration-none fw-semibold e-texto-marron">Registrarse</a>
+                  <!-- <a routerLink="/" class="text-decoration-none fw-semibold e-texto-marron">Registrarse</a> -->
+                  <a routerLink="/" class="text-decoration-none fw-semibold text-dark-emphasis">Registrarse</a>
                 </div>
                           
                 <div class="p-3">

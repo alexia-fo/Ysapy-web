@@ -1,97 +1,80 @@
-import { Component } from '@angular/core';
-import { DatosDetRecepcion, DatosDetSalida, DatosDetalleInventario, RespuestaDetInventario, RespuestaDetRecepcion, RespuestaDetSalida, datosDetInventario } from '../../modelos/ver-calculos-rendicion';
+import { Component, OnInit } from '@angular/core';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { VerCalculosRendicionService } from '../../servicios/ver-calculos-rendicion.service';
-import { ActivatedRoute } from '@angular/router';
+import { DatosDetalleInventario, RespuestaDetalleInventario } from '../../modelos/inventariosRegistrados';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
 
 @Component({
   selector: 'app-ver-detalle-inventario',
   templateUrl: './ver-detalle-inventario.component.html',
   styleUrls: ['./ver-detalle-inventario.component.css']
 })
-export class VerDetalleInventarioComponent {
-  idCabecera!:number;
-  detalleInventario!:datosDetInventario[];
+export class VerDetalleInventarioComponent implements OnInit {
+//id de cabecera de inventario
+idCabecera!:number;
 
-  modDetalleRec='detalleRecep';
-  modDetalleSalida='detalleSalida';
+detalleRendicion!:DatosDetalleInventario[];//para la tabla
 
-  detalleRecepcion!:DatosDetRecepcion[];
-  detalleSalida!:DatosDetSalida[];
+cargandoDetalle=true; //obteniendo los datos
 
-  constructor(
-    private mensajeAlertify: AlertifyService,
-    private servicioC: VerCalculosRendicionService,
-    private route: ActivatedRoute
-  ){
+dtOpciones: DataTables.Settings = {
+  paging: false,
+  info: false,
+  responsive: true,
+  lengthChange: false,
+  order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
+  language: {
+
+  },
+  initComplete: () => {
+    $('table').on('click', '[id^="btnRecepcion_"]', (event) => {
+      const idProducto = event.currentTarget.id.split('_')[1];
+      //  [routerLink]="['/detalles-recepcion', idCabecera, idProducto]">
+      this.router.navigateByUrl(`/administracion/detalleRecepcion/${this.idCabecera}/${idProducto}`);
+    });
+    
+    $('table').on('click', '[id^="btnSalida_"]', (event) => {
+      const idProducto = event.currentTarget.id.split('_')[1];
+      this.router.navigateByUrl(`/administracion/detalleSalida/${this.idCabecera}/${idProducto}`);
+    });
   }
+};
 
-  ngOnInit(): void {
-    this.route.params
-      .pipe(
-        switchMap(params => {
-          this.idCabecera = params['idCabecera'];
-          return this.servicioC.obtenerDetalleInventario(this.idCabecera);
-        })
-      )
-      .subscribe({
-        next: (respuesta: RespuestaDetInventario) => {
-          this.detalleInventario=respuesta.detalleInventario;
-        },
-        error: (errores) => {
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-        },
+constructor(
+  private mensajeAlertify: AlertifyService,
+  private servicioC: InventariosRegistradosService,
+  private route: ActivatedRoute,
+  private router: Router
+
+){
+}
+
+ngOnInit(): void {
+  this.cargandoDetalle=true;
+  this.route.params // obtenemos el id de la cabecera desde la url
+  .pipe(
+    switchMap(params => {
+      this.idCabecera = params['idCabecera'];
+      return this.servicioC.obtenerDetalleInventario(this.idCabecera); // una vez que obtenemos el id se realiza la consulta
+    })
+  )
+  .subscribe({
+    next: (respuesta: RespuestaDetalleInventario) => {
+      this.detalleRendicion=respuesta.detalleInventario;
+      this.cargandoDetalle=false;
+    },
+    error: (errores) => {
+      errores.forEach((error: string) => {
+        this.mensajeAlertify.mensajeError(error);
       });
-  }
+      this.cargandoDetalle=false;
+    },
+  });
+}
 
-  verDetalleRecep(idProducto:number){
-    console.log('recepcion')
-    this.servicioC.obtenerDetalleRecepcion(this.idCabecera, idProducto).subscribe({
-      next: (respuesta: RespuestaDetRecepcion) => {
-        this.detalleRecepcion=respuesta.dRecepcion;
-        this.mostrarModal(this.modDetalleRec, true);
-        console.log(respuesta)
-        //this.cargandoOperacion = false;
-      },
-      error: (errores: string[]) => {
-        errores.forEach((error: string) => {
-          this.mensajeAlertify.mensajeError(error);
-        });
-        //this.cargandoOperacion = false;
-      },
-    });
-  }
-
-  verDetalleSalida(idProducto:number){
-    console.log('salida')
-
-    this.servicioC.obtenerDetalleSalida(this.idCabecera, idProducto).subscribe({
-      next: (respuesta: RespuestaDetSalida) => {
-        this.detalleSalida=respuesta.dSalida;
-        this.mostrarModal(this.modDetalleSalida, true);
-        //this.cargandoOperacion = false;
-      },
-      error: (errores: string[]) => {
-        errores.forEach((error: string) => {
-          this.mensajeAlertify.mensajeError(error);
-        });
-        //this.cargandoOperacion = false;
-      },
-    });
-  }
-
-    // ------ MODAL DE FORMULARIO ------ //
-
-    mostrarModal(id: string, mostrar:boolean) {
-      if(mostrar){
-        $(`#${id}`).modal('show');
-      }else{
-        $(`#${id}`).modal('hide');
-      }
-    }
-
+paginaAnterior(){
+  this.router.navigateByUrl(`/administracion/calculoRendicion/${this.idCabecera}`);
+}
 
 }

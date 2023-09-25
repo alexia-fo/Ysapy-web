@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ActualizarProducto, EliminadoProducto, GuardarProducto, Producto, RespuestaProductos } from './../modelos/producto.model';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
+import { ActualizarProducto, EliminadoProducto, GuardarProducto, Producto, RespuestaProductos } from './../modelos/producto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +31,10 @@ export class ProductoService {
       }
     })
       .pipe(
-        catchError((response: HttpErrorResponse) => {
-          return throwError(() => new Error(response.error.msg))
-        })
+        // catchError((response: HttpErrorResponse) => {
+        //   return throwError(() => new Error(response.error.msg))
+        // })
+        catchError(this.errorS.handleError)
       );
   }
 
@@ -44,28 +45,15 @@ export class ProductoService {
       );
   }
 
-  obtenerProductos(limite: number = -1, desde: number = -1, activo: number = -1): Observable<RespuestaProductos> {
+  obtenerProductos(limite: number = -1, desde: number = -1): Observable<RespuestaProductos> {
 
-    if (limite != -1 && desde != -1) {
+    if (desde > 0  && limite > desde) {
 
-      if (activo != -1 ) {
-        this.params = {
-          limite,
-          desde,
-          activo
-        }
-      }else{
-        this.params = {
-          limite,
-          desde
-        }
-      }
-    }
-
-    if (activo != -1 ) {
       this.params = {
-        activo
+        limite,
+        desde
       }
+      
     }
     
     return this.http.get<RespuestaProductos>(`${this.apiUrl}`, {

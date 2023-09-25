@@ -4,12 +4,12 @@ import { ValidarRolesGuard } from './guardianes/validar-roles.guard';
 import { ValidarTokenGuard } from './guardianes/validar-token.guard';
 
 const routes:Routes=[
-  /*
-  {
-    path:'',
-    component:InicioComponent
-  },
-  */
+  
+  // {
+  //   path:'',
+  //   component:InicioComponent
+  // },
+  
   {
     path:'autentificacion',
     loadChildren:()=>import('./autentificacion/autentificacion.module').then(m=>m.AutentificacionModule)
@@ -19,7 +19,7 @@ const routes:Routes=[
     loadChildren:()=>import('./administracion/administracion.module').then(m=>m.AdministracionModule),
     canActivate: [ValidarTokenGuard, ValidarRolesGuard],
     data: {
-      roles: ['ROOT', 'ADMINISTRACION'] // Roles permitidos para acceder a la ruta
+      roles: ['ROOT', 'ADMINISTRADOR'] // Roles permitidos para acceder a la ruta
     }
   },
   {

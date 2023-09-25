@@ -7,15 +7,12 @@ import { ModalFormularioComponent } from './componentes/modal-formulario/modal-f
 import { TablaServersideComponent } from './componentes/tabla-serverside/tabla-serverside.component';
 import { TablaBasicaComponent } from './componentes/tabla-basica/tabla-basica.component';
 import { TablaEventoComponent } from './componentes/tabla-evento/tabla-evento.component';
-import { MenuRafComponent } from './paginas/menu-raf/menu-raf.component';
 import { RouterModule } from '@angular/router';
 import { DataTablesModule } from 'angular-datatables';
 import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.component';
 import { ActivoInactivoPipe } from './pipes/activo-inactivo.pipe';
 import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.component';
-
-
 
 @NgModule({
   declarations: [
@@ -26,7 +23,6 @@ import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.compo
     TablaServersideComponent,
     TablaBasicaComponent,
     TablaEventoComponent,
-    MenuRafComponent,
     TablaPipeComponent,
     ActivoInactivoPipe,
     BooleanToStringPipe,
@@ -45,13 +41,9 @@ import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.compo
     TablaServersideComponent,
     TablaBasicaComponent,
     TablaEventoComponent,
-    MenuRafComponent,
-
     TablaPipeComponent,
     BooleanToStringPipe,
-
-    //prueba
-    TablaBotonComponent
+    TablaBotonComponent,
   ],
 })
 export class UtilidadesModule { }

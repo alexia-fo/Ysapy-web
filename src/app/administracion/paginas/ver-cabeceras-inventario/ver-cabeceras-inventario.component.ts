@@ -1,67 +1,34 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { RespuestaCabecera, datosCabecera } from '../../modelos/ver-calculos-rendicion';
+import { RespuestaCabecera, datosCabecera } from '../../modelos/inventariosRegistrados';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { VerCalculosRendicionService } from '../../servicios/ver-calculos-rendicion.service';
 import { Router } from '@angular/router';
-import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 import { SucursalService } from '../../servicios/sucursal.service';
-import { RespuestaSucursales, Sucursal } from '../../modelos/sucursal.model';
+import { Sucursal } from '../../modelos/sucursal.model';
 import { forkJoin } from 'rxjs';
-import { JspdfAutotableService } from 'src/app/utilidades/servicios/pdf/jspdf-autotable.service';
-
+//para formatos de datos del pdf
+import { format } from 'date-fns'; // Importa la función de formateo 
+import { TitleCasePipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
+//para generar pdf
 import { jsPDF } from "jspdf";
-import autoTable from 'jspdf-autotable'
-import { format } from 'date-fns'; // Importa la función de formateo
+import autoTable from 'jspdf-autotable';
+import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
+import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
 
 @Component({
   selector: 'app-ver-cabeceras-inventario',
   templateUrl: './ver-cabeceras-inventario.component.html',
-  styleUrls: ['./ver-cabeceras-inventario.component.css']
+  styleUrls: ['./ver-cabeceras-inventario.component.css'],
+  //inyectar pipes
+  providers:[TitleCasePipe, DecimalPipe]
 })
 export class VerCabecerasInventarioComponent implements OnInit{
 
   modalFiltros="modalFiltros";
   
-  form!: FormGroup; 
-  
-  //cargandoTabla = true; //obteniendo los datos a mostrar en la tabla
-  
-  // dtOpciones: DataTables.Settings = {//configuracion del datatable
-  //   paging:false,
-  //   info:false,
+  form!: FormGroup; //formulario para filtrar cabeceras
 
-  //   responsive: true,
-
-  //   /*
-  //   paging: true,
-  //   info: true,
-  //   pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
-  //   pageLength: 10, // establece la cantidad de registros por página en 10
-  //   */
-  //   /*
-  //   lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
-  //   */
-  //  lengthChange: false, // deshabilita el selector de cantidad de registros
-   
-  //  language: { //traducimos porque por defecto esta en ingles
-  //   search: 'Buscar:',
-  //   zeroRecords: 'No se encontraron resultados',
-  //   info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
-  //   infoEmpty: 'Mostrando 0 a 0 de 0 registros',
-  //   infoFiltered: '(filtrados de _MAX_ registros en total)',
-  //   lengthMenu: 'Mostrar _MENU_ registros',
-  //   loadingRecords: 'Cargando...',
-  //   processing: 'Procesando...',
-  //     emptyTable: 'No hay datos disponibles en la tabla',
-  //     paginate: {
-  //       first: 'Primero',
-  //       last: 'Último',
-  //       next: 'Siguiente',
-  //       previous: 'Anterior',
-  //     },
-  //   },
-  // };
   dtOpciones: DataTables.Settings = {
     paging: false,
     info: false,
@@ -69,7 +36,7 @@ export class VerCabecerasInventarioComponent implements OnInit{
     lengthChange: false,
     order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
     language: {
-      // ... tu configuración de idioma ...
+  
     },
     initComplete: () => {
       $('table').on('click', '[id^="btnCalculos_"]', (event) => {
@@ -79,140 +46,82 @@ export class VerCabecerasInventarioComponent implements OnInit{
   
       $('table').on('click', '[id^="btnDetalle_"]', (event) => {
         const idCabecera = event.currentTarget.id.split('_')[1];
-        this.redirigirADetalleRendicion(idCabecera);
+        this.verDetalle(idCabecera);
       });
     }
   };
 
-  fechaHoy!:Date;
-  fechaHace7Dias!:Date;
+  fechaHoy!:Date; //para establecer las fechas por defecto al filtro de las cabeceras (fecha desde)
 
-  cabeceras:datosCabecera[]=[];
+  diasAntes!:Date;//para establecer las fechas por defecto al filtro de las cabeceras (fecha hasta)
 
-  sucursales:Sucursal[]=[];
+  cabeceras:datosCabecera[]=[]; //para el listado de cabeceras en la tabla
 
-  cargandoDatos=true;
+  sucursales:Sucursal[]=[]; //para el combo de sucursales en ventana de filtro
+
+  cargandoDatos=true; //cargando datos de cabecera
 
   constructor(
     private formulario:FormBuilder,
     private mensajeAlertify: AlertifyService,
-    private servicioC: VerCalculosRendicionService,
+    private servicioC: InventariosRegistradosService,
     private router: Router,
     private servicioS:SucursalService,
-    private pdfService:JspdfAutotableService
+    //para formatos de datos en pdf
+    private titlecasePipe: TitleCasePipe,
+    private decimalPipe: DecimalPipe
   ){
     this.obtenerFechas();
   }
   
   ngOnInit(): void {
-    this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
-      desde:[''],
-      hasta:[''],
+    //establecer valores por defecto al formulario para obtener los datos iniciales
+    this.form=this.formulario.group({
+      desde:[new Date(this.diasAntes).toISOString().substring(0, 10)],
+      hasta:[new Date(this.fechaHoy).toISOString().substring(0, 10)],
       sucursal:['todos'],
       estado:['todos'],
       turno:['todos'],
-    
     });
 
-    ////establecer en formulario
-    this.form.get('desde')?.setValue(new Date(this.fechaHace7Dias).toISOString().substring(0, 10));
-    this.form.get('hasta')?.setValue(new Date(this.fechaHoy).toISOString().substring(0, 10));
-
-
-    const {desde, hasta} = this.form.value;
-    console.log(desde)
-    
-    /////////
-  //   this.servicioC.obtenerCabeceras(desde, hasta)
-  //   .subscribe({
-  //     next: (respuesta:RespuestaCabecera) => {
-  //       this.cabeceras=respuesta.cabecera
-  //     },
-  //     error: (errores) => {
-  //       errores.forEach((error: string) => {
-  //         this.mensajeAlertify.mensajeError(error);
-  //       });
-  //     },
-  //   });
-
-  //   this.servicioS.obtenerSucursales()
-  //   .subscribe({
-  //     next: (respuesta:RespuestaSucursales) => {
-  //       this.sucursales=respuesta.sucursal
-  //     },
-  //     error: (errores) => {
-  //       errores.forEach((error: string) => {
-  //         this.mensajeAlertify.mensajeError(error);
-  //       });
-  //     },
-  //   });
-  // Realiza las consultas iniciales y de sucursales usando forkJoin
-  this.cargandoDatos=true;
-  forkJoin([
-    //el formulario por defecto ya tiene los valores
-    this.servicioC.obtenerCabeceras(this.form.value),
-    this.servicioS.obtenerSucursales()
-  ]).subscribe({
-    next: ([cabecerasRespuesta, sucursalesRespuesta]) => {
-      // Procesa las respuestas de las consultas
-    this.cabeceras = cabecerasRespuesta.cabecera;
-    this.sucursales = sucursalesRespuesta.sucursal;
-    this.cargandoDatos=false;
-  },
-  error: (errores) => {
-    errores.forEach((error: string) => {
-      this.mensajeAlertify.mensajeError(error);
+    // Realiza la consulta incicial para obtener las cabeceras, y las sucursales para la ventana de filtro
+    this.cargandoDatos=true;
+    forkJoin([
+      //el formulario por defecto ya cuenta con valores por defecto
+      this.servicioC.obtenerCabeceras(this.form.value),
+      this.servicioS.obtenerSucursales()
+    ]).subscribe({
+      next: ([cabecerasRespuesta, sucursalesRespuesta]) => {
+        // Procesa las respuestas de las consultas
+        this.cabeceras = cabecerasRespuesta.cabecera;
+        this.sucursales = sucursalesRespuesta.sucursal;
+        this.cargandoDatos=false;
+      },
+      error: (errores) => {
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+        this.cargandoDatos=false;
+      }
     });
-    this.cargandoDatos=false;
-
   }
-  });
-
-}
-
-
 
   obtenerFechas() {
     // Obtener la fecha de hoy
     this.fechaHoy = new Date();
 
     // Obtener la fecha hace 7 días
-    this.fechaHace7Dias = new Date();
-    this.fechaHace7Dias.setDate(this.fechaHoy.getDate() - 15);
-
+    this.diasAntes = new Date();
+    this.diasAntes.setDate(this.fechaHoy.getDate() - 15);
   }
 
-  verCalculos(idCabecera:number){
-    //this.router.navigate([`/calculoRendicion/${idCabecera}`]);
-    this.router.navigateByUrl(`/administracion/calculoRendicion/${idCabecera}`);
-  }
-
+  //para filtrar los datos de la cabecera
   buscar(){
-
-    // const {desde, hasta} = this.form.value;
-    // console.log(desde, hasta)
-    // /////////
-    // this.servicioC.obtenerCabeceras(desde, hasta)
-    // .subscribe({
-    //   next: (respuesta:RespuestaCabecera) => {
-    //     console.log(respuesta)
-    //     this.cabeceras=respuesta.cabecera
-    //   },
-    //   error: (errores) => {
-    //     errores.forEach((error: string) => {
-    //       this.mensajeAlertify.mensajeError(error);
-    //     });
-    //   },
-    // });
     this.cargandoDatos=true;
-
-    const data = this.form.value;
-  
-    this.servicioC.obtenerCabeceras(data)
+    this.servicioC.obtenerCabeceras(this.form.value)
     .subscribe({
       next: (respuesta:RespuestaCabecera) => {
-        this.cabeceras=respuesta.cabecera
-        console.log(this.cabeceras)
+        this.cabeceras=respuesta.cabecera;       
         this.cargandoDatos=false;
       },
       error: (errores) => {
@@ -227,113 +136,75 @@ export class VerCabecerasInventarioComponent implements OnInit{
 
   }
 
+  verCalculos(idCabecera:number){
+    this.router.navigateByUrl(`/administracion/calculoRendicion/${idCabecera}`);
+  }
 
-  ///////pdf//////////
+  verDetalle(idCabecera: number) {
+    this.router.navigateByUrl(`/administracion/verRendicion/${idCabecera}`);
+  }
 
-  // ver(){
-  //   this.servicioC.obtenerCabecerasPDF()
-  //   .subscribe({
-  //       next:(pdfData: Blob) => {
-  //         ObtenerPDF.visualizarPDF(pdfData);
-  //         // this.servicioPDF.visualizarPDF(pdfData);
-  //       },
-  //       error:(error) => {
-  //         console.error('Error al obtener el PDF:', error);
-  //       }
-  //     }
-  //   );
-  // }
+  // ------ MODAL DE FORMULARIO ------ //
 
-  // descargar(){
-  //   this.servicioC.obtenerCabecerasPDF().subscribe({
-  //       next:(pdfData: Blob) => {
-  //         ObtenerPDF.descargarPDF(pdfData);
-  //         // this.servicioPDF.descargarPDF(pdfData);
-  //       },
-  //       error:(error) => {
-  //         console.error('Error al obtener el PDF:', error);
-  //       }
-  //     }
-  //   );
-  // }
-
-    // ------ MODAL DE FORMULARIO ------ //
-
-    mostrarModal(id: string, mostrar:boolean) {
-      if(mostrar){
-        $(`#${id}`).modal('show');
-      }else{
-        $(`#${id}`).modal('hide');
-      }
+  mostrarModal(id: string, mostrar:boolean) {
+    if(mostrar){
+      $(`#${id}`).modal('show');
+    }else{
+      $(`#${id}`).modal('hide');
     }
+  }
 
-    //prueba
-    redirigirADetalleRendicion(idCabecera: number) {
-      // this.router.navigate([`./detalleRendicion/${idCabecera}`, idCabecera]);
-      this.router.navigateByUrl(`/administracion/detalleRendicion/${idCabecera}`);
-    }
+  //PDF
 
+  mostrarPDF() {
+    const encabezado = ['Apertura', 'Cierre', 'Sucursal', 'Turno', 'Apertura', 'Cierre', 'Diferencia', 'Pendiente'];
+    const cuerpo = this.cabeceras.map(item => [
+      format(new Date(item.fechaApertura), 'yyyy/MM/dd'), // Formatea la fecha
+      format(new Date(item.fechaCierre), 'yyyy/MM/dd'), // Formatea la fecha
+      /*
+      '1' indica que se debe usar el separador de miles,
+      '0' indica que no se deben mostrar decimales y '-' 
+      indica que no se debe mostrar ningún número negativo.
+      */
+      this.titlecasePipe.transform(item.Sucursal.nombre),
+      this.titlecasePipe.transform(item.turno),
+      this.decimalPipe.transform(item.montoApertura, '1.0-0'), // Formatea el monto con separadores de miles
+      this.decimalPipe.transform(item.montoCierre, '1.0-0'),   // Formatea el monto con separadores de miles
+      this.decimalPipe.transform(item.montoDiferencia, '1.0-0'), // Formatea el monto con separadores de miles
+      this.decimalPipe.transform(item.montoPendiente, '1.0-0'),  // Formatea el monto con separadores de miles
+    ]);
 
-    mostrarPDF() {
-      // const encabezado = ['ID', 'Fecha Apertura', 'Fecha Cierre', 'Monto Apertura', 'Monto Cierre', 'Monto Salida', 'Monto Diferencia', 'ID Sucursal', 'ID Usuario', 'Observación', 'Estado', 'Turno', 'Creado en', 'Actualizado en', 'Nombre Usuario', 'Nombre Sucursal'];
-      const encabezado = ['Fecha Apertura', 'Fecha Cierre', 'Sucursal', 'Turno', 'Usuario', 'Apertura', 'Cierre', 'Salida', 'Diferencia'];
-      const cuerpo = this.cabeceras.map(item => [
-        // item.fechaApertura,
-        format(new Date(item.fechaApertura), 'yyyy/MM/dd'), // Formatea la fecha
-        format(new Date(item.fechaCierre), 'yyyy/MM/dd'), // Formatea la fecha
-        item.Sucursal.nombre,
-        item.turno,
-        item.Usuario.nombre,
-        item.montoApertura,
-        item.montoCierre,
-        item.montoSalida,
-        
+    const titulo = 'Datos de Inventario';
+    
+    // this.pdfService.imprimir(encabezado, cuerpo, titulo, false);
+    // this.pdfService.imprimir(encabezado, cuerpo, titulo, false);
 
+    //!GENERAR PDF
 
-        // item.fechaApertura.toISOString(),
-        // item.Sucursal.nombre,
-        // item.turno,
-        // item.Usuario.nombre,
-        // item.montoApertura.toString(),
-        // item.montoCierre.toString(),
-        // item.montoSalida.toString(),
-        // item.montoDiferencia.toString(),
+    const doc= new jsPDF({
+      orientation:"portrait",
+      unit:"px",
+      format:"letter"
+    });
 
-        
-        
-        // item.idCabecera.toString(),
-        // item.fechaCierre.toISOString(),
-        // item.idsucursal.toString(),
-        // item.idusuario.toString(),
-        // item.observacion,
-        // item.estado,
-        // item.createdAt.toISOString(),
-        // item.updatedAt.toISOString(),
-      ]);
+    doc.text(titulo, doc.internal.pageSize.width/ 2, 25, {align:'center'});
 
-      const titulo = 'Datos de Cabecera';
+    autoTable ( doc ,  { 
+      head : [ encabezado ] , 
+      body : cuerpo, 
+      theme:'plain'
+
+    } )
+
+    // Obtiene el objeto Blob del PDF generado
+    const pdfBlob = doc.output('blob');
+    
+    // Llama al método para visualizar el PDF
+    ObtenerPDF.visualizarPDF(pdfBlob);
       
-      // this.pdfService.imprimir(encabezado, cuerpo, titulo, false);
-      this.pdfService.imprimir(encabezado, cuerpo, titulo, false);
-    }
+  }
 
-    // mostrar2(){
-    //   console.log("ha ejecutado 1")
-    //   const doc= new jsPDF({
-    //     orientation:"portrait",
-    //     unit:"px",
-    //     format:"letter"
-    //   });
-      
-    //   // doc.autoTable({ html: '#my-table' })
-    //   // doc.save('table.pdf')
-    //   autoTable(doc, { html: '#my-table' })
-    //   console.log("ha ejecutado 2")
-
-    //   const pdfBlob = doc.output('blob');
-      
-    //   // Llama al método para visualizar el PDF
-    //   ObtenerPDF.visualizarPDF(pdfBlob);
-    // }
-  
 }
+
+//!ahora ya no es necesario
+

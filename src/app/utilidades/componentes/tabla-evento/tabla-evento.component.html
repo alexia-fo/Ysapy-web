@@ -1,9 +1,18 @@
-<!--mientras se esta obteniendo los datos muestra el loading-->
-  <div class="text-center mt-3" *ngIf="cargandoTabla">
+<!--
+  con el dtTrigger se dibuja la tabla a pesar de que se estan obteniendo los 
+  datos, se puede distinguirlo mediante el encabezado, que se muestra aunque se estan recargando los datos,
+  ya que el trigger evita que se muestre error en la tabla al redibujar solamente las filas cuando se modifica el array,
+
+  en el caso de que se redibuje la tabla completa no es necesario que el trigger ya que la tabla
+  no se construye hasta que se obtengan todos los datos, y cuando se cambia se destruye completamente con el
+  *ngIf y luego se vuelve a reconstruir completamente
+-->  
+
+<!-- <div class="text-center mt-3" *ngIf="cargandoTabla">
     <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-  </div>
+  </div> -->
   
   
   <table class="table hover" datatable [dtOptions]="dtOpciones" [dtTrigger]="dtEventos">

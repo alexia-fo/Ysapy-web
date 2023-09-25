@@ -1,5 +1,6 @@
+
 <div class="modal fade" [id]="idModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable"  [ngClass]="getModalSizeClass()">
       <div class="modal-content">
   
         <div class="modal-header">
@@ -14,8 +15,13 @@
             <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-          <ng-content></ng-content>
-          <!--falta el cuerpo que seria el formulario-->
+          <!--
+            El contenido personalizado se inserta en el lugar marcado por <ng-content></ng-content>, 
+            lo que permite que el contenido dentro del modal sea definido por el componente que utiliza este modal.
+          -->
+          <ng-content>
+            <!--falta el cuerpo que seria el formulario-->
+          </ng-content>
         </div>
         
         <div class="modal-footer">

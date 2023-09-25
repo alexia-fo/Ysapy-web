@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Producto, RespuestaDatosProducto } from '../../modelos/inventario.model';
+import { GuardarInventario, Producto, RespuestaDatosProducto } from '../../modelos/inv-rend.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InvRendService } from '../../servicios/inv-rend.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
+
 @Component({
   selector: 'app-inventario-productos',
   templateUrl: './inventario-productos.component.html',
@@ -11,18 +12,19 @@ import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 })
 export class InventarioProductosComponent {
   productos: Producto[]=[]; //lista para tabla
-  invHabilitado:boolean=false;
-  descripcion:string='';
   cargandoTabla:boolean = false; //obteniendo los datos a mostrar en la tabla
   
-  form = new FormGroup({}); //formulario
+  invHabilitado:boolean=false;
+  descripcion:string='';
+  
+  form:FormGroup=new FormGroup({}); //formulario para ingresar cantidades de productos
   cargandoOperacion!: boolean; //registro de inv en proceso
   
   dtOptions = {
     paging:false,
     info:false,
-    responsive:false,
-
+    responsive:true,
+    searching: false,
     language: {
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
@@ -66,6 +68,34 @@ export class InventarioProductosComponent {
     return mensaje;
   }
 
+  /*FIXME:
+
+    datoInvalido(campo: string) {: Esta línea define la función datoInvalido que toma un parámetro llamado campo, 
+    que es una cadena de texto que representa el nombre de un campo en un formulario Y ademas se utiliza el mismo para establecer el valor del id en los inputs, es decir,
+    que el campo del this.form y el id del input en el html son el mismo.
+
+    let valido = (this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;: 
+    En esta línea, se evalúa si el campo es válido o no. Esto se hace verificando tres condiciones:
+
+    this.form.get(campo)?.touched || this.form.get(campo)?.dirty: Se verifica si el campo ha sido tocado (interactuado por el usuario) o si ha sido modificado (dirty). Esto indica que el campo ha tenido alguna interacción.
+    this.form.get(campo)?.invalid: Se verifica si el campo tiene un estado de "inválido" según las reglas de validación definidas para el formulario.
+    let input = document.getElementById(campo);: Se obtiene una referencia al elemento del DOM (Documento de Objeto Modelo) correspondiente al campo del formulario utilizando el id proporcionado en el parámetro campo.
+
+    if (valido) { ... }: Si la variable valido es true, significa que el campo es inválido según las condiciones establecidas. En este caso:
+
+    Se agrega la clase "is-invalid" al elemento del DOM asociado al campo aplicar estilos visuales que indiquen que el campo es inválido.
+    else if ((this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.valid) { ... }: Si el campo no es inválido, pero ha sido tocado o modificado por el usuario y es válido, se realiza lo siguiente:
+
+    Se quita la clase "is-invalid" del elemento del DOM asociado al campo (si estaba presente).
+    Se agrega la clase "is-valid" al elemento del DOM asociado al campo para aplicar estilos visuales que indiquen que el campo es válido.
+    else { ... }: Si ninguna de las condiciones anteriores se cumple, se ejecuta este bloque:
+    Se quita la clase "is-invalid" del elemento del DOM asociado al campo (si estaba presente).
+    Se quita la clase "is-valid" del elemento del DOM asociado al campo (si estaba presente).
+    return valido;: La función devuelve el valor de valido, que indica si el campo es inválido según las condiciones de validación definidas.
+
+    En resumen, esta función datoInvalido se utiliza para gestionar la validación de un campo en un formulario HTML. Agrega o quita clases CSS ("is-invalid" y "is-valid") al elemento del DOM correspondiente al campo para reflejar su estado de validez. 
+    Luego, devuelve un valor booleano que indica si el campo es inválido según las condiciones establecidas.
+  */
   datoInvalido(campo:string){
     let valido=(this.form.get(campo)?.touched || this.form.get(campo)?.dirty) && this.form.get(campo)?.invalid;
     let input = document.getElementById(campo);
@@ -82,24 +112,25 @@ export class InventarioProductosComponent {
     return valido;
   }
 
-  //falta
   enviar(){
-    
+
+    //Para mostrar error en las cantidades no establecidas de los productos 
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    let inventario = {productos:this.form.value } ;
     this.cargandoOperacion = true;
+    let inventario:GuardarInventario = {productos:this.form.value } ;
 
     this.servicioI.registrarInventario(inventario).subscribe({
       next: (respuesta: respuestaMensaje) => {
         this.cargandoOperacion = false;
-        //$('#modal').modal('hide');
         this.mensajeAlertify.mensajeExito(
           `${respuesta.msg}`
         );
+        //Luego de la apertura de inventario; en caso de que la rendicion de caja ya se haya registrado se mostrara el cierre de inventario con
+        //los controladores resetados 
         this.consultarDetalle();
       },
       error: (errores: string[]) => {
@@ -112,9 +143,10 @@ export class InventarioProductosComponent {
 
   }
 
+  /*FIXME:en caso que se cargue la pagina, se crean los controladores
+  en caso de de que se recargue la tabla se limpian los controladores existentes*/
   consultarDetalle(){
-    this.form.reset();//para limpiar al volver a mostrar luego de guardar
-
+    
     this.cargandoTabla = true;
     this.servicioI.obtenerDatosProducto()
     .subscribe({
@@ -123,13 +155,46 @@ export class InventarioProductosComponent {
         if(respuesta.mostrar){
           this.invHabilitado=true;
           this.productos=respuesta.productos!;
-                
+                        
           this.productos.forEach(product => {
-            this.form.addControl(product.idProducto.toString(), new FormControl(0, [Validators.required, Validators.min(0)]));
+            const controlName = product.idProducto.toString();
+            /*FIXME:
+            Se verifica si el formulario (this.form) ya contiene un control con el nombre obtenido. 
+            Si ya existen los controladores se limpian los mismos.
+            Si aun no existen se crean
+            */
+           if (this.form.contains(controlName)) {
+                //Resetear un controlador: Usar reset() en un controlador existente restablecerá el valor del controlador a su valor inicial (no establece el valor inicial 0, por eso es mejor limpiarlos y establecer sus valores)
+                // this.form.get(controlName)?.reset();
+                            
+                this.form.get(controlName)?.setValue(0); // Establece el valor a 0
+                this.form.get(controlName)?.markAsUntouched(); // Marca como no tocado
+                this.form.get(controlName)?.markAsPristine(); // Marca como no modificado
+                this.form.get(controlName)?.updateValueAndValidity(); // Actualiza la validez
+            } else {
+                // Agrega un nuevo control si no existe un controlador con el nombre idProducto
+                this.form.addControl(controlName, new FormControl(0, [Validators.required, Validators.min(0)]));
+            }
           });
-          
+
+          //TODO: Eliminar un controlador y luego agregarlo nuevamente: Si eliminas un controlador y luego lo agregas nuevamente, estás creando un nuevo controlador con las mismas propiedades. Esto es útil si deseas volver a crear completamente el controlador, incluidas sus validaciones y otros metadatos, y establecerlo en un estado específico.
+          // this.productos.forEach(product => {
+
+          //   const controlName = product.idProducto.toString();
+
+          //   if (this.form.contains(controlName)) {
+          //       this.form.removeControl(controlName); // Elimina el control existente
+          //   }
+
+          //   this.form.addControl(controlName, new FormControl(0, [Validators.required, Validators.min(0)]));
+          // });
+ 
         }else{
           this.invHabilitado=false;
+          //NO ES NECESARIO PQ SE RECARGA LA PAGINA
+          // this.productos=[];
+          // this.form.reset();
+          // this.form= new FormGroup({});
         }
         this.cargandoTabla = false;      
       },
@@ -142,26 +207,5 @@ export class InventarioProductosComponent {
       }
     });
   }
-
-  //PARA MOSTRAR EL TOTAL DE CADA PRODUCTO SI ES NECESARIO (CON FORMCONTROL)
-  /*
-  total(idProducto:number, precio:number){
-    let total=precio* Number(this.form.get(idProducto.toString())?.value);
-    return total;
-  }
-  */
-
-  //CON NG MODEL
-  /*
-
-  actualizarCantidad(producto: Producto){
-    if (!producto.cantidad) {
-      console.log("if",producto.cantidad)
-      producto.cantidad = 0;
-    }
-    console.log("no if",producto.cantidad)
-
-  }
-  */
 
 }

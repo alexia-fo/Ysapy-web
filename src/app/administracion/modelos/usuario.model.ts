@@ -31,7 +31,6 @@ export interface RespuestaUsuario{
     result:Usuario
 }
 
-
 //crear usuario
 export interface GuardarUsuario extends Omit<Usuario, 'idUsuario' | 'activo' | 'img' | 'google' | 'createAt' | 'updateAt'>{//| 'nivel'
     /*
@@ -69,7 +68,8 @@ export interface datoUsuario{
     nombre:string;
 }
 
-///////////
+//para consultas anidadas en los servicios
+
 //se usa para obtener los datos al mismo tiempo con switchMap
 export interface RolSucursal{
     roles: Rol[];

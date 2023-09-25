@@ -1,5 +1,5 @@
 
-//PARA CABECERA DE INVENTARIO
+//!PARA CABECERA DE INVENTARIO
 export interface invCabHabilitado{
     habilitado:boolean;
     descripcion:string;
@@ -25,9 +25,7 @@ export interface guardarCabecera{
     observacion:string;
 }
 
-//--crear apertura aun no tiene modelo--//
-
-///PARA INVENTARIO DE PRODUCTOS
+//!PARA INVENTARIO DE PRODUCTOS
 export interface invProdHabilitado{
     habilitado:boolean;
     descripcion:string;
@@ -58,12 +56,10 @@ nombres de llaves dinámicas. Dado que no puedes predefinir todas las llaves de 
 tendrás que usar una notación de índice genérica
 */
 export interface GuardarInventario{
-    [key: number]: number;
+    productos:{[key: number]: number;}
 }
 
-//registrar inventario aun no tiene modelo
-
-//PARA RENDICION DE CAJA 
+//!PARA RENDICION DE CAJA 
 export interface rendCajaHabilitado{
     habilitado:boolean;
     descripcion:string;
@@ -85,4 +81,14 @@ export interface RespuestaDatosDinero {
     mostrar: boolean;
     descripcion:string;
     dineros?: Dinero[];
+}
+
+export interface datosGuardarBillete {
+    idBillete:number;
+    cantidad:number;
+    observacion:string;
+}
+
+export interface GuardarRendicion{
+    dineroControles:datosGuardarBillete[];
 }

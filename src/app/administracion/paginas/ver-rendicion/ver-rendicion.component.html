@@ -1,0 +1,26 @@
+<!--PAGINA PRINCIPAL: Resumen de la rendicion-->
+<div class="container">
+    <h1 class="text-center mt-3">Detalles de la Rendicion</h1>
+    <div class="row">
+
+        <!--Boton Nuevo-->
+        <div class="col-12 offset-md-9 col-md-3">
+            <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-warning" [routerLink]="['/administracion/detalleInvetario', idCabecera]">Detalle de Inventario</button>
+            </div>
+        </div>
+        <!--Boton Nuevo-->
+        <div class="col-12 offset-md-9 col-md-3">
+            <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-warning" [routerLink]="['/administracion/detalleRendicion', idCabecera]">Detallede Caja</button>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <br>
+            <br>
+            <br>
+            <p class="fw-bold text-primary" routerLink="../../inventarios">Regresar a la pagina anterior</p>
+        </div>
+    </div>
+</div>

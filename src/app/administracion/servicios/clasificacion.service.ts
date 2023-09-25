@@ -22,7 +22,7 @@ export class ClasificacionService {
     private errorS: ManejarErrorService
   ) { }
 
-  //para abmc de productos en modulo administracion
+  //para combo de abmc de productos en modulo administracion
   obtenerClasificaciones(limite: number = -1, desde: number = -1): Observable<RespuestaClasificaciones> {
 
     if (desde > 0  && limite > desde) {
@@ -31,7 +31,6 @@ export class ClasificacionService {
         desde
       }
     }
-  
 
     return this.http.get<RespuestaClasificaciones>(`${this.apiUrl}`, {
       params: this.params

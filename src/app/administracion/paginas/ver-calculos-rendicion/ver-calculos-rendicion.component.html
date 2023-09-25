@@ -1,28 +1,18 @@
+<!--PAGINA PRINCIPAL: Resumen de la rendicion-->
 <div class="container">
-    <h1 class="text-center mt-3">Detalles de la Rendicion</h1>
+    <h1 class="text-center mt-3">Calculos de la Rendicion</h1>
     <div class="row" *ngIf="calculoRendicion">
-        
-        <!-- 
-            
-            <div class="col-12">
-                <br>
-                <h2>Datos de Usuario</h2>
-                <h6>Nombre: </h6>
-                <h6>Sucursal: </h6>
-                <h6>Turno: </h6>
-            </div>         
-        
-        -->
-        
+
         <div class="col-12">
             <br>
             <h2>Detalles de la Rendicion</h2>
             <h6>Total Apertura: {{calculoRendicion.totalAperturaDinero | number}}</h6>
             <h6>Total Cierre: {{calculoRendicion.totalCierreDinero | number}} </h6>
             <h6>Total Diferencia: {{calculoRendicion.totalDiferenciaDinero | number}}</h6>
-            <h6>Total Credito y otras salidas: {{calculoRendicion.totalSalida | number}}</h6>
-        </div>         
-        
+            <h6>Total Credito y Salidas: {{calculoRendicion.totalPendiente | number}}</h6>
+            <h6>Total de Cobros por creditos: {{calculoRendicion.totalOtrosCobros | number }}</h6>
+        </div>
+
         <div class="col-12">
             <br>
             <h2>Resultados de la Rendicion</h2>
@@ -31,267 +21,53 @@
                     <h5>Total Venta: </h5>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="text-end">{{calculoRendicion.totalVenta  | number}}</h5>
+                    <h5 class="text-end">{{calculoRendicion.totalVenta | number}}</h5>
                 </div>
             </div>
-        </div> 
-        
+        </div>
+
         <div class="col-12">
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h5>Total Cierre: </h5>
+                    <h5>Total Cierre (Diferencia + Creditos y Salidas): </h5>
                 </div>
                 <div class="col-md-4">
                     <h5 class="text-end">{{calculoRendicion.totalDiferenciaDinero | number}}</h5>
                 </div>
             </div>
-        </div> 
+        </div>
 
         <div class="col-12">
             <hr>
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h5 class="fw-bold">Total Venta - Total Cierre: </h5>
+                    <h4 class="fw-bold">Total Venta - Total Cierre: </h4>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="text-end fw-bold">{{calculoRendicion.diferenciaVentaCaja  | number}}</h5>
-                    <h5 class="text-end fw-bold text-danger">{{calculoRendicion.descVentaCaja}}</h5>
+                    <h4 class="text-end fw-bold">{{calculoRendicion.diferenciaVentaCaja | number}}</h4>
+                    <h4 class="text-end fw-bold text-danger">{{calculoRendicion.descVentaCaja}}</h4>
                 </div>
             </div>
-        </div> 
+        </div>
 
         <!--Boton Nuevo-->
         <div class="col-12 offset-md-9 col-md-3">
             <div class="d-grid gap-2 mt-3">
-                <button class="btn e-segundo-boton" (click)="verDetalleI()">Detalle de Inventario</button>
+                <button class="btn btn-warning" [routerLink]="['/administracion/detalleInvetario', idCabecera]">Detalle de Inventario</button>
             </div>
         </div>
         <!--Boton Nuevo-->
         <div class="col-12 offset-md-9 col-md-3">
             <div class="d-grid gap-2 mt-3">
-                <button class="btn e-segundo-boton" (click)="verDetalleR()">Detalle de Caja</button>
+                <button class="btn btn-warning" [routerLink]="['/administracion/detalleRendicion', idCabecera]">Detallede Caja</button>
             </div>
         </div>
 
-        <!-- <div class="col-12">
-            <div class="row">
-                <div class="col-md-6">
-                    <button class="btn btn-warning" (click)="verDetalleI()">Detalle de Inventario</button>
-                </div>
-                
-                <div class="col-md-6">
-                    <button class="btn btn-warning" (click)="verDetalleR()">Detalle de Rendicion</button>
-                </div>
-            </div>
-        </div> -->
-        
         <div class="col-12">
             <br>
             <br>
             <br>
-            <p class="fw-bold text-warning" routerLink="../../inventarios">Regresar a la pagina anterior</p>
+            <p class="fw-bold text-primary" routerLink="../../inventarios">Regresar a la pagina anterior</p>
         </div>
     </div>
 </div>
-
-
-<app-modal
-[modalId]="modDetalleI"
-[modalTamaño]="'pantallaCompleta'"
-[titulo]="'Detalle de Inventario'"
-*ngIf="calculoRendicion"
->
-
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Producto</th>
-                            <th class="text-center">Apertura</th>
-                            <th class="text-center">Cierre</th>
-                            <th class="text-center">Recepcion</th>
-                            <th class="text-center">Salida</th>
-                            <th class="text-center">Suma</th>
-                            <th class="text-center">Precio</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Recepcion</th>
-                            <th class="text-center">Salida</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let i of calculoRendicion.detalleInventario">
-                        <tr>
-                            <td class="text-start">{{i.Producto.nombre}}</td>
-                            <td class="text-center">{{i.cantidadApertura | number}}</td>
-                            <td class="text-center">{{i.cantidadCierre | number}}</td>
-                            <td class="text-center">{{i.cantidadRecepcion | number}}</td>
-                            <td class="text-center">{{i.cantidadSalida | number}}</td>
-                            <td class="text-center fw-bold">{{i.cantidadTotal | number}}</td>
-                            <td class="text-end fw-bold">{{i.precio | number}}</td>
-                            <td class="text-end fw-bold">{{i.totalMultiplicado | number}}</td>   
-                            <td class="text-center"><button (click)="verDetalleRecep(i.idproducto)" class="btn btn-warning"><i class="bi bi-box-arrow-in-left"></i></button></td>
-                            <td class="text-center"><button (click)="verDetalleSalida(i.idproducto)" class="btn btn-secondary"><i class="bi bi-box-arrow-right"></i></button></td>
-                         
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <br>
-            <h3>Total Venta: {{calculoRendicion.totalVenta | number}}</h3>
-        </div>
-    </div>
-</app-modal>
-
-<app-modal
-[modalId]="modDetalleR"
-[modalTamaño]="'pantallaCompleta'"
-[titulo]="'Detalle de Caja'"
-*ngIf="calculoRendicion"
->
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Dinero</th>
-                            <th class="text-center">Cantidad Apertura</th>
-                            <th class="text-center">Cantidad Cierre</th>
-                            <th class="text-center">Total Apertura</th>
-                            <th class="text-center">Total Cierre</th>
-                            <th class="text-center">Diferencia C-A</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let i of calculoRendicion.detalleRendicion">
-                        <tr>
-                            <td class="text-start">{{i.Dinero.nombreBillete}}</td>
-                            <td class="text-center">{{i.cantidadApertura | number}}</td>
-                            <td class="text-center">{{i.cantidadCierre | number}}</td>
-                            <td class="text-end">{{i.totalApertura | number}}</td>
-                            <td class="text-end">{{i.totalCierre | number}}</td>
-                            <td class="text-end fw-bold">{{i.montoTotal | number}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <h3>Total Dinero: {{calculoRendicion.totalCierreDinero | number}}</h3>
-        </div>
-    </div>
-</app-modal>
-
-<!--prueba temporal-->
-
-<app-modal
-[modalId]="modDetalleRec"
-[modalTamaño]="'pantallaCompleta'"
-[titulo]="'Detalle de Recepciones'"
->
-    <div class="row" *ngIf="detalleRecepcion">
-        <div class="col-12">
-            <div class="table table-striped table-hover">
-                <table class="table hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Producto</th>
-                            <th class="text-center">Cantidad</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">Observacion</th>
-                            <th class="text-center">Usuario</th>
-                            <th class="text-center">Nro Comprobante</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let i of detalleRecepcion">
-                        <tr>
-                            <td class="text-start">{{i.Producto.nombre}}</td>
-                            <td class="text-center">{{i.cantidad | number}}</td>
-                            <td class="text-end">{{i.total | number}}</td>
-                            <td class="text-start">{{i.Crecepcion.fecha | date}}</td>
-                            <td class="text-start">{{i.Crecepcion.observacion}}</td>
-                            <td class="text-start">{{i.Crecepcion.Usuario.nombre}}</td>
-                            <td class="text-center">{{i.Crecepcion.nroComprobante}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</app-modal>
-
-<app-modal
-[modalId]="modDetalleSalida"
-[modalTamaño]="'pantallaCompleta'"
-[titulo]="'Detalle de Salidas'"
->
-
-    <div class="row" *ngIf="detalleSalida">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table class="table hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Producto</th>
-                            <th class="text-center">Cantidad</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">Observacion</th>
-                            <th class="text-center">Usuario</th>
-                            <th class="text-center">Tipo Salida</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let i of detalleSalida">
-                        <tr>
-                            <td class="text-start">{{i.Producto.nombre}}</td>
-                            <td class="text-center">{{i.cantidad | number}}</td>
-                            <td class="text-end">{{i.total | number}}</td>
-                            <td class="text-start">{{i.Csalida.fecha | date}}</td>
-                            <td class="text-start">{{i.Csalida.observacion}}</td>
-                            <td class="text-start">{{i.Csalida.Usuario.nombre}}</td>
-                            <td class="text-start">{{i.Salida.descripcion}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</app-modal> 
-
-
-        <!-- <div class="col-12">
-            <div class="row justify-content-around">
-                <div class="col-8">
-                    <h3>Total Venta: {{calculoRendicion.totalVenta  | number}}</h3>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-warning" (click)="verDetalleI()">Detalles de Inventario</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="row justify-content-around">
-                <div class="col-8">
-                    <h3>Total Dinero: {{calculoRendicion.totalDinero  | number}}</h3>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-warning" (click)="verDetalleR()">Detalles de Rendicion</button>
-                </div>
-            </div>
-        </div> 
-
-
-        <div class="col-12">
-            <h2>Total Dinero - Venta = {{calculoRendicion.totalFinal  | number}}</h2>
-        </div>
-
-        <div class="col-12">
-            <h2>Resultado de la Rendicion del día: {{calculoRendicion.descTotalFinal}}</h2>
-        </div>-->

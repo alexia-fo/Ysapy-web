@@ -1,36 +1,20 @@
-//la tabla se reconstruye mediante ngIf del loading por lo que no es necesario idTabla 
-//para destruirlo, no tiene eventos, pero esto conlleva a que solo se pueda construir una tabla en un mismo componente
-export interface TablaItem<T> {//para modal buscar y tabla basica
-    campos:string[];
-    propiedades: string[];
-    datos: T[];
+//! 1. tabla basica --> 2. tabla pipe --> 3. tabla boton y con alineacion
+//!para componente modal-buscar y para componente tabla basica
+export interface TablaItem<T> {
+    campos:string[];//Encabezado de la tabla
+    propiedades: string[];//propiedades del objeto
+    datos: T[];//array de objetos
 }
 
-//para listado en tablas con paginado 
-//! VOVER A VERIFICAR CREO QUE NO SE UTILIZA (NO SE PUEDE DESTRUIR LA TABLA POR ID)
-export interface TablaItemPag<T> {//para modal buscar
-    campos:string[];
-    propiedades: string[];
-    datos: T[];
-    tablaId:string;//para destruir solo una tabla cuando hay varias en un mismo componente con el ngOnDestroy
-}
-
-//PARA PRUEBA DE TABLAS CON PIPE
-// export interface TablaItemPipe<T> {//para modal buscar y tabla basica
-//     campos:string[];
-//     propiedades: definicionColumnas[];
-//     datos: T[];
-// }
+//!Para componente tabla-pipe y tabla-boton
 export interface TablaItemPipe<T> {//para modal buscar y tabla basica
     campos:string[];
     propiedades: definicionColumnas[];
     datos: T[];
-    // alineaciones?: ('left' | 'center' | 'right')[];
 }
-
 export interface definicionColumnas{
     campo:string;
     pipe?:any;
 }
 
-//: 1. tabla basica 2. tabla pipe 3. tabla boton y con alineacion
+

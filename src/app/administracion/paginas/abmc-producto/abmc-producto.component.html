@@ -1,57 +1,65 @@
-<!--PANTALLA-->
+<!-- PANTALLA --> 
 <div class="container">
     <div class="row">
+
       <!--Boton Nuevo-->
       <div class="col offset-md-9 col-md-3">
         <div class="d-grid gap-2 my-2">
           <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
         </div>
       </div>
+
+      <!--Spinner de la tabla-->
+      <div class="col-12">
+        <div class="text-center mt-3" *ngIf="cargandoTabla">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <!-- <div class="text-center text-danger">
+            Obteniendo los Datos...
+          </div> -->
+        </div>
+      </div>
+
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <!-- <app-tabla-basica 
-        [tabla]="tabla" 
-        [cargandoTabla]="cargandoTabla" 
-        (itemSeleccionado)="obtenerSeleccionado($event)"
-        [dtOpciones]="dtOpciones"></app-tabla-basica> -->
-
-        <!-- <div class="table-responsive"> -->
-            <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
-                <thead>
-                  <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Descripcion</th>
-                    <th>Clasificacion</th>
-                    <th>Activo</th>
-                    <th>Facturable</th>
-                    <th>Usuario</th>
-                    <th>Detalle</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of tabla"><!-- (dblclick)="obtenerSeleccionado(item)" -->
-                    <td>{{item.idProducto}}</td>
-                    <td>{{item.nombre}}</td>
-                    <td>{{item.precio | number}}</td>
-                    <td>{{item.descripcion}}</td>
-                    <td>{{item.Clasificacion.nombre}}</td>
-                    <td>{{item.activo | booleanToString}}</td>
-                    <td>{{item.facturable | booleanToString}}</td>
-                    <td>{{item.Usuario.nombre}}</td>
-                    <td  class="text-center"><button id="btnDetalle_{{item.idProducto}}" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
-                  </tr>
-                </tbody>
-            </table>
-        <!-- </div> -->
+        <div class="table-responsive">
+          <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Descripcion</th>
+                <th>Clasificacion</th>
+                <th>Activo</th>
+                <th>Facturable</th>
+                <th>Usuario</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of tabla">
+                <td>{{item.idProducto}}</td>
+                <td>{{item.nombre | titlecase}}</td>
+                <td>{{item.precio | number}}</td>
+                <td>{{item.descripcion | titlecase}}</td>
+                <td>{{item.Clasificacion.nombre | titlecase}}</td>
+                <td>{{item.activo | booleanToString}}</td>
+                <td>{{item.facturable | booleanToString}}</td>
+                <td>{{item.Usuario.nombre | titlecase}}</td>
+                <td class="text-center"><button class="btn btn-secondary" (click)="obtenerSeleccionado(item)"><i class="bi bi-arrow-up-right-square"></i></button></td>     
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-
-  </div>
+</div>
   
-  <div class="modal fade"  [id]="modProductoId" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+<!-- MODAL DATOS E IMAGEN -->
+<div class="modal fade" [id]="modProductoId" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -60,14 +68,14 @@
             </div>
 
             <div class="modal-body">
-              <!--Spinner-->
+              <!--Spinner del modal-->
               <div class="text-center" *ngIf="cargandoOperacion">
                 <div class="spinner-border text-danger" role="status">
-                <span class="visually-hidden">Loading...</span>
+                  <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
 
-              <!--Formulario para realizar ABMC de los datos-->
+             <!--FORMULARIO PARA REALIZAR ABM DE DATOS-->
               <form [formGroup]="form" class="row g-3">
                 <div class="col-12">
                   <h3 class="text-center">Datos del Producto</h3>
@@ -121,9 +129,9 @@
                       <span class="visually-hidden">Loading...</span>
                     </div>
                   </div>
-                  <div class="text-center text-danger">
+                  <!-- <div class="text-center text-danger">
                     Obteniendo los Datos...
-                  </div>
+                  </div> -->
                 </div>
               </form>
             

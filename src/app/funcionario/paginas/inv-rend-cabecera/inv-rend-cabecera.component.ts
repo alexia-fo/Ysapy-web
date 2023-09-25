@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormatosService } from 'src/app/validaciones/formatos.service';
-import { RespuestaDatosCab } from '../../modelos/inventario.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { RespuestaDatosCab, guardarCabecera } from '../../modelos/inv-rend.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InvRendService } from '../../servicios/inv-rend.service';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
@@ -12,21 +11,21 @@ import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
   styleUrls: ['./inv-rend-cabecera.component.css'],
 })
 export class InvRendCabeceraComponent implements OnInit {
-  form!: FormGroup; //formulario para los datos, sin las imágenes
+  form!: FormGroup; //para enviar la descripcion
 
   cargandoOperacion: boolean=false; //registrando-loading
 
-  cargandoDatos:boolean=true; //al comenzar ya se busca la sucursal
+  cargandoDatos:boolean=true; //al comenzar ya se busca la sucursal y la habilitacion del inventario, obteniendoHabilitacion-loading
 
-  datosCabecera:RespuestaDatosCab={
+  datosCabecera:RespuestaDatosCab={ 
     mostrar:false,
     descripcion:''
+    //sucursal es opcional
   };
 
   constructor(
     private formulario: FormBuilder,
     private mensajeAlertify: AlertifyService,
-    private formatos: FormatosService,
     private servicioI:InvRendService
   ) {}
 
@@ -37,19 +36,20 @@ export class InvRendCabeceraComponent implements OnInit {
       observacion: ['' ],
     });
 
-    this.form.get('nombreSucursal')?.disable();//solo mostramos el nombre de la sucursal
+    this.form.get('nombreSucursal')?.disable();//solo mostramos el nombre de la sucursal, no editable
 
     this.consultarApertura();
   }
 
   guardar() {
-    if (!this.form.valid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+    /* TODO: Si el formulario cuenta con validaciones se mostrarán los errores, en este caso no contiene validaciones */
+    // if (!this.form.valid) {
+    //   this.form.markAllAsTouched();
+    //   return;
+    // }
 
     this.cargandoOperacion = true;
-    let { ...cabecera } = this.form.value;
+    let { ...cabecera }:guardarCabecera = this.form.value;
 
     this.servicioI.crearApertura(cabecera).subscribe({
       next: (respuesta: respuestaMensaje) => {
@@ -58,6 +58,7 @@ export class InvRendCabeceraComponent implements OnInit {
           `${respuesta.msg}`
         );
 
+        //para volver a verificar la habilitacion de la cabecera
         this.consultarApertura();
       },
       error: (errores: string[]) => {
@@ -69,14 +70,17 @@ export class InvRendCabeceraComponent implements OnInit {
     });
   }
 
+  /*FIXME:
+    Constulta la habilitacion de la Cabecera (si aun no existe una cabecera en la sucursal del usuario, en el turno del usuario, en la fecha de hoy)
+    si esta habilitado, se cuenta con la sucursal del usuario
+  */
   consultarApertura(){
     this.cargandoDatos=true;
     this.servicioI.obtenerDatosCabecera()
     .subscribe({
       next:(respuesta:RespuestaDatosCab)=>{
-        //console.log(respuesta)
         this.datosCabecera=respuesta;
-        if(respuesta.mostrar){
+        if(this.datosCabecera.mostrar){
           this.form.get('nombreSucursal')?.setValue(respuesta.sucursal?.nombre);
         }
         this.cargandoDatos=false;
@@ -85,7 +89,6 @@ export class InvRendCabeceraComponent implements OnInit {
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
-        console.log(errores);
         this.cargandoDatos = false;
       },
     })

@@ -15,7 +15,7 @@ export interface RespuestaClasificaciones{
 //-----fin clasificacion-------
 
 // PARA ACCEDER A LOS DATOS DE CLASIFICACIONES (CUANDO SON LLAVES FORANEAS) 
-// para ver el nombre de la clasificacion al listar el producto en la tabla
+// para ver el nombre de la clasificacion al listar el producto en la tabla de productos
 
 export interface datoClasificacion{
     nombre:string;
