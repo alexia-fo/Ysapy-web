@@ -2,7 +2,9 @@
 <div class="container mt-2">
 
     <h1 class="text-center text-dark-emphasis">Salida de productos</h1>
-    <p class="text-danger mt-3" *ngIf="!invHabilitado">{{descripcion}}</p>
+    <h6 class="text-secondary mt-3" *ngIf="invHabilitado">Fecha Apertura: {{fechaApertura | date}}</h6>
+    <h6 class="text-secondary mt-3" *ngIf="invHabilitado">Nro Inventario: {{idCabeceraInv}}</h6>
+    <p class="text-danger mt-3 fw-bold" *ngIf="!invHabilitado">{{descripcion}}</p>
 
     <div class="row" *ngIf="invHabilitado">
 
@@ -30,52 +32,58 @@
             </form>
             
             <hr>
-            
-            <!--FORMULARIO PARA AGREGAR O MODIFICAR EL PRODUCTO EN BAJA-->
-            <form [formGroup]="formSalida" class="mt-3">
-                <div class="row g-3">
-                    <!-- Detalle de recepcion -->
-                    <div class="col-md-6">
-                        <label for="idProducto" class="form-label">Id</label>
-                        <input formControlName="idProducto" type="text" id="idProducto" class="form-control">
-                        <!-- <small *ngIf="datoInvalido('idProducto')" class="e-mensaje-error">{{mensaje('idProducto')}}</small> -->
-                    </div>
-                    <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input formControlName="nombre" type="text" id="nombre" class="form-control">
-                        <!-- <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small> -->
-                    </div>
 
-                    <div class="col-md-6">
-                        <label for="salida" class="form-label">Tipo Salida</label>
-                        <select formControlName="salida" class="form-select" id="salida">
-                            <option *ngFor="let n of salidas" [ngValue]="n">{{ n.descripcion }}</option>
-                        </select>
-                        <small *ngIf="datoInvalido('salida')" class="e-mensaje-error">{{mensaje('salida')}}</small>
-                    </div>
-
-                    <div class="col-md-3 col-xl-4">
-                        <!-- <div class="col-md-6"> -->
-                        <label for="cantidad" class="form-label">Cantidad</label>
-                        <input formControlName="cantidad" type="number" id="cantidad" class="form-control">
-                        <small *ngIf="datoInvalido('cantidad')" class="e-mensaje-error">{{mensaje('cantidad')}}</small>
-                    </div>
-
-                    <div class="col-md-3 col-xl-2">
-                        <div class="d-grid gap-2 d-flex justify-content-end">
-                            <div class="text-center">
-                                <label for="cantidad" class="form-label fw-bold d-block">Buscar</label>
-                                <button class="btn btn-secondary" (click)="buscar()"><i class="bi bi-search"></i></button>
+            <div class="row">
+                <div class="col-md-9">
+                    <!--FORMULARIO PARA AGREGAR O MODIFICAR EL PRODUCTO EN BAJA-->
+                    <form [formGroup]="formSalida">
+                        <div class="row g-3">
+                            <!-- Detalle de recepcion -->
+                            <div class="col-md-3">
+                                <label for="idProducto" class="form-label" >Id</label>
+                                <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (keydown)="onInputClick($event)">
+                                <!-- <small *ngIf="datoInvalido('idProducto')" class="e-mensaje-error">{{mensaje('idProducto')}}</small> -->
                             </div>
-                            <div class="text-center">
-                                <label for="cantidad" class="form-label fw-bold d-block">Agregar</label>
-                                <button class="btn btn-secondary" (click)="agregar()"><i class="bi bi-plus-square"></i></button>
+                            
+                            <div class="col-md-6    ">
+                                <label for="salida" class="form-label">Tipo Salida</label>
+                                <select formControlName="salida" class="form-select" id="salida">
+                                    <option *ngFor="let n of salidas" [ngValue]="n">{{ n.descripcion }}</option>
+                                </select>
+                                <small *ngIf="datoInvalido('salida')" class="e-mensaje-error">{{mensaje('salida')}}</small>
                             </div>
+                            
+                            <div class="col-md-3 col-xl-3">
+                                <!-- <div class="col-md-6"> -->
+                                    <label for="cantidad" class="form-label">Cantidad</label>
+                                    <input formControlName="cantidad" type="number" id="cantidad" class="form-control">
+                                    <small *ngIf="datoInvalido('cantidad')" class="e-mensaje-error">{{mensaje('cantidad')}}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input formControlName="nombre" type="text" id="nombre" class="form-control">
+                                <!-- <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small> -->
+                            </div>
+                    </form>
+                
+                </div>
+
+                <div class="col-md-3 col-xl-2">
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <div class="text-center">
+                            <label for="cantidad" class="form-label fw-bold d-block">Buscar</label>
+                            <button class="btn btn-secondary" (click)="buscar()"><i class="bi bi-search"></i></button>
+                        </div>
+                        <div class="text-center">
+                            <label for="cantidad" class="form-label fw-bold d-block">Agregar</label>
+                            <button class="btn btn-secondary" (click)="agregar()"><i class="bi bi-plus-square"></i></button>
                         </div>
                     </div>
                 </div>
-            </form>
 
+            </div>
+            
         </div>
 
 

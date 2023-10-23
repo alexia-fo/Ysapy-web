@@ -3,6 +3,8 @@
 export interface invCabHabilitado{
     habilitado:boolean;
     descripcion:string;
+    idCabeceraInv?:number;
+    fechaApertura?: Date;
 }
 
 export interface Sucursal {
@@ -19,6 +21,8 @@ export interface RespuestaDatosCab {
     mostrar: boolean;
     descripcion:string;
     sucursal?: Sucursal;
+    idCabeceraInv?:number;
+    fechaApertura?: Date;
 }
 
 export interface guardarCabecera{
@@ -29,6 +33,8 @@ export interface guardarCabecera{
 export interface invProdHabilitado{
     habilitado:boolean;
     descripcion:string;
+    idCabeceraInv?:number;
+    fechaApertura?:Date;
 }
 
 export interface Producto{
@@ -48,6 +54,8 @@ export interface RespuestaDatosProducto {
     mostrar: boolean;
     descripcion:string;
     productos?: Producto[];
+    idCabeceraInv?:number;
+    fechaApertura?:Date;
 }
 
 /*
@@ -63,6 +71,8 @@ export interface GuardarInventario{
 export interface rendCajaHabilitado{
     habilitado:boolean;
     descripcion:string;
+    idCabeceraInv?:number;
+    fechaApertura?:Date;
 }
 
 export interface Dinero {
@@ -81,6 +91,8 @@ export interface RespuestaDatosDinero {
     mostrar: boolean;
     descripcion:string;
     dineros?: Dinero[];
+    idCabeceraInv?:number;
+    fechaApertura?:Date;
 }
 
 export interface datosGuardarBillete {
@@ -91,4 +103,62 @@ export interface datosGuardarBillete {
 
 export interface GuardarRendicion{
     dineroControles:datosGuardarBillete[];
+}
+
+//para obtener informacion del producto al presionar enter en el campo id producto de recepcion y salida
+
+export interface RespuestaProducto{
+    nombre: string;
+}
+
+//para visualizar los inventarios ya enviados o registrados
+//para visualizar las recepciones
+
+export interface InventarioVisualizar{
+    idcrecepcion:number;
+    idproducto:number;
+    cantidad:number;
+    total:number;
+    Producto:{
+        nombre:string;
+    }
+}
+
+export interface RespuestaInventariosVisualizar{
+    dInventario:InventarioVisualizar[];
+}
+
+export interface RespuestaDatosVisualizarInventario{
+    mostrar: boolean;
+    descripcion:string;
+    idCabeceraInv?:number;
+    fechaApertura?:Date;
+    dinventario?:InventarioVisualizar[];
+}
+
+//para visualizar el detalle de inventario 
+export interface DetInventario{
+    idproducto:number;
+    cantidadApertura:number;
+    cantidadCierre:number;
+    cantidadRecepcion:number;
+    cantidadSalida:number;
+    precio:number;
+    cantidadTotal:number; // para inventarios cerrados
+    totalMultiplicado:number; // para inventarios cerrados
+    Producto:{
+        nombre:String;
+    }
+}
+
+export interface RespuestaDetInventarioVisualizar{
+    dInventario:DetInventario[];
+}
+
+export interface RespuestaDatosVisualizarInv{
+    mostrar: boolean;
+    descripcion:string;
+    idCabeceraInv?:number;
+    fechaApertura?:Date;
+    dinventario?:DetInventario[];
 }

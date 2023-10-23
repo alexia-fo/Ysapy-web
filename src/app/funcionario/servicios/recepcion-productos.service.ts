@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
 import { environment } from 'src/environments/environment.prod';
 import { Observable, catchError, switchMap, map, of } from 'rxjs';
-import { GuardarRecepcion, ProdRecibido, RespuestaDatos, recCabHabilitado } from '../modelos/recepcion-productos.model';
+import { GuardarRecepcion, ProdRecibido, RespuestaDatos,  RespuestaDatosVisualizarRecepcion,  RespuestaRecepcionesVisualizar,  recCabHabilitado } from '../modelos/recepcion-productos.model';
 import { AutentificacionService } from 'src/app/autentificacion/servicios/autentificacion.service';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 import { RespuestaProductos } from '../modelos/inv-rend.model';
@@ -105,6 +105,7 @@ constructor(
 //     );
 // }
 
+//verifica si ya existe un detalle de inventario, ya que al registrar recepciones se actualiza el campo cantidadRecepcion de la tabla dinventario
 verExiteApertura(): Observable<recCabHabilitado> {
   return this.http.get<recCabHabilitado>(`${this.apiUrl}/recepciones/verExisteApertura`)
   .pipe(
@@ -112,6 +113,7 @@ verExiteApertura(): Observable<recCabHabilitado> {
   );
 } 
 
+//obtener los productos registrados en la tabla productos utilizando el mismo endpoint para obtener los productos de inventario
 productosRecepcion(): Observable<RespuestaProductos> {
   return this.http.get<RespuestaProductos>(`${this.apiUrl}/inventarios/productosInventario`)
   .pipe(
@@ -126,7 +128,7 @@ obtenerDatos(): Observable<RespuestaDatos> {
       if (respuesta.habilitado) {
         return this.productosRecepcion().pipe(
           map((RespuestaPrs: RespuestaProductos): RespuestaDatos => {
-            return ({ mostrar: true, descripcion:respuesta.descripcion ,producto: RespuestaPrs.producto })
+            return ({ mostrar: true, descripcion:respuesta.descripcion ,producto: RespuestaPrs.producto, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura, proximoNroComprobante:respuesta.proximoNroComprobante })
           })
         );
       } else {
@@ -136,10 +138,36 @@ obtenerDatos(): Observable<RespuestaDatos> {
   );
 }
 
+//registra las recepciones TODO: POR AHORA SE OBTIENEN TODOS LOS PRODUCTOS DE LA TABLA PRODUCTO AL BUSCAR POR ENDE SI AL INICIAR LA APERTURA NO ESTABA ESE PRODUCTO LANZARA UN ERROR Y NO DE PODRA REGISTRAR
 registrarRecepcion(recepcion: GuardarRecepcion): Observable<respuestaMensaje> {
   return this.http.post<respuestaMensaje>(`${this.apiUrl}/recepciones/registrarRecepcion`, { ...recepcion })
     .pipe(
       catchError(this.errorS.handleError)
+  );
+}
+
+//para obtener las recepciones ya registradas el dia de hoy en la sucursal del usuario logeado
+visualizarRecepciones(): Observable<RespuestaRecepcionesVisualizar> {
+  return this.http.get<RespuestaRecepcionesVisualizar>(`${this.apiUrl}/recepciones/visualizarRecepciones`)
+  .pipe(
+    catchError(this.errorS.handleError)
+  );
+}
+
+//si ya existe una apertura de inventario obtener los datos de las recepciones registradas
+obtenerDatosVisualizar(): Observable<RespuestaDatosVisualizarRecepcion> {
+  return this.verExiteApertura().pipe(
+    switchMap((respuesta: recCabHabilitado): Observable<RespuestaDatosVisualizarRecepcion> => {
+      if (respuesta.habilitado) {
+        return this.visualizarRecepciones().pipe(
+          map((RespuestaPrs: RespuestaRecepcionesVisualizar): RespuestaDatosVisualizarRecepcion => {
+            return ({ mostrar: true, descripcion:respuesta.descripcion ,drecepcion: RespuestaPrs.dRecepcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura })
+          })
+        );
+      } else {
+        return of({ mostrar: false, descripcion:respuesta.descripcion });
+      }
+    })
   );
 }
 

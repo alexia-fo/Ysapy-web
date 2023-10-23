@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
 import { environment } from 'src/environments/environment.prod';
-import { GuardarInventario, GuardarRendicion, RespuestaDatosCab, RespuestaDatosDinero, RespuestaDatosProducto, RespuestaDineros, RespuestaProductos, RespuestaSucursal, guardarCabecera, invCabHabilitado, invProdHabilitado, rendCajaHabilitado } from '../modelos/inv-rend.model';
+import { GuardarInventario, GuardarRendicion, RespuestaDatosCab, RespuestaDatosDinero, RespuestaDatosProducto, RespuestaDatosVisualizarInv, RespuestaDetInventarioVisualizar, RespuestaDineros, RespuestaInventariosVisualizar, RespuestaProducto, RespuestaProductos, RespuestaSucursal, guardarCabecera, invCabHabilitado, invProdHabilitado, rendCajaHabilitado } from '../modelos/inv-rend.model';
 import { Observable, catchError, switchMap, tap, map, of } from 'rxjs';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 
@@ -64,11 +64,11 @@ export class InvRendService {
         if (respuesta.habilitado) {
           return this.sucDeUsuario().pipe(
             map((RespuestaSucursal: RespuestaSucursal): RespuestaDatosCab => {
-              return ({ mostrar: true, descripcion:respuesta.descripcion ,sucursal: RespuestaSucursal.sucursal })
+              return ({ mostrar: true, descripcion:respuesta.descripcion, sucursal: RespuestaSucursal.sucursal })
             })
           );
-        } else {
-          return of({ mostrar: false, descripcion:respuesta.descripcion });
+        } else { //si existe cabecera mostrar=false, si existe se obtiene el id y la cabecera
+          return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura });
         }
       })
     );
@@ -128,11 +128,12 @@ export class InvRendService {
         if (respuesta.habilitado) {
           return this.productosInventario().pipe(
             map((respuestaProductos: RespuestaProductos): RespuestaDatosProducto => {
-              return ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto })
+              return ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura  })
             })
           );
         } else {
-          return of({ mostrar: false, descripcion:respuesta.descripcion });
+          return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura}); // el id y la fecha vienen igual si el inventario no esta habilitado pq no existe detalle de rendicion de caja pero ya existe cabecera
+          //el id y la fecha no viene solo en el caso de que aun no exista apertura es decir una cabecera
         }
       })
     );
@@ -191,11 +192,11 @@ export class InvRendService {
         if (respuesta.habilitado) {
           return this.dinerosRendicion().pipe(
             map((respuestaDineros: RespuestaDineros): RespuestaDatosDinero => {
-              return ({ mostrar: true, descripcion:respuesta.descripcion ,dineros: respuestaDineros.dinero })
+              return ({ mostrar: true, descripcion:respuesta.descripcion ,dineros: respuestaDineros.dinero, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura })
             })
           );
         } else {
-          return of({ mostrar: false, descripcion:respuesta.descripcion });
+          return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura });
         }
       })
     );
@@ -207,4 +208,41 @@ export class InvRendService {
         catchError(this.errorS.handleError)
     );
   }
+
+  /*FIXME: para obtener la informacion de producto al presionar enter en el campo id de producto 
+  en recepcion y en salida de productos */
+
+  obtenerProductoPorId(idProducto:number): Observable<RespuestaProducto> {
+    return this.http.get<RespuestaProducto>(`${this.apiUrl}/inventarios/producto/${idProducto}`)
+      .pipe(
+        catchError(this.errorS.handleError)
+    );
+  }
+
+  //para visualizar el inventario registrado por los usuarios
+  visualizarInventarios(): Observable<RespuestaDetInventarioVisualizar> {
+    return this.http.get<RespuestaDetInventarioVisualizar>(`${this.apiUrl}/inventarios/visualizarInventario`)
+    .pipe(
+      catchError(this.errorS.handleError)
+    );
+  }
+
+  //si ya existe una apertura de inventario obtener los datos de las recepciones registradas
+  obtenerDatosVisualizar(): Observable<RespuestaDatosVisualizarInv> {
+    return this.verExiteApertura().pipe(
+      switchMap((respuesta: invCabHabilitado): Observable<RespuestaDatosVisualizarInv> => {
+        if (!respuesta.habilitado) {
+          return this.visualizarInventarios().pipe(
+            map((RespuestaPrs: RespuestaDetInventarioVisualizar): RespuestaDatosVisualizarInv => {
+              return ({ mostrar: true, descripcion:respuesta.descripcion , dinventario: RespuestaPrs.dInventario, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura })
+            })
+          );
+        } else {
+          return of({ mostrar: false, descripcion:respuesta.descripcion });
+        }
+      })
+    );
+  }
+
+
 }

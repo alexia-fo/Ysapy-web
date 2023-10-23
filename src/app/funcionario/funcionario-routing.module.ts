@@ -6,12 +6,27 @@ import { InventarioProductosComponent } from './paginas/inventario-productos/inv
 import { InvRendCabeceraComponent } from './paginas/inv-rend-cabecera/inv-rend-cabecera.component';
 import { RecepcionProductosComponent } from './paginas/recepcion-productos/recepcion-productos.component';
 import { SalidaProductosComponent } from './paginas/salida-productos/salida-productos.component';
+import { VisualizarInventariosComponent } from './paginas/visualizar-inventarios/visualizar-inventarios.component';
+import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones/visualizar-recepciones.component';
+import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
 
 const routes: Routes = [
   {
     path:"",
     component:MainComponent,
     children:[
+      {
+        path:'visualizarInventarios',
+        component:VisualizarInventariosComponent
+      },
+      {
+        path:'visualizarRecepciones',
+        component:VisualizarRecepcionesComponent
+      },
+      {
+        path:'visualizarSalidas',
+        component:VisualizarSalidasComponent
+      },
       {
         path:'salidaProductos',
         component:SalidaProductosComponent

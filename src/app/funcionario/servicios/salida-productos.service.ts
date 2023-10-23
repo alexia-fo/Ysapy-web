@@ -4,8 +4,8 @@ import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/maneja
 import { environment } from 'src/environments/environment.prod';
 import { Observable, catchError, switchMap, tap, map, of, forkJoin } from 'rxjs';
 import { AutentificacionService } from 'src/app/autentificacion/servicios/autentificacion.service';
-import { GuardarSalida, ProdEnBaja, RespuestaDatos, RespuestaSalidas, salidaCabHabilitado } from '../modelos/salida-productos.model';
-import { ProdRecibido } from '../modelos/recepcion-productos.model';
+import { GuardarSalida, ProdEnBaja, RespuestaDatos, RespuestaDatosVisualizarSalida, RespuestaSalidas, RespuestaSalidasVisualizar, salidaCabHabilitado } from '../modelos/salida-productos.model';
+import { ProdRecibido, recCabHabilitado } from '../modelos/recepcion-productos.model';
 import { RespuestaProductos } from '../modelos/inv-rend.model';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 
@@ -102,6 +102,7 @@ constructor(
 //     );
 // }
 
+//verifica si ya existe un detalle de inventario, ya que al registrar salidas se actualiza el campo cantidadRecepcion de la tabla dinventario
 verExiteApertura(): Observable<salidaCabHabilitado> {
   return this.http.get<salidaCabHabilitado>(`${this.apiUrl}/salidas/verExisteApertura`)
   .pipe(
@@ -109,6 +110,7 @@ verExiteApertura(): Observable<salidaCabHabilitado> {
   );
 } 
 
+//obtener los productos registrados en la tabla productos utilizando el mismo endpoint para obtener los productos de inventario
 productosSalida(): Observable<RespuestaProductos> {
   return this.http.get<RespuestaProductos>(`${this.apiUrl}/inventarios/productosInventario`)
   .pipe(
@@ -123,7 +125,7 @@ tiposSalida(): Observable<RespuestaSalidas> {
     catchError(this.errorS.handleError)
   );
 }
-//Si ya existe una detalle de inventario, se obtienen los productos registrados para seleccionarlos al generar salidas
+//Si ya existe una detalle de inventario, se obtienen los productos registrados para seleccionarlos al generar salidas, ademas se obtienen los tipos de salidas al mismo tiempo
 obtenerDatos(): Observable<RespuestaDatos> {
   return this.verExiteApertura().pipe(
     
@@ -134,7 +136,7 @@ obtenerDatos(): Observable<RespuestaDatos> {
           this.tiposSalida()
         ]).pipe(
           map((Respuestas: [RespuestaProductos, RespuestaSalidas]): RespuestaDatos => {
-            return ({ mostrar: true, descripcion:respuesta.descripcion ,producto: Respuestas[0].producto, salida:Respuestas[1].salida })
+            return ({ mostrar: true, descripcion:respuesta.descripcion ,producto: Respuestas[0].producto, salida:Respuestas[1].salida, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura })
           })
 
         );
@@ -153,11 +155,37 @@ https://www.google.com/search?q=como+puedo+realizar+dos+peticiones+al+mismo+tiem
 https://adrianub.dev/blog/combinando-multiples-flujos-http-con-rxjs-observables-en-angular/
 */
 
+//registra las salidas TODO: POR AHORA SE OBTIENEN TODOS LOS PRODUCTOS DE LA TABLA PRODUCTO AL BUSCAR POR ENDE SI AL INICIAR LA APERTURA NO ESTABA ESE PRODUCTO LANZARA UN ERROR Y NO DE PODRA REGISTRAR
 registrarSalida(recepcion: GuardarSalida): Observable<respuestaMensaje> {
   console.log(recepcion)
   return this.http.post<respuestaMensaje>(`${this.apiUrl}/salidas/registrarSalida`, { ...recepcion })
     .pipe(
       catchError(this.errorS.handleError)
+  );
+}
+
+//para obtener las salidas ya registradas el dia de hoy en la sucursal del usuario logeado
+visualizarSalidas(): Observable<RespuestaSalidasVisualizar> {
+  return this.http.get<RespuestaSalidasVisualizar>(`${this.apiUrl}/salidas/visualizarSalidas`)
+  .pipe(
+    catchError(this.errorS.handleError)
+  );
+}
+
+//si ya existe una apertura de inventario obtener los datos de las salidas registradas
+obtenerDatosVisualizar(): Observable<RespuestaDatosVisualizarSalida> {
+  return this.verExiteApertura().pipe(
+    switchMap((respuesta: salidaCabHabilitado): Observable<RespuestaDatosVisualizarSalida> => {
+      if (respuesta.habilitado) {
+        return this.visualizarSalidas().pipe(
+          map((RespuestaPrs: RespuestaSalidasVisualizar): RespuestaDatosVisualizarSalida => {
+            return ({ mostrar: true, descripcion:respuesta.descripcion ,dsalida: RespuestaPrs.dSalida, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura })
+          })
+        );
+      } else {
+        return of({ mostrar: false, descripcion:respuesta.descripcion });
+      }
+    })
   );
 }
 

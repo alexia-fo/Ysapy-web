@@ -1,65 +1,45 @@
-import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { environment } from 'src/environments/environment';
-import { EliminadoProducto, Producto, RespuestaProductos } from '../../modelos/producto.model';
-import { Clasificacion, RespuestaClasificaciones } from '../../modelos/clasificacion.model';
-import { ProductoService } from '../../servicios/producto.service';
-import { ClasificacionService } from '../../servicios/clasificacion.service';
-import { FormatosService } from 'src/app/validaciones/formatos.service';
+import { Component } from '@angular/core';
+import { TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
+import { EliminadoInformaicion, Informacion, RespuestaInformaciones } from '../../modelos/informacion.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment.prod';
+import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { ImagenService } from 'src/app/utilidades/servicios/imagenes/imagen.service';
 import { ImagenesService } from 'src/app/utilidades/servicios/imagenes/imagenes.service';
-import { TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
-import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
-import { DecimalPipe } from '@angular/common';
-import { Validaciones } from 'src/app/validaciones/bd';
+import { FormatosService } from 'src/app/validaciones/formatos.service';
+import { InformacionService } from '../../servicios/informacion.service';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './producto.component.html',
-  styleUrls: ['./producto.component.css']
+  selector: 'app-informacion',
+  templateUrl: './informacion.component.html',
+  styleUrls: ['./informacion.component.css']
 })
-
-export class ProductoComponent implements OnInit{
+export class InformacionComponent {
 
   //Instanciar los pipes para la tabla
   stringPipe:BooleanToStringPipe= new BooleanToStringPipe();
-  //decimalPipe: DecimalPipe = new DecimalPipe('en-US'); // Puedes ajustar la configuración de localización según tus necesidades
-  //todo:la configuracion global del pipe solo afecta a los pipes utilizados en el html no a los instacidos en el ts
-  decimalPipe: DecimalPipe = new DecimalPipe('es-PY'); // Puedes ajustar la configuración de localización según tus necesidades
   
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
   //se puede ocultar un modal y mostrar otro y viceversa
-  modProductoId='modalProducto';
+  modInforamacionId='modalInformacion';
 
   //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
   //los datos, corresponde al array de informacion que se quiere listar 
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
-  
-  //TODO:tabla sin pipes
-  // tabla:TablaItem<Producto>={ //propiedades de la tabla para el listado
-  //   propiedades: ['idProducto','nombre', 'precio', 'descripcion', 'activo', 'facturable', 'Usuario.nombre'], 
-  //   datos: [], 
-  //   campos:['Id', 'Producto', 'Precio', 'Descripcion', 'Clasificacion', 'Activo', 'Facturable', 'Usuario'], 
-  // }
 
   //utilizar pipes instanciados para formatear los datos
-  tabla:TablaItemPipe<Producto>={ //propiedades de la tabla para el listado
-    propiedades: [{campo:'idProducto'}, {campo:'nombre'}, {campo: 'precio', pipe:this.decimalPipe}, {campo:'descripcion'}, {campo:'Clasificacion.nombre'}, {campo:'activo', pipe:this.stringPipe}, {campo:'facturable', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
+  tabla:TablaItemPipe<Informacion>={ //propiedades de la tabla para el listado
+    propiedades: [{campo:'idInformacion'}, {campo:'titulo'}, {campo:'descripcion'}, {campo:'fecha'}, {campo:'activo', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
     datos: [], 
-    campos:['Id', 'Producto', 'Precio', 'Descripcion', 'Clasificacion', 'Activo', 'Facturable', 'Usuario'], 
+    campos:['Id', 'Titulo', 'Descripcion', 'Fecha', 'Activo', 'Usuario'], 
   }
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
-  //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a actualiar
-  seleccionado!: Producto; 
+  //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id de la informacion editado a actualiar
+  seleccionado!: Informacion; 
 
-  //formulario para crear y modificar registros (en este caso se instancia más de una vez, se instancia cuando se va a ralizar una creacion
-  //y cuando se va a hacer una modificacion, porque requiere de validaciones asincronas: cuando es una modificación se envia al validador del nombre, el nombre a modificar,
-  //que no se deberia tener en cuenta al verificar si el nombre ya se encuentra almacenado en la BD)
-  //para las validaciones asincronas es necesario que al instanciar el formulario ya se le envie los parametros necesarios para validarlo
   form!: FormGroup; 
-  //formInstanciado: boolean = false; // no es necesario pq el fomulario se instancia una sola vez pq no requiere de validaciones asincronas
 
   //crear-modificar-eliminar (se le envia como parametro al modal para habilitar o deshabilitar botones)
   //tambien se utiliza al momento de guardar para verificar si se insertara un nuevo registro o se actualizara uno existenete
@@ -105,16 +85,8 @@ export class ProductoComponent implements OnInit{
     },
   };
 
-  //------- CLASIFICACIONES DE PRODUCTOS ---------//
-
-  //para controlar que una vez que se obtengan las clasificaciones se establezcan los datos a editar o sino la clasificacion no se mostrará
-  //( también se usa para mostrar un loading de obtencion de datos)
-  cargandoComboClasif=false;  
-  
-  clasificaciones!:Clasificacion[]; //para el combo de clasificaciones
-
   //------- IMAGENES DE PRODUCTOS ---------//
-  apiUrl=`${environment.API_URL}/api/uploads/productos/`; //ruta del API (se usa para mostrar la imagen actual de un producto seleccinado para modificar)
+  apiUrl=`${environment.API_URL}/api/uploads/informaciones/`; //ruta del API (se usa para mostrar la imagen actual de un producto seleccinado para modificar)
   
   cargandoImagen:boolean=false; // si se está guardando imagen (para deshabilitar botones)
 
@@ -124,40 +96,46 @@ export class ProductoComponent implements OnInit{
   
   formImagen!:FormGroup; //formulario independiente para guardar las imagenes, sin el resto de los datos
 
-  //TODO:
-  //ya no es necesario pq al instaciar en el ngOnInit una vez como "crear" se evita el error
-  //formInstanciado=false; //ya que al modificar o crear nuevo, recien se instancia el formulario, el html genera error pq ya se requiere al visualizar el modal 
-
   constructor(
     private formulario:FormBuilder,
     private mensajeAlertify: AlertifyService,
-    private servicioProd: ProductoService,
-    private servicioClasif:ClasificacionService,
     private servicioConvImg: ImagenService,
     private servicioImagen:ImagenesService,
     private formatos: FormatosService,
+    private servicioI:InformacionService,
   ) {
   }
 
   ngOnInit(): void {
     //para evitar errores se inicializan los formularios, luego se volveran a inicializar por cada accion
-    this.instanciarFormularioDatos(false);
+
+    this.instanciarFormulario();
+
     this.instanciarFormularioImagen();
 
-    this.obtenerProductos();
+    this.obtenerInformaciones();
   }
 
+
+  instanciarFormulario(){
+    this.form=this.formulario.group({   
+      titulo:['',[Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      descripcion:['', [Validators.required, Validators.maxLength(250)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
+      fecha:['', []]
+    });
+  }
 
   //requiere de validaciones asincronas por eso requiere que el formulario se instancia al crear 
   //nuevo y al modificar un producto
   nuevo() {
     //instanciar el formulario y luego cargar el combo de clasificaciones
     this.accion="C";
-    this.instanciarFormularioDatos(false);
-    this.obtenerClasificaciones(false);
+
+    ///limpiar formulario por si se uso el de modificacion
+    this.form.reset();
 
     //mostrar el modal
-    this.mostrarModal(this.modProductoId, true);
+    this.mostrarModal(this.modInforamacionId, true);
   }
  
   guardar() {
@@ -174,16 +152,18 @@ export class ProductoComponent implements OnInit{
     }
 
     this.cargandoOperacion = true; //coienza la operacion de insercion
-    let { ...producto } = this.form.value;
+    let { ...informacion } = this.form.value;
+
+    console.log(informacion)
 
     if (this.accion == 'C') {
-      this.servicioProd.crear(producto).subscribe({
-        next: (respuesta: Producto) => {
-          this.mostrarModal(this.modProductoId, false);
+      this.servicioI.crear(informacion).subscribe({
+        next: (respuesta: Informacion) => {
+          this.mostrarModal(this.modInforamacionId, false);
           this.cargandoOperacion = false;
-          this.obtenerProductos();
+          this.obtenerInformaciones();
           this.mensajeAlertify.mensajeExito(
-            `${respuesta.nombre} se ha insertado correctamente ✓✓`
+            `${respuesta.titulo} se ha insertado correctamente ✓✓`
           );
         },
         error: (errores: string[]) => {
@@ -194,15 +174,15 @@ export class ProductoComponent implements OnInit{
         },
       });
     } else if (this.accion == 'M') {
-      this.servicioProd
-        .actualizar(this.seleccionado.idProducto, producto)
+      this.servicioI
+        .actualizar(this.seleccionado.idInformacion, informacion)
         .subscribe({
-          next: (respuesta: Producto) => {
-            this.mostrarModal(this.modProductoId, false)
+          next: (respuesta: Informacion) => {
+            this.mostrarModal(this.modInforamacionId, false)
             this.cargandoOperacion = false;
-            this.obtenerProductos();
+            this.obtenerInformaciones();
             this.mensajeAlertify.mensajeExito(
-              `${respuesta.nombre} se ha actualizado correctamente ✓✓`
+              `${respuesta.titulo} se ha actualizado correctamente ✓✓`
             );
           },
           error: (errores) => {
@@ -217,14 +197,14 @@ export class ProductoComponent implements OnInit{
     
   eliminar() {
     this.cargandoOperacion=true; //empieza la operacion
-    this.mostrarModal(this.modProductoId, false);
-    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion del producto ${this.seleccionado.nombre}`,()=>{
-      this.servicioProd.eliminar(this.seleccionado.idProducto).subscribe({
-        next: (respuesta: EliminadoProducto) => {
+    this.mostrarModal(this.modInforamacionId, false);
+    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion del producto ${this.seleccionado.titulo}`,()=>{
+      this.servicioI.eliminar(this.seleccionado.idInformacion).subscribe({
+        next: (respuesta: EliminadoInformaicion) => {
           this.cargandoOperacion = false;
-          this.obtenerProductos();
+          this.obtenerInformaciones();
           this.mensajeAlertify.mensajeExito(
-            `${respuesta.producto.nombre} se ha anulado correctamente ✓✓`
+            `${respuesta.informacion.titulo} se ha anulado correctamente ✓✓`
           );
         },
         error: (errores) => {
@@ -241,50 +221,32 @@ export class ProductoComponent implements OnInit{
   mensaje(campo:string){
     let mensaje="";
     if(this.form.get(campo)?.hasError('required')){
-      if(campo=="nombre"){
-        mensaje="El nombre es requerido";
-      }
-      
-      if(campo=="precio"){
-        mensaje="El precio es requerido";
+      if(campo=="fecha"){
+        mensaje="La fecha es requerida";
       }
 
-      if(campo=="idclasificacion"){
-        mensaje="La clasificación es requerida";
+      if(campo=="descripcion"){
+        mensaje="La descripcion es requerida";
       }
 
-      if(this.accion=='M'){
-        if(campo=="facturable"){
-          mensaje="Facturable requerido";
-        }
+      if(campo=="titulo"){
+        mensaje="El titulo es requerido";
       }
     }
 
     if(this.form.get(campo)?.hasError('minlength')){
-      if(campo == "nombre"){
-        mensaje="Nombre: min 5 caracteres";
+      if(campo == "titulo"){
+        mensaje="El título debe contener minimo 5 caracteres";
       }
-
     }
 
     if(this.form.get(campo)?.hasError('maxlength')){
-      if(campo == "nombre"){
-        mensaje="Nombre: max 100 caracteres";
+      if(campo == "titulo"){
+        mensaje="Titulo: Máximo 200 caracteres";
       }
       if(campo == "descripcion"){
-        mensaje="Nombre: max 200 caracteres";
+        mensaje="Descripcion: max 250 caracteres";
       }
-    }
-
-    if(this.form.get(campo)?.hasError('min')){
-      if(campo == "precio"){
-        mensaje="Precio: mínimo = 0";
-      }
-    }
-
-    // validacion asincrona
-    if(this.form.get(campo)?.hasError('not_available')){
-      mensaje="El nombre ya está registrado";
     }
     
     return mensaje;
@@ -308,11 +270,11 @@ export class ProductoComponent implements OnInit{
   }
 
   // -- PARA RECARGAR TABLA --//
-  obtenerProductos() {
+  obtenerInformaciones() {
     this.cargandoTabla=true;
-    this.servicioProd.obtenerProductos().subscribe({
-      next: (respuesta: RespuestaProductos) => {
-        this.tabla.datos = respuesta.producto;
+    this.servicioI.obtenerInformaciones().subscribe({
+      next: (respuesta: RespuestaInformaciones) => {
+        this.tabla.datos = respuesta.informacion;
         this.cargandoTabla = false;
       },
       error: (errores) => {
@@ -334,86 +296,22 @@ export class ProductoComponent implements OnInit{
     }
   }
 
-  obtenerSeleccionado(producto: Producto) {
+  obtenerSeleccionado(informacion: Informacion) {
+
+    console.log("seleccionado", informacion)
 
     //para limpiar la imagen anteriormente seleccionada
     this.limpiarArchivo();
     this.accion="M";
-    this.seleccionado = {...producto};
-    //se debe instanciar el formulario una vez que se establece el valor de this.seleccionado, para permitir la validacion asincrona
-    this.instanciarFormularioDatos(true);
-    //si es modificacion, se agrega el valor del producto una vez que se obtienen las clasificaciones
-    this.obtenerClasificaciones(true); 
-    this.mostrarModal(this.modProductoId, true);
-  }
-
-  instanciarFormularioDatos(esModificar:boolean){
-    if(esModificar){
-      this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
-        nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
-        {
-          validators:[Validators.required, Validators.minLength(5), Validators.maxLength(100)],
-          asyncValidators:[Validaciones.validacionProducto(this.servicioProd, this.seleccionado.nombre)],
-          updateOn:"blur"
-        }],    
-        precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:['', [Validators.maxLength(200)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
-        idclasificacion:['',[Validators.required]],
-        facturable:['',[Validators.required]],
-      });
-
-    }else{
-      this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
-        nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
-            {
-          validators:[Validators.required, Validators.minLength(5), Validators.maxLength(100)],
-          asyncValidators:[Validaciones.validacionProducto(this.servicioProd, undefined)],
-          updateOn:"blur"
-        }],
-        precio:['',[Validators.required, Validators.min(0)]],
-        descripcion:['', [Validators.maxLength(200)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
-        idclasificacion:['',[Validators.required]],
-      });
-    }
+    ///limpiar formulario por si se uso el de nuevo
+    this.form.reset();
+    this.seleccionado = {...informacion};
+    this.form.patchValue(this.seleccionado)
+    this.mostrarModal(this.modInforamacionId, true);
   }
 
 
-  obtenerClasificaciones(esModificacion:boolean){
-    if(esModificacion && this.seleccionado!=undefined){
-      this.cargandoComboClasif=true;
-      this.servicioClasif.obtenerClasificaciones()
-      .subscribe({
-        next:(response:RespuestaClasificaciones)=>{
-          this.clasificaciones=response.clasificacion;
-          this.cargandoComboClasif=false;
-          this.form.patchValue(this.seleccionado);
-          //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
-          this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
 
-        },
-        error:(errores)=>{
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-        }
-
-      });
-    }else{
-      this.cargandoComboClasif=true;
-      this.servicioClasif.obtenerClasificaciones()
-      .subscribe({
-        next:(response:RespuestaClasificaciones)=>{
-          this.clasificaciones=response.clasificacion;
-          this.cargandoComboClasif=false;
-        },
-        error:(errores)=>{
-          errores.forEach((error: string) => {
-            this.mensajeAlertify.mensajeError(error);
-          });
-        }
-      });
-    }
-  }
 
   // -------- imagen -----------------// 
 
@@ -441,13 +339,13 @@ export class ProductoComponent implements OnInit{
       this.archivos.forEach((archivo:any) => {
         formularioDeDatos.append('archivo', archivo);
       });
-      this.servicioImagen.crear(this.seleccionado.idProducto, "productos", formularioDeDatos)
+      this.servicioImagen.crear(this.seleccionado.idInformacion, "informaciones", formularioDeDatos)
       .subscribe({
         next:(response)=>{
           
           // Llama a la función para recargar la página, pq si no se recarga la url sigue siendo la misma y el navegador sigue mostrando la misma imagen
           //si se vuelve a ver la misma imagen sin recargar          
-          this.mostrarModal(this.modProductoId, false);
+          this.mostrarModal(this.modInforamacionId, false);
           this.mensajeAlertify.mensajeExito('Imagen actualizada');
           // Continuar con la recarga de la página después de mostrar el mensaje
           setTimeout(() => {
@@ -511,15 +409,3 @@ export class ProductoComponent implements OnInit{
     return (this.form.pending && nombreControl!.touched);
   }
 }
-
-
-//!probando moneda
-/*
-import { registerLocaleData } from '@angular/common';
-import localeEsPy from '@angular/common/locales/es-PY';
-// Registra la configuración de localización para 'es-PY'
-registerLocaleData(localeEsPy, 'es-PY');
-//COPIAR EN EL COMPONENTE
-// currencyPipe: CurrencyPipe = new CurrencyPipe('en-US'); // Ajusta la configuración de localización según tus necesidades
-currencyPipe: CurrencyPipe = new CurrencyPipe('es-PY'); // Ajusta la configuración de localización según tus necesidades
-*/

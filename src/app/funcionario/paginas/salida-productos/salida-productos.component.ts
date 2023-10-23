@@ -6,7 +6,8 @@ import { DataTableDirective } from 'angular-datatables';
 import { GuardarSalida, ProdEnBaja, RespuestaDatos, Salida } from '../../modelos/salida-productos.model';
 import { SalidaProductosService } from '../../servicios/salida-productos.service';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
-import { Producto } from '../../modelos/inv-rend.model';
+import { Producto, RespuestaProducto } from '../../modelos/inv-rend.model';
+import { InvRendService } from '../../servicios/inv-rend.service';
 
 @Component({
   selector: 'app-salida-productos',
@@ -92,6 +93,8 @@ export class SalidaProductosComponent {
 
   invHabilitado:boolean=false;//estado de inventarios (se encuentra algun inventario disponible para agregarle salidas ?)
   descripcion:string='';//detalle del estado de inventarios
+  fechaApertura!:Date;
+  idCabeceraInv!:number;
 
   productos:Producto[]=[]; //Productos disponibles para buscar y seleccionar en el modal
 
@@ -112,12 +115,13 @@ export class SalidaProductosComponent {
     private fb: FormBuilder, 
     private servicioP: SalidaProductosService,
     private detectorCambio: ChangeDetectorRef,
+    private servicioC:InvRendService
   ){}
 
 
   ngOnInit(): void {
     //deshabilitar edicion de campos
-    this.formSalida.get('idProducto')?.disable();//solo mostramos
+    // this.formSalida.get('idProducto')?.disable();//solo mostramos
     this.formSalida.get('nombre')?.disable();//solo mostramos
     
     this.cargandoProductos=true;
@@ -134,6 +138,9 @@ export class SalidaProductosComponent {
         if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar salida
           this.productos=response.producto!;//se obtienen los productos si existe apertura
           this.salidas=response.salida!;
+          //si el inventario esta habilitado quiere decir que existe una cabecera por lo que si va a haber la fecha y el id
+          this.fechaApertura=response.fechaApertura!;
+          this.idCabeceraInv=response.idCabeceraInv!;
           
           //obtenemos datos del local storage
           //si ya se han agregado productos en baja y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
@@ -467,5 +474,53 @@ export class SalidaProductosComponent {
   limpiarDetalle(){
     this.formSalida.reset();
   }
+
+    /*FIXME: para buscar producto mediante clicks en el campo id */
+    onInputClick(event: KeyboardEvent) {
+      /*if (event.key === 'F1') {
+        // Muestra un mensaje cualquiera (puedes ajustar esto según tus necesidades)
+        console.log('Se presionó F10');
+        this.mostrarModal('smodal', true);
+      }else*/ if(event.key==='Enter'){
+          // Realiza la petición HTTP para obtener la información del producto
+          
+          console.log('Se presionó Enter');
+          this.obtenerProducto();
+      }
+  
+      // console.log('presionado')
+      // const target = event.target as HTMLInputElement;
+      // const inputValue = target.value;
+      // if (inputValue === 'F1') {
+      //   console.log('Se presionó F1');
+      // } else if(inputValue==='Enter'){
+      //   // Realiza la petición HTTP para obtener la información del producto
+        
+      //   console.log('Se presionó Enter');
+      //   this.obtenerProducto();
+      // }
+    }
+  
+    obtenerProducto(){
+      let idProducto = this.formSalida.get('idProducto')?.value;
+  
+      if(idProducto){
+        this.servicioC.obtenerProductoPorId(idProducto).subscribe({
+          next: (respuesta: RespuestaProducto) => {
+            this.formSalida.get('nombre')?.setValue(respuesta.nombre);
+            console.log(respuesta)
+          },
+          error: (errores: string[]) => {
+            errores.forEach((error: string) => {
+              this.mensajeAlertify.mensajeError(error);
+            });
+            this.cargandoOperacion = false;
+          },
+        });
+      }else{
+        this.mensajeAlertify.mensajeError('Establezca el id de Producto - '+ idProducto);
+      }
+    }
+  
 
 }

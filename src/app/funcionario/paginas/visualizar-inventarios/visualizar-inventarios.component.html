@@ -1,0 +1,65 @@
+<div class="container">
+
+    <div class="row">
+  
+        <div class="col-12">
+          <h1 class="text-center mt-3 text-dark-emphasis">{{'Detalle de inventario'}}</h1>
+          <h6 class="text-secondary mt-3" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</h6>
+          <h6 class="text-secondary mt-3" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</h6>
+          <h6 class="mt-3 fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-secondary': invHabilitado}">{{descripcion}}</h6>
+        </div>
+    
+        <div class="col-12">
+          <div class="text-center" *ngIf="cargandoDatos">
+              <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <!-- 
+              <div class="text-center text-danger">
+                Obteniendo los Datos..
+              </div> 
+              -->
+          </div>
+        </div>
+  
+    
+        <div class="col-12"  *ngIf="!cargandoDatos">
+          <table class="table hover mt-2" *ngIf="dinventario.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+  
+              <thead class="bg-warning">
+                  <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Producto</th>
+                    <th class="text-center">Apertura</th>
+                    <th class="text-center">Cierre</th>
+                    <th class="text-center">Diferencia</th>
+                    <th class="text-center">Total</th>
+                    <th class="text-center">Recepcion</th>
+                    <th class="text-center">Salida</th>
+                    <th class="text-center">Precio</th>
+                    <th class="text-center">Recepcion</th>
+                    <th class="text-center">Salida</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let i of dinventario; let j=index;">
+                    <td class="text-start">{{i.idproducto}}</td>
+                    <td class="text-start">{{i.Producto.nombre}}</td>
+                    <td class="text-center">{{i.cantidadApertura}}</td>
+                    <td class="text-center">{{i.cantidadCierre}}</td>
+                    <td class="text-center">{{i.cantidadApertura-i.cantidadCierre}}</td>
+                    <td class="text-center">{{(i.cantidadApertura-i.cantidadCierre)*i.precio | number}}</td>
+                    <td class="text-center">{{i.cantidadRecepcion}}</td>
+                    <td class="text-center">{{i.cantidadSalida}}</td>
+                    <td class="text-end fw-bold">{{i.precio}}</td>
+                    <td class="text-center"><button class="btn btn-warning"><i class="bi bi-box-arrow-in-left"></i></button></td>
+                    <td class="text-center"><button class="btn btn-secondary"><i class="bi bi-box-arrow-right"></i></button></td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+      
+      </div>
+
+</div>
+

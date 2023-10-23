@@ -17,6 +17,7 @@ import { VerDetalleSalidaComponent } from './paginas/ver-detalle-salida/ver-deta
 import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rendicion.component';
 import { ListarCalculosRendicionComponent } from './paginas/listar-calculos-rendicion/listar-calculos-rendicion.component';
 import { ListarCabecerasInventarioComponent } from './paginas/listar-cabeceras-inventario/listar-cabeceras-inventario.component';
+import { InformacionComponent } from './paginas/informacion/informacion.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,10 @@ const routes: Routes = [
       {
         path: 'sucursal',
         component: SucursalComponent
+      },
+      {
+        path: 'informaciones',
+        component: InformacionComponent
       },
 
       //////////////SIN COMPONENTES DE REUTILIZACION/////////////////

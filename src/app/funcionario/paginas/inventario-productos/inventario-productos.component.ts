@@ -16,6 +16,8 @@ export class InventarioProductosComponent {
   
   invHabilitado:boolean=false;
   descripcion:string='';
+  fechaApertura:Date | undefined;
+  idCabeceraInv:number  | undefined;
   
   form:FormGroup=new FormGroup({}); //formulario para ingresar cantidades de productos
   cargandoOperacion!: boolean; //registro de inv en proceso
@@ -25,6 +27,8 @@ export class InventarioProductosComponent {
     info:false,
     responsive:true,
     searching: false,
+    ordering: false, // Deshabilitar el ordenamiento por defecto
+
     language: {
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
@@ -152,10 +156,13 @@ export class InventarioProductosComponent {
     .subscribe({
       next:(respuesta:RespuestaDatosProducto)=>{
         this.descripcion=respuesta.descripcion;
+        this.fechaApertura=respuesta.fechaApertura;
+        this.idCabeceraInv=respuesta.idCabeceraInv;
+            
         if(respuesta.mostrar){
           this.invHabilitado=true;
           this.productos=respuesta.productos!;
-                        
+           
           this.productos.forEach(product => {
             const controlName = product.idProducto.toString();
             /*FIXME:

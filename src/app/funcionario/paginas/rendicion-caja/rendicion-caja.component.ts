@@ -17,6 +17,8 @@ export class RendicionCajaComponent {
 
   invHabilitado: boolean = false;
   descripcion: string = '';
+  fechaApertura:Date | undefined;
+  idCabeceraInv:number  | undefined;
 
   form!: FormGroup;//formulario para ingresar cantidades de productos y observaciones
   cargandoOperacion!: boolean; //registro de rendicion en proceso
@@ -27,8 +29,8 @@ export class RendicionCajaComponent {
     info: false,
     responsive: true,
     searching: false,
-    // ordering: false, // Deshabilitar el ordenamiento por defecto
-    order: [[1, 'asc']], // Ordenar por el segundo campo (índice 1) en forma ascendente
+    ordering: false, // Deshabilitar el ordenamiento por defecto
+    // order: [[1, 'asc']], // Ordenar por el segundo campo (índice 1) en forma ascendente
 
     language: {
       search: 'Buscar:',
@@ -162,14 +164,18 @@ export class RendicionCajaComponent {
         next: (respuesta: RespuestaDatosDinero) => {
 
           this.descripcion = respuesta.descripcion;
+          this.fechaApertura=respuesta.fechaApertura;
+          this.idCabeceraInv=respuesta.idCabeceraInv;
+
           if (respuesta.mostrar) {
             this.invHabilitado = true;
             this.dineros = respuesta.dineros!;
+            console.log(respuesta.dineros)
 
             this.dineroControles = this.form.get('dineroControles') as FormArray;
 
             this.dineros.forEach((dinero: Dinero) => {
-              const controlName = dinero.idBillete.toString();
+              // const controlName = dinero.idBillete.toString();
               /*FIXME:
               Se verifica cada formGroup del formulario para ver si contiene un controlador que tiene como nombre el idBillete
               si es que existe se obtiene el formGroup en existingControl y se limpia,
@@ -184,11 +190,14 @@ export class RendicionCajaComponent {
 
                 existingControl.get('cantidad')?.setValue(0);// Establece el valor a 0
                 existingControl.get('observacion')?.setValue('');
+               // existingControl.get('monto')?.setValue('');//TODO: prueba total caja
                 existingControl.markAsUntouched(); // Marca como no tocado
                 existingControl.markAsPristine(); // Marca como no modificado
                 existingControl.updateValueAndValidity(); // Actualiza la validez
               } else {
                 const group = this.fb.group({
+                  
+                  monto:[dinero.monto],//TODO: prueba total caja
                   cantidad: [0, [Validators.required, Validators.min(0)]],
                   observacion: [''],
                   idBillete: [dinero.idBillete]
@@ -212,6 +221,23 @@ export class RendicionCajaComponent {
           this.cargandoTabla = false;
         }
       });
+  }
+
+  calcularTotalCaja():number{
+
+    let total=0;
+    let cantidad=0;
+    let monto=0;
+    this.dineroControles = this.form.get('dineroControles') as FormArray;
+
+    this.dineroControles.controls.forEach(i =>{
+      // console.log(i.get('cantidad')?.value)
+      cantidad=i.get('cantidad')?.value;
+      monto=i.get('monto')?.value;
+      total+=cantidad*monto;
+    })
+
+    return total;
   }
 
 }

@@ -1,0 +1,98 @@
+<!--PANTALLA PRINCIPAL-->
+<div class="container">
+    <div class="row">
+      <!--Boton Nuevo-->
+      <div class="col offset-md-9 col-md-3">
+        <div class="d-grid gap-2 my-2">
+          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
+        </div>
+      </div>
+      <!-- La tabla ya cuenta con un sppiner -->
+  
+      <!--Tabla Para Listar Datos-->
+      <div class="col-12">
+        <app-tabla-boton 
+        [tabla]="tabla"
+        [cargandoTabla]="cargandoTabla" 
+        (itemSeleccionado)="obtenerSeleccionado($event)"
+        [dtOpciones]="dtOpciones"
+        [alineaciones]="['center','left', 'left', 'center','center','left']"
+        [idNombre]="'idInformacion'"
+        ></app-tabla-boton>
+      </div>
+    </div>
+  </div>
+    
+  <!-- MODAL DATOS E IMAGEN -->
+  <app-modal-formulario 
+  [idModal]="modInforamacionId" 
+  [titulo]="'Producto'" 
+  [accion]="accion" 
+  (guardarClick)="guardar()"
+  (eliminarClick)="eliminar()" 
+  [cargandoOperacion]="cargandoOperacion"
+  [modalTamaño]="'extraLargo'"
+  >
+    <!-- Ya cuenta con el spinner -->
+  
+    <!--FORMULARIO PARA REALIZAR ABM  DE DATOS-->
+    <form [formGroup]="form" class="row g-3">
+      <div class="col-12">
+        <h3 class="text-center">Datos de la informacion</h3>
+      </div>
+  
+      <div class="col-md-6">
+        <label for="titulo" class="form-label">Titulo</label>
+        <input formControlName="titulo" type="text" id="titulo" class="form-control">
+        <small *ngIf="datoInvalido('titulo')" class="e-mensaje-error">{{mensaje('titulo')}}</small>
+      </div>
+  
+      <div class="col-md-6">
+        <label for="fecha" class="form-label">Fecha</label>
+        <input formControlName="fecha" type="date" id="fecha" class="form-control">
+        <small *ngIf="datoInvalido('fecha')" class="e-mensaje-error">{{mensaje('fecha')}}</small>
+      </div>
+
+      <div class="col-12">
+        <label for="descripcion" class="form-label">Descripcion</label>
+        <input formControlName="descripcion" type="text" id="descripcion" class="form-control">
+        <small *ngIf="datoInvalido('descripcion')" class="e-mensaje-error">{{mensaje('descripcion')}}</small>
+      </div>
+
+
+    </form>
+  
+    <!--FORMULARIO DE IMAGEN-->
+    <form [formGroup]="formImagen" class="row g-3" *ngIf="accion=='M'">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <h3 class="text-center">Imagen de la Informacion</h3>
+          </div>
+  
+          <div class="col-12">
+            <label class="form-label fw-bold">Editar Imagen</label>
+            <div class="input-group my-2">
+              <input type="file" (change)="capturarArchivo($event)" formControlName="imagenControl" class="form-control">
+              <button class="btn btn-warning" type="button" (click)="subirArchivo()" [disabled]="cargandoImagen">{{(cargandoImagen)? 'Cargando':'Guardar'}}</button>
+            </div>
+            <small *ngIf="archivoInvalido('imagenControl')" class="e-mensaje-error">{{mensajeArchivo('imagenControl')}}</small>
+          </div>
+  
+          <div class="col-6">
+            <div class="fw-bold">Imagen Actual</div>
+            <img [src]="apiUrl+seleccionado.idInformacion" alt="" width="100%" height="auto">
+          </div>
+  
+          <div class="col-6">
+            <div class="fw-bold">Imagen Nueva</div>
+            <img [src]="previsualizacion" alt="" width="100%" height="auto">
+          </div>
+  
+        </div>
+      </div>
+    </form>
+  </app-modal-formulario>
+    
+    
+    

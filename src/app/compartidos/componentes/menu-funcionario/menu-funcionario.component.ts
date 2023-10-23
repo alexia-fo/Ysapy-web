@@ -69,6 +69,11 @@ export class MenuFuncionarioComponent {
           ]
         },
         {
+          title: 'Informaciones',
+          route: '/administracion/informaciones',
+          isDropdown: false
+        },
+        {
           title: 'ABMC NoReut.',
           route: '/administracion',
           isDropdown: true,
@@ -230,7 +235,30 @@ export class MenuFuncionarioComponent {
             },
           ]
         },
+        {          
+          title: 'Visualizar',
+          route: '/funcionario',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Inventarios',
+              route: '/visualizarInventarios',
+              isDropdown: false
+            },
+            {
+              title: 'Recepciones',
+              route: '/visualizarRecepciones',
+              isDropdown: false
+            },
+            {
+              title: 'Salidas',
+              route: '/visualizarSalidas',
+              isDropdown: false
+            },
+          ]
+        },
         // Agrega más opciones de menú aquí según tus necesidades
+        
       ];
     }
   }

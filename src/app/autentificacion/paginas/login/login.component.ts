@@ -36,6 +36,8 @@ export class LoginComponent {
   login(){
     console.log("Login")
 
+    console.log('correo ', this.form.get('correo')?.value)
+
     if(this.form.valid){
       this.authService.ingresarRetornarPerfil(this.form.get('correo')?.value, this.form.get('contra')?.value)
       .subscribe({
@@ -56,10 +58,13 @@ export class LoginComponent {
           this.mensajeAlertify.mensajeExito(
             `Has ingresado como ${this.mensaje}`
           );
+
+          console.log('funciona next')
           
           this.router.navigate(['/autentificacion/perfil']); 
         },
         error:(errores: string[])=>{
+          console.log('errores ', errores);
           errores.forEach((error: string) => {
             this.mensajeAlertify.mensajeError(error);
           });

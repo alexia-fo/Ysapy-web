@@ -6,7 +6,8 @@ import { DataTableDirective } from 'angular-datatables';
 import { GuardarRecepcion, ProdRecibido, RespuestaDatos } from '../../modelos/recepcion-productos.model';
 import { RecepcionProductosService } from '../../servicios/recepcion-productos.service';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
-import { Producto } from '../../modelos/inv-rend.model';
+import { Producto, RespuestaProducto, RespuestaSucursal } from '../../modelos/inv-rend.model';
+import { InvRendService } from '../../servicios/inv-rend.service';
 
 @Component({
   selector: 'app-recepcion-productos',
@@ -93,6 +94,10 @@ export class RecepcionProductosComponent {
 
   invHabilitado:boolean=false;//estado de inventarios (se encuentra algun inventario disponible para agregarle recepciones ?)
   descripcion:string='';//detalle del estado de inventarios
+  fechaApertura!:Date;
+  idCabeceraInv!:number;
+  proximoNroComprobante!:number;
+
   
   productos:Producto[]=[];//Productos disponibles para buscar y seleccionar en el modal
   
@@ -111,12 +116,13 @@ export class RecepcionProductosComponent {
     private fb: FormBuilder, 
     private servicioP: RecepcionProductosService,
     private detectorCambio: ChangeDetectorRef,
+    private servicioC:InvRendService
   ){}
 
   ngOnInit(): void {
 
     //deshabilitar edicion de campos
-    this.formRecepcion.get('idProducto')?.disable();//solo mostramos
+    // this.formRecepcion.get('idProducto')?.disable();//solo mostramos
     this.formRecepcion.get('nombre')?.disable();//solo mostramos
     
     this.cargandoProductos=true;
@@ -126,6 +132,7 @@ export class RecepcionProductosComponent {
     this.servicioP.obtenerDatos()
     .subscribe({
       next:(response:RespuestaDatos)=>{
+        
         this.cargandoProductos=false;
         
         this.invHabilitado=response.mostrar;
@@ -133,14 +140,21 @@ export class RecepcionProductosComponent {
         
         if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar recepciones   
           this.productos=response.producto!;//se obtienen los productos si existe la apertura de inventario
-          
-            //si ya se han agregado productos recepcionados y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
+          //si el inventario esta habilitado quiere decir que existe una cabecera por lo que si va a haber la fecha y el id
+          this.fechaApertura=response.fechaApertura!;
+          this.idCabeceraInv=response.idCabeceraInv!;
+          this.proximoNroComprobante=response.proximoNroComprobante!;
+          //!
+          this.formCabecera.get('nroComprobante')?.setValue(this.proximoNroComprobante.toString());
+                    
+          //si ya se han agregado productos recepcionados y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
             //esos productos ya que estan almacenados en el localStorage(que sean del usuario activo, y que sean de la fecha)
             let datosAlmacenados=this.servicioP.getItems();
             if(datosAlmacenados.items){
               this.productosRecibidos=datosAlmacenados.items;//se obtinen los productos ya agregados y no registrados del dia de hoy
-              this.formCabecera.get('observacion')?.setValue(datosAlmacenados.observacion);
-              this.formCabecera.get('nroComprobante')?.setValue(datosAlmacenados.nroComprobante);
+              //!
+              // this.formCabecera.get('observacion')?.setValue(datosAlmacenados.observacion);
+              // this.formCabecera.get('nroComprobante')?.setValue(datosAlmacenados.nroComprobante);
             }
           }
           
@@ -438,6 +452,10 @@ export class RecepcionProductosComponent {
           `${respuesta.msg}`
         );
         this.borrarDatos();
+
+        //!
+        this.formCabecera.get('nroComprobante')?.setValue((this.proximoNroComprobante+1).toString());
+        // this.obtenerDatosRec()
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
@@ -467,5 +485,101 @@ export class RecepcionProductosComponent {
 
   limpiarDetalle(){
     this.formRecepcion.reset();
+  }
+
+  /*FIXME: para buscar producto mediante clicks en el campo id */
+  onInputClick(event: KeyboardEvent) {
+    /*if (event.key === 'F1') {
+      // Muestra un mensaje cualquiera (puedes ajustar esto según tus necesidades)
+      console.log('Se presionó F10');
+      this.mostrarModal('smodal', true);
+    }else*/ if(event.key==='Enter'){
+        // Realiza la petición HTTP para obtener la información del producto
+        
+        console.log('Se presionó Enter');
+        this.obtenerProducto();
+    }
+
+    // console.log('presionado')
+    // const target = event.target as HTMLInputElement;
+    // const inputValue = target.value;
+    // if (inputValue === 'F1') {
+    //   console.log('Se presionó F1');
+    // } else if(inputValue==='Enter'){
+    //   // Realiza la petición HTTP para obtener la información del producto
+      
+    //   console.log('Se presionó Enter');
+    //   this.obtenerProducto();
+    // }
+  }
+
+  obtenerProducto(){
+    let idProducto = this.formRecepcion.get('idProducto')?.value;
+
+    if(idProducto){
+      this.servicioC.obtenerProductoPorId(idProducto).subscribe({
+        next: (respuesta: RespuestaProducto) => {
+          this.formRecepcion.get('nombre')?.setValue(respuesta.nombre);
+          console.log(respuesta)
+        },
+        error: (errores: string[]) => {
+          errores.forEach((error: string) => {
+            this.mensajeAlertify.mensajeError(error);
+          });
+          this.cargandoOperacion = false;
+        },
+      });
+    }else{
+      this.mensajeAlertify.mensajeError('Establezca el id de Producto - '+ idProducto);
+    }
+  }
+
+  obtenerDatosRec(){
+    this.cargandoProductos=true;
+    //para tabla de pantalla
+    this.cargandoTabRecepcion=true;
+    
+    this.servicioP.obtenerDatos()
+    .subscribe({
+      next:(response:RespuestaDatos)=>{
+        //console.log(response)
+        
+        this.cargandoProductos=false;
+        this.invHabilitado=response.mostrar;
+        this.descripcion=response.descripcion;
+        
+        if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar recepciones   
+          this.productos=response.producto!;//se obtienen los productos si existe la apertura de inventario
+          //si el inventario esta habilitado quiere decir que existe una cabecera por lo que si va a haber la fecha y el id
+          this.fechaApertura=response.fechaApertura!;
+          this.idCabeceraInv=response.idCabeceraInv!;
+
+          //!
+          this.formCabecera.get('nroComprobante')?.setValue(response.proximoNroComprobante!.toString());
+                    
+          //si ya se han agregado productos recepcionados y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
+            //esos productos ya que estan almacenados en el localStorage(que sean del usuario activo, y que sean de la fecha)
+            let datosAlmacenados=this.servicioP.getItems();
+            if(datosAlmacenados.items){
+              this.productosRecibidos=datosAlmacenados.items;//se obtinen los productos ya agregados y no registrados del dia de hoy
+              //!
+              // this.formCabecera.get('observacion')?.setValue(datosAlmacenados.observacion);
+              // this.formCabecera.get('nroComprobante')?.setValue(datosAlmacenados.nroComprobante);
+            }
+          }
+          
+          this.cargandoProductos=false;
+          //una vez que se obtuvieron las recpciones del localStorage, si es que existen, se formatea el datatable
+          //para evitar errores en la tabla al modificar el array al obtener los que fueron agregados previamente
+          this.establecerDatos();
+          this.cargandoTabRecepcion=false;
+      },
+      error:(errores)=>{
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+        this.cargandoProductos=false;
+      }});
+
   }
 }

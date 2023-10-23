@@ -53,6 +53,7 @@ export class InvRendCabeceraComponent implements OnInit {
 
     this.servicioI.crearApertura(cabecera).subscribe({
       next: (respuesta: respuestaMensaje) => {
+
         this.cargandoOperacion = false;
         this.mensajeAlertify.mensajeExito(
           `${respuesta.msg}`
@@ -79,6 +80,7 @@ export class InvRendCabeceraComponent implements OnInit {
     this.servicioI.obtenerDatosCabecera()
     .subscribe({
       next:(respuesta:RespuestaDatosCab)=>{
+        console.log(respuesta)
         this.datosCabecera=respuesta;
         if(this.datosCabecera.mostrar){
           this.form.get('nombreSucursal')?.setValue(respuesta.sucursal?.nombre);

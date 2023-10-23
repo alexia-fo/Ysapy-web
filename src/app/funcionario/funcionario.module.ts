@@ -11,7 +11,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { CompartidosModule } from '../compartidos/compartidos.module';
 import { RecepcionProductosComponent } from './paginas/recepcion-productos/recepcion-productos.component';
 import { SalidaProductosComponent } from './paginas/salida-productos/salida-productos.component';
-
+import { VisualizarInventariosComponent } from './paginas/visualizar-inventarios/visualizar-inventarios.component';
+import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones/visualizar-recepciones.component';
+import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,11 @@ import { SalidaProductosComponent } from './paginas/salida-productos/salida-prod
     InventarioProductosComponent,
     RendicionCajaComponent,
     RecepcionProductosComponent,
-    SalidaProductosComponent
+    SalidaProductosComponent,
+    VisualizarInventariosComponent,
+    VisualizarRecepcionesComponent,
+    VisualizarSalidasComponent,
+
   ],
   imports: [
     CommonModule,

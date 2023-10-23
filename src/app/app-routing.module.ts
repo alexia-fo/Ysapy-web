@@ -2,14 +2,18 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ValidarRolesGuard } from './guardianes/validar-roles.guard';
 import { ValidarTokenGuard } from './guardianes/validar-token.guard';
+import { InicioComponent } from './compartidos/paginas/inicio/inicio.component';
 
 const routes:Routes=[
   
-  // {
-  //   path:'',
-  //   component:InicioComponent
-  // },
-  
+  {
+    path:'inicio',
+    component:InicioComponent,
+    canActivate: [ValidarTokenGuard, ValidarRolesGuard],
+    data: {
+      roles: ['ROOT', 'ADMINISTRADOR'] // Roles permitidos para acceder a la ruta
+    }
+  },
   {
     path:'autentificacion',
     loadChildren:()=>import('./autentificacion/autentificacion.module').then(m=>m.AutentificacionModule)
@@ -40,6 +44,7 @@ const routes:Routes=[
 
 
 @NgModule({
+  // imports: [RouterModule.forRoot(routes, {useHash:true})],
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })

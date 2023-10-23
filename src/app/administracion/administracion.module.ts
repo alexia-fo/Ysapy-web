@@ -22,6 +22,7 @@ import { VerRendicionComponent } from './paginas/ver-rendicion/ver-rendicion.com
 import { ListarCabecerasInventarioComponent } from './paginas/listar-cabeceras-inventario/listar-cabeceras-inventario.component';
 import { ListarCalculosRendicionComponent } from './paginas/listar-calculos-rendicion/listar-calculos-rendicion.component';
 import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rendicion.component';
+import { InformacionComponent } from './paginas/informacion/informacion.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rend
     VerRendicionComponent,
     ListarCabecerasInventarioComponent,
     ListarCalculosRendicionComponent,
-    ListarRendicionComponent
+    ListarRendicionComponent,
+    InformacionComponent
   ],
   imports: [
     CommonModule,
