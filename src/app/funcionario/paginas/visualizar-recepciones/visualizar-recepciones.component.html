@@ -42,9 +42,9 @@
                     <td class="text-start">{{i.idcrecepcion}}</td>
                     <td class="text-start">{{ i.Crecepcion.fecha | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
                     <td class="text-start">{{i.Producto.nombre}}</td>
-                    <td class="text-start">{{i.precio}}</td>
-                    <td class="text-start">{{i.cantidad}}</td>
-                    <td class="text-end">{{i.total}}</td>
+                    <td class="text-end">{{i.precio | number}}</td>
+                    <td class="text-center">{{i.cantidad}}</td>
+                    <td class="text-end">{{i.total | number}}</td>
                 </tr>
             </tbody>
         </table>

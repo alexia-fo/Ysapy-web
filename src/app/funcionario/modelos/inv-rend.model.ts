@@ -78,7 +78,9 @@ export interface rendCajaHabilitado{
 export interface Dinero {
     idBillete:number;
     nombreBillete:string; 
-    monto:number;   
+    monto:number;  
+    //add
+    entrada:number; 
 }
 
 //para listar dineros

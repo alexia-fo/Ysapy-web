@@ -39,8 +39,10 @@
     </div>
 
     <div class="col-12"  *ngIf="!cargandoTabla && !cargandoOperacion">
-        <form [formGroup]="form" *ngIf="invHabilitado">
-            <table datatable [dtOptions]="dtOptions" class="table hover mt-2"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+        <form [formGroup]="form" *ngIf="invHabilitado" class="">
+          <div class="outer-wrapper">
+            <div class="table-wrapper">
+              <table datatable [dtOptions]="dtOptions" class="table hover"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
 
                 <thead class="bg-warning">
                     <tr>
@@ -63,6 +65,8 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
+          </div>
         </form>
     </div>
   

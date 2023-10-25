@@ -3,14 +3,20 @@
     <h1 class="text-center mt-3">Calculos de la Rendicion</h1>
     <div class="row" *ngIf="calculoRendicion">
 
+        <div class="col-md-12">
+            <br>
+            <h2>Cobro por creditos de fechas anteriores</h2>
+            <h6>Total cobrado: {{calculoRendicion.totalOtrosCobros | number }}</h6>
+
+        </div>
+
         <div class="col-12">
             <br>
             <h2>Detalles de la Rendicion</h2>
-            <h6>Total Apertura: {{calculoRendicion.totalAperturaDinero | number}}</h6>
-            <h6>Total Cierre: {{calculoRendicion.totalCierreDinero | number}} </h6>
-            <h6>Total Diferencia: {{calculoRendicion.totalDiferenciaDinero | number}}</h6>
-            <h6>Total Credito y Salidas: {{calculoRendicion.totalPendiente | number}}</h6>
-            <h6>Total de Cobros por creditos: {{calculoRendicion.totalOtrosCobros | number }}</h6>
+            <h6>Total Apertura Efectivo: {{calculoRendicion.totalAperturaDinero | number}}</h6>
+            <h6>Total Cierre  Efectivo: {{calculoRendicion.totalCierreDinero | number}} </h6>
+            <h6>Total Diferencia  Efectivo (Apertura-Cierre): {{calculoRendicion.totalDiferenciaDinero | number}}</h6>
+            <h6>Total Creditos dados, Cobro con tarjetas y Pagos realizados por recepciones: {{calculoRendicion.totalPendiente | number}}</h6>
         </div>
 
         <div class="col-12">
@@ -29,10 +35,10 @@
         <div class="col-12">
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h5>Total Cierre (Diferencia + Creditos y Salidas): </h5>
+                    <h5>Total Cobrado (efectivo + creditos + tarjetas + pagos ): </h5>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="text-end">{{calculoRendicion.totalDiferenciaDinero | number}}</h5>
+                    <h5 class="text-end">{{calculoRendicion.totalDiferenciaDinero+calculoRendicion.totalPendiente | number}}</h5>
                 </div>
             </div>
         </div>
@@ -47,6 +53,7 @@
                     <h4 class="text-end fw-bold">{{calculoRendicion.diferenciaVentaCaja | number}}</h4>
                     <h4 class="text-end fw-bold text-danger">{{calculoRendicion.descVentaCaja}}</h4>
                 </div>
+ 
             </div>
         </div>
 

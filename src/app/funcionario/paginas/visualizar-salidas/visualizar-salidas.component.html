@@ -38,9 +38,9 @@
                 <tr *ngFor="let i of dsalidas; let j=index;">
                     <td class="text-start">{{i.idcsalida}}</td>
                     <td class="text-start">{{i.Producto.nombre}}</td>
-                    <td class="text-start">{{i.Producto.DInventarios[0].precio}}</td>
-                    <td class="text-start">{{i.cantidad}}</td>
-                    <td class="text-end">{{i.total}}</td>
+                    <td class="text-end">{{i.Producto.DInventarios[0].precio  | number}}</td>
+                    <td class="text-center">{{i.cantidad}}</td>
+                    <td class="text-end">{{i.total | number}}</td>
                 </tr>
             </tbody>
         </table>

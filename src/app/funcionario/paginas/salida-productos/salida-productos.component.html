@@ -2,8 +2,8 @@
 <div class="container mt-2">
 
     <h1 class="text-center text-dark-emphasis">Salida de productos</h1>
-    <h6 class="text-secondary mt-3" *ngIf="invHabilitado">Fecha Apertura: {{fechaApertura | date}}</h6>
-    <h6 class="text-secondary mt-3" *ngIf="invHabilitado">Nro Inventario: {{idCabeceraInv}}</h6>
+    <h6 class="text-secondary mt-3" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</h6>
+    <h6 class="text-secondary mt-3" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</h6>
     <p class="text-danger mt-3 fw-bold" *ngIf="!invHabilitado">{{descripcion}}</p>
 
     <div class="row" *ngIf="invHabilitado">

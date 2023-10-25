@@ -94,9 +94,11 @@ export class RecepcionProductosComponent {
 
   invHabilitado:boolean=false;//estado de inventarios (se encuentra algun inventario disponible para agregarle recepciones ?)
   descripcion:string='';//detalle del estado de inventarios
-  fechaApertura!:Date;
-  idCabeceraInv!:number;
+  fechaApertura:Date | undefined;
+  idCabeceraInv:number | undefined;
   proximoNroComprobante!:number;
+
+  idProductoSeleccionado!:number;//para evitar agregar en el array un idProducto modificado debido a que se obtiene mediante el formulario y el campo es editable
 
   
   productos:Producto[]=[];//Productos disponibles para buscar y seleccionar en el modal
@@ -137,12 +139,14 @@ export class RecepcionProductosComponent {
         
         this.invHabilitado=response.mostrar;
         this.descripcion=response.descripcion;
-        
+        this.fechaApertura=response.fechaApertura;
+        this.idCabeceraInv=response.idCabeceraInv;
+
         if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar recepciones   
           this.productos=response.producto!;//se obtienen los productos si existe la apertura de inventario
           //si el inventario esta habilitado quiere decir que existe una cabecera por lo que si va a haber la fecha y el id
-          this.fechaApertura=response.fechaApertura!;
-          this.idCabeceraInv=response.idCabeceraInv!;
+          // this.fechaApertura=response.fechaApertura!;
+          // this.idCabeceraInv=response.idCabeceraInv!;
           this.proximoNroComprobante=response.proximoNroComprobante!;
           //!
           this.formCabecera.get('nroComprobante')?.setValue(this.proximoNroComprobante.toString());
@@ -228,7 +232,7 @@ export class RecepcionProductosComponent {
   agregar(){
 
     //para validar campos dehabilitados pq no se incluyen en el formRecepcion.valid
-    if(!(this.formRecepcion.get('idProducto')?.value || this.formRecepcion.get('nombre')?.value)){
+    if(!(this.formRecepcion.get('idProducto')?.value || this.formRecepcion.get('nombre')?.value || this.idProductoSeleccionado)){
       this.mensajeAlertify.mensajeError('Seleccione el producto');
       return;
     }
@@ -251,8 +255,11 @@ export class RecepcionProductosComponent {
    
     let producto: ProdRecibido = this.formRecepcion.value;
     //obtenemos los valores de los compos deshabilitados, se puede utilizar solo el metodo this.form.getRawValue()
-    producto.idProducto=this.formRecepcion.get('idProducto')?.value;
+    // producto.idProducto=this.formRecepcion.get('idProducto')?.value;
+    producto.idProducto=this.idProductoSeleccionado;
     producto.nombre=this.formRecepcion.get('nombre')?.value;
+
+    console.log(producto)
 
     //let {cantidad}=this.form.value
     let bandera=false;
@@ -347,6 +354,8 @@ export class RecepcionProductosComponent {
   }
 
   seleccionarProducto(i: Producto){
+    //establecemos el valor del idProducto para luego guardar el mismo en el array y no el obtenido desde el formulario ya que se puede editar
+    this.idProductoSeleccionado=i.idProducto;
     //settear los campos deshabilitados del formulario
     this.formRecepcion.get('idProducto')?.setValue(i.idProducto)
     this.formRecepcion.get('nombre')?.setValue(i.nombre)
@@ -520,7 +529,9 @@ export class RecepcionProductosComponent {
       this.servicioC.obtenerProductoPorId(idProducto).subscribe({
         next: (respuesta: RespuestaProducto) => {
           this.formRecepcion.get('nombre')?.setValue(respuesta.nombre);
-          console.log(respuesta)
+          //para evitar la modificacion del idProducto en el formulario
+          this.idProductoSeleccionado=idProducto;
+
         },
         error: (errores: string[]) => {
           errores.forEach((error: string) => {

@@ -141,7 +141,8 @@ obtenerDatos(): Observable<RespuestaDatos> {
 
         );
         } else {
-          return of({ mostrar: false, descripcion:respuesta.descripcion });
+          // return of({ mostrar: false, descripcion:respuesta.descripcion });
+          return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura  });
         }
       })
       );
@@ -164,6 +165,14 @@ registrarSalida(recepcion: GuardarSalida): Observable<respuestaMensaje> {
   );
 }
 
+//para que el funcionario visualice las salidas que ha registrado
+visualizacionDisponible(): Observable<recCabHabilitado> {
+  return this.http.get<recCabHabilitado>(`${this.apiUrl}/salidas/visualizacionDisponible`)
+  .pipe(
+    catchError(this.errorS.handleError)
+  );
+} 
+
 //para obtener las salidas ya registradas el dia de hoy en la sucursal del usuario logeado
 visualizarSalidas(): Observable<RespuestaSalidasVisualizar> {
   return this.http.get<RespuestaSalidasVisualizar>(`${this.apiUrl}/salidas/visualizarSalidas`)
@@ -174,7 +183,7 @@ visualizarSalidas(): Observable<RespuestaSalidasVisualizar> {
 
 //si ya existe una apertura de inventario obtener los datos de las salidas registradas
 obtenerDatosVisualizar(): Observable<RespuestaDatosVisualizarSalida> {
-  return this.verExiteApertura().pipe(
+  return this.visualizacionDisponible().pipe(
     switchMap((respuesta: salidaCabHabilitado): Observable<RespuestaDatosVisualizarSalida> => {
       if (respuesta.habilitado) {
         return this.visualizarSalidas().pipe(
@@ -183,7 +192,8 @@ obtenerDatosVisualizar(): Observable<RespuestaDatosVisualizarSalida> {
           })
         );
       } else {
-        return of({ mostrar: false, descripcion:respuesta.descripcion });
+        // return of({ mostrar: false, descripcion:respuesta.descripcion});
+        return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura });
       }
     })
   );

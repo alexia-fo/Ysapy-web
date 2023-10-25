@@ -132,7 +132,8 @@ obtenerDatos(): Observable<RespuestaDatos> {
           })
         );
       } else {
-        return of({ mostrar: false, descripcion:respuesta.descripcion });
+        // return of({ mostrar: false, descripcion:respuesta.descripcion });
+        return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura });
       }
     })
   );
@@ -146,6 +147,15 @@ registrarRecepcion(recepcion: GuardarRecepcion): Observable<respuestaMensaje> {
   );
 }
 
+
+//para que el funcionario visualice las recepciones que ha registrado
+visualizacionDisponible(): Observable<recCabHabilitado> {
+  return this.http.get<recCabHabilitado>(`${this.apiUrl}/recepciones/visualizacionDisponible`)
+  .pipe(
+    catchError(this.errorS.handleError)
+  );
+} 
+
 //para obtener las recepciones ya registradas el dia de hoy en la sucursal del usuario logeado
 visualizarRecepciones(): Observable<RespuestaRecepcionesVisualizar> {
   return this.http.get<RespuestaRecepcionesVisualizar>(`${this.apiUrl}/recepciones/visualizarRecepciones`)
@@ -156,16 +166,18 @@ visualizarRecepciones(): Observable<RespuestaRecepcionesVisualizar> {
 
 //si ya existe una apertura de inventario obtener los datos de las recepciones registradas
 obtenerDatosVisualizar(): Observable<RespuestaDatosVisualizarRecepcion> {
-  return this.verExiteApertura().pipe(
+  return this.visualizacionDisponible().pipe(
     switchMap((respuesta: recCabHabilitado): Observable<RespuestaDatosVisualizarRecepcion> => {
       if (respuesta.habilitado) {
+      // if (true) {
         return this.visualizarRecepciones().pipe(
           map((RespuestaPrs: RespuestaRecepcionesVisualizar): RespuestaDatosVisualizarRecepcion => {
             return ({ mostrar: true, descripcion:respuesta.descripcion ,drecepcion: RespuestaPrs.dRecepcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura })
           })
         );
       } else {
-        return of({ mostrar: false, descripcion:respuesta.descripcion });
+        // return of({ mostrar: false, descripcion:respuesta.descripcion });
+        return of({ mostrar: false, descripcion:respuesta.descripcion, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura  });
       }
     })
   );

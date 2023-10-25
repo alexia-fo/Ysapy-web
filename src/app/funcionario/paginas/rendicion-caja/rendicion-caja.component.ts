@@ -200,7 +200,9 @@ export class RendicionCajaComponent {
                   monto:[dinero.monto],//TODO: prueba total caja
                   cantidad: [0, [Validators.required, Validators.min(0)]],
                   observacion: [''],
-                  idBillete: [dinero.idBillete]
+                  idBillete: [dinero.idBillete],
+                  //para calcular el total de dinero que son de tipo entrada
+                  entrada:[dinero.entrada]
                 });
                 // Agrega un nuevo array de controladores si no existe un controlador con el nombre idBillete
 
@@ -228,13 +230,21 @@ export class RendicionCajaComponent {
     let total=0;
     let cantidad=0;
     let monto=0;
+    let entrada=0;
     this.dineroControles = this.form.get('dineroControles') as FormArray;
 
     this.dineroControles.controls.forEach(i =>{
       // console.log(i.get('cantidad')?.value)
       cantidad=i.get('cantidad')?.value;
       monto=i.get('monto')?.value;
-      total+=cantidad*monto;
+      entrada=i.get('entrada')?.value;
+      /*1: dinero existente cobrado por venta de productos, 0: dinero no presente pq aun 
+      no se ha cobrado por la venta o se ha cobrado con tarjeta, 2: dinero cobrado no por 
+      venta actual de productos ej cobro por creditos anteriores, 3: se ha pagado por alguna 
+      compra con el dinero cobrado */
+      if(entrada!=3){
+        total+=cantidad*monto;
+      }
     })
 
     return total;

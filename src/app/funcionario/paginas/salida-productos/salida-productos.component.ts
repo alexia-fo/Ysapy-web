@@ -93,8 +93,10 @@ export class SalidaProductosComponent {
 
   invHabilitado:boolean=false;//estado de inventarios (se encuentra algun inventario disponible para agregarle salidas ?)
   descripcion:string='';//detalle del estado de inventarios
-  fechaApertura!:Date;
-  idCabeceraInv!:number;
+  fechaApertura:Date | undefined;
+  idCabeceraInv:number | undefined;
+
+  idProductoSeleccionado!:number;//para evitar agregar en el array un idProducto modificado debido a que se obtiene mediante el formulario y el campo es editable
 
   productos:Producto[]=[]; //Productos disponibles para buscar y seleccionar en el modal
 
@@ -134,13 +136,17 @@ export class SalidaProductosComponent {
 
         this.invHabilitado=response.mostrar;
         this.descripcion=response.descripcion;
+        this.fechaApertura=response.fechaApertura;
+        this.idCabeceraInv=response.idCabeceraInv;
+
+        console.log(' this.idCabeceraInv',  this.idCabeceraInv)
 
         if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar salida
           this.productos=response.producto!;//se obtienen los productos si existe apertura
           this.salidas=response.salida!;
           //si el inventario esta habilitado quiere decir que existe una cabecera por lo que si va a haber la fecha y el id
-          this.fechaApertura=response.fechaApertura!;
-          this.idCabeceraInv=response.idCabeceraInv!;
+          // this.fechaApertura=response.fechaApertura!;
+          // this.idCabeceraInv=response.idCabeceraInv!;
           
           //obtenemos datos del local storage
           //si ya se han agregado productos en baja y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
@@ -222,7 +228,7 @@ export class SalidaProductosComponent {
   agregar(){
 
     //para validar campos dehabilitados pq no se incluyen en el formRecepcion.valid
-    if(!(this.formSalida.get('idProducto')?.value || this.formSalida.get('nombre')?.value)){
+    if(!(this.formSalida.get('idProducto')?.value || this.formSalida.get('nombre')?.value || this.idProductoSeleccionado)){
       this.mensajeAlertify.mensajeError('Seleccione el producto');
       return;
     }
@@ -243,7 +249,8 @@ export class SalidaProductosComponent {
    
     let producto:ProdEnBaja = this.formSalida.value;
     //obtenemos los valores de los compos deshabilitados, se puede utilizar solo el metodo this.form.getRawValue()
-    producto.idProducto=this.formSalida.get('idProducto')?.value;
+    // producto.idProducto=this.formSalida.get('idProducto')?.value;
+    producto.idProducto=this.idProductoSeleccionado;
     producto.nombre=this.formSalida.get('nombre')?.value;
 
     //let {cantidad}=this.formSalida.value
@@ -340,6 +347,8 @@ export class SalidaProductosComponent {
   }
 
   seleccionarProducto(i: Producto){
+    //establecemos el valor del idProducto para luego guardar el mismo en el array y no el obtenido desde el formulario ya que se puede editar
+    this.idProductoSeleccionado=i.idProducto;
     this.formSalida.get('idProducto')?.setValue(i.idProducto)
     this.formSalida.get('nombre')?.setValue(i.nombre)
     this.mostrarModal('smodal', false); 
@@ -508,8 +517,8 @@ export class SalidaProductosComponent {
         this.servicioC.obtenerProductoPorId(idProducto).subscribe({
           next: (respuesta: RespuestaProducto) => {
             this.formSalida.get('nombre')?.setValue(respuesta.nombre);
-            console.log(respuesta)
-          },
+            //para evitar la modificacion del idProducto en el formulario
+            this.idProductoSeleccionado=idProducto;          },
           error: (errores: string[]) => {
             errores.forEach((error: string) => {
               this.mensajeAlertify.mensajeError(error);
