@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InformacionesService } from '../../servicios/informaciones.service';
 import { Informacion, RespuestaInformaciones } from '../../modelos/informaciones.model';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -11,6 +11,9 @@ import { Informacion, RespuestaInformaciones } from '../../modelos/informaciones
 export class InicioComponent implements OnInit{
   obteniendoDatos=true;
   datos:Informacion[]=[];
+
+  apiUrl=`${environment.API_URL}/api/uploads/informaciones/`; //ruta del API (se usa para mostrar la imagen actual de un producto seleccinado para modificar)
+
 
   constructor(
     private mensajeAlertify: AlertifyService,

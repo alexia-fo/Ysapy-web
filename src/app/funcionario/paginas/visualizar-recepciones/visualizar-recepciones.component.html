@@ -25,12 +25,13 @@
 
   
       <div class="col-12"  *ngIf="!cargandoDatos">
-        <table class="table hover mt-2" *ngIf="drecpciones.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+        <table class="responsive">
+          <table class="table hover mt-2" *ngIf="drecpciones.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
 
             <thead class="bg-warning">
                 <tr>
                     <th class="text-center">Id Recepcion</th>
-                    <th class="text-center">Fecha</th>
+                    <!-- <th class="text-center">Fecha</th> -->
                     <th class="text-center">Producto</th>
                     <th class="text-center">Precio</th>
                     <th class="text-center">Cantidad</th>
@@ -40,13 +41,14 @@
             <tbody>
                 <tr *ngFor="let i of drecpciones; let j=index;">
                     <td class="text-start">{{i.idcrecepcion}}</td>
-                    <td class="text-start">{{ i.Crecepcion.fecha | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
-                    <td class="text-start">{{i.Producto.nombre}}</td>
+                    <!-- <td class="text-start">{{ i.Crecepcion.fecha | date: 'dd-MM-yyyy HH:mm:ss' }}</td> -->
+                    <td class="text-start">{{i.Producto.nombre  | titlecase}}</td>
                     <td class="text-end">{{i.precio | number}}</td>
                     <td class="text-center">{{i.cantidad}}</td>
                     <td class="text-end">{{i.total | number}}</td>
                 </tr>
             </tbody>
+        </table>
         </table>
       </div>
     

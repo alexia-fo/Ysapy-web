@@ -1,0 +1,41 @@
+<!-- PANTALLA --> 
+<div class="container">
+    <div class="row">
+
+      <!--Spinner de la tabla-->
+      <div class="col-12 my-2">
+        <div class="text-center mt-3" *ngIf="cargandoTabla">
+          <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <!-- <div class="text-center text-danger">
+            Obteniendo los Datos...
+          </div> -->
+        </div>
+      </div>
+
+      <!--Tabla Para Listar Datos-->
+      <div class="col-12">
+        <div class="table-responsive">
+          <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Descripcion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of productos">
+                <td>{{item.idProducto}}</td>
+                <td>{{item.nombre | titlecase}}</td>
+                <td>{{item.precio | number}}</td>
+                <td>{{item.descripcion | titlecase}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>

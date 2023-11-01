@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { SucursalService } from '../../servicios/sucursal.service';
 import { EliminadoSucursal, RespuestaSucursales, Sucursal } from '../../modelos/sucursal.model';
@@ -8,7 +8,7 @@ import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.
   templateUrl: './abmc-sucursal.component.html',
   styleUrls: ['./abmc-sucursal.component.css']
 })
-export class AbmcSucursalComponent {
+export class AbmcSucursalComponent /*implements AfterViewInit*/{
 
   //id del modal para mostrarlo u ocultarlo mediante jquery (mediante los id's establecidos a cada modal se puede manipular más de uno en un mismo componente)
   //se puede ocultar un modal y mostrar otro y viceversa
@@ -76,7 +76,7 @@ export class AbmcSucursalComponent {
   constructor(
     private formulario: FormBuilder,
     private mensajeAlertify: AlertifyService,
-    private servicioSucur: SucursalService
+    private servicioSucur: SucursalService,
   ) {}
 
   ngOnInit(): void {

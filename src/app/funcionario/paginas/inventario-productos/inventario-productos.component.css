@@ -70,3 +70,8 @@ table td {
     padding-left: 20px;
     
 } */
+
+.field-amount-size{
+    min-width: 150px;
+    max-width: 150px;
+}

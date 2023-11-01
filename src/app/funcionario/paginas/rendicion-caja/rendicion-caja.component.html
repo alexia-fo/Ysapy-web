@@ -52,65 +52,68 @@
             div formArrayName="dineroControles": Establece que esta sección del formulario se gestionará como un FormArray llamado "dineroControles".
           -->
       
-          <table class="table hover mt-2" datatable [dtOptions]="dtOptions">
-            <!--
-              table: Crea una tabla HTML.
-              class="table hover mt-2": Aplica clases CSS para dar formato a la tabla.
-              datatable [dtOptions]="dtOptions": Configura la tabla utilizando opciones definidas en el componente.
-            -->
-      
-            <thead class="bg-warning">
-              <tr>
-                <th class="text-center">Nombre</th>
-                <th class="text-center">Monto</th>
-                <th class="text-center">Cantidad</th>
-                <th class="text-center">Observacion</th>
-              </tr>
-            </thead>
-      
-            <tbody>
-              <!-- Aquí se crea una fila por cada elemento "dinero" en la colección "dineros" -->
-              <tr *ngFor="let dinero of dineros; let i = index;" [formGroupName]="i">
+          <!-- <table class="table hover mt-2" datatable [dtOptions]="dtOptions"> -->
+            <div class="table-responsive-lg">
+              <table class="table hover mt-2">
                 <!--
-                  *ngFor="let dinero of dineros; let i = index;": Itera sobre la colección "dineros" y asigna un índice "i" a cada elemento.
-                  [formGroupName]="i": Asocia cada fila a un elemento específico en el FormArray "dineroControles" utilizando el índice "i".
+                  table: Crea una tabla HTML.
+                  class="table hover mt-2": Aplica clases CSS para dar formato a la tabla.
+                  datatable [dtOptions]="dtOptions": Configura la tabla utilizando opciones definidas en el componente.
                 -->
-      
-                <td class="text-start">{{ dinero.nombreBillete | titlecase }}</td>
-                <!-- Muestra el nombre del billete y lo convierte a título (mayúsculas y minúsculas). -->
-      
-                <td class="text-end">{{ dinero.monto | number}}</td><!--number:'1.2-2'-->
-                <!-- Muestra el monto del billete y lo formatea como número. -->
-      
-                <td class="col-2">
-                  <div>
-                    <input type="number" class="form-control" formControlName="cantidad" [id]="'dineroControles-'+i+'-cantidad'">
+          
+                <thead class="bg-warning">
+                  <tr>
+                    <th class="text-center">Nombre</th>
+                    <th class="text-center">Monto</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-center">Observacion</th>
+                  </tr>
+                </thead>
+          
+                <tbody>
+                  <!-- Aquí se crea una fila por cada elemento "dinero" en la colección "dineros" -->
+                  <tr *ngFor="let dinero of dineros; let i = index;" [formGroupName]="i">
                     <!--
-                      Crea un campo de entrada numérica asociado al FormControl "cantidad".
-                      [id]="'dineroControles-'+i+'-cantidad'": Asigna un ID único al campo de entrada.
+                      *ngFor="let dinero of dineros; let i = index;": Itera sobre la colección "dineros" y asigna un índice "i" a cada elemento.
+                      [formGroupName]="i": Asocia cada fila a un elemento específico en el FormArray "dineroControles" utilizando el índice "i".
                     -->
-      
-                    <!-- Muestra un mensaje de error si el campo "cantidad" es inválido -->
-                    <span *ngIf="datoInvalido('cantidad', 'dineroControles', i)" class="e-mensaje-error">
-                      {{ mensajeValidacion('cantidad', form.get('dineroControles')!.get(i.toString())!) }}
-                    </span>
-                  </div>
-                </td>
-      
-                <td class="col-2">
-                  <div>
-                    <input type="text" class="form-control" formControlName="observacion"><!-- [id]="'dineroControles-'+i+'-observacion'"-->
-                    <!-- Crea un campo de entrada de texto asociado al FormControl "observacion". -->
-      
-                    <!-- Muestra un mensaje de error si el campo "observacion" es inválido -->
-                    <span *ngIf="datoInvalido('observacion', 'dineroControles', i)" class="e-mensaje-error" >
-                      {{ mensajeValidacion('observacion', form.get('dineroControles')!.get(i.toString())!) }}
-                    </span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          
+                    <td class="text-start">{{ dinero.nombreBillete | titlecase }}</td>
+                    <!-- Muestra el nombre del billete y lo convierte a título (mayúsculas y minúsculas). -->
+          
+                    <td class="text-end">{{ dinero.monto | number}}</td><!--number:'1.2-2'-->
+                    <!-- Muestra el monto del billete y lo formatea como número. -->
+          
+                    <td class="field-amount-size"><!-- class="col-2"-->
+                      <div>
+                        <input type="number" class="form-control" formControlName="cantidad" [id]="'dineroControles-'+i+'-cantidad'">
+                        <!--
+                          Crea un campo de entrada numérica asociado al FormControl "cantidad".
+                          [id]="'dineroControles-'+i+'-cantidad'": Asigna un ID único al campo de entrada.
+                        -->
+          
+                        <!-- Muestra un mensaje de error si el campo "cantidad" es inválido -->
+                        <span *ngIf="datoInvalido('cantidad', 'dineroControles', i)" class="e-mensaje-error">
+                          {{ mensajeValidacion('cantidad', form.get('dineroControles')!.get(i.toString())!) }}
+                        </span>
+                      </div>
+                    </td>
+          
+                    <td class="field-description-size">
+                      <div>
+                        <input type="text" class="form-control" formControlName="observacion"><!-- [id]="'dineroControles-'+i+'-observacion'"-->
+                        <!-- Crea un campo de entrada de texto asociado al FormControl "observacion". -->
+          
+                        <!-- Muestra un mensaje de error si el campo "observacion" es inválido -->
+                        <span *ngIf="datoInvalido('observacion', 'dineroControles', i)" class="e-mensaje-error" >
+                          {{ mensajeValidacion('observacion', form.get('dineroControles')!.get(i.toString())!) }}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
         </div>
       </form>
       

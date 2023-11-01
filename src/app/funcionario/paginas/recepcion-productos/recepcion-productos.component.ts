@@ -138,7 +138,7 @@ export class RecepcionProductosComponent {
         this.cargandoProductos=false;
         
         this.invHabilitado=response.mostrar;
-        this.descripcion=response.descripcion;
+        this.descripcion=response.descripcion; 
         this.fechaApertura=response.fechaApertura;
         this.idCabeceraInv=response.idCabeceraInv;
 

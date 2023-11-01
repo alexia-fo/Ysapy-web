@@ -23,7 +23,8 @@
 
   
       <div class="col-12"  *ngIf="!cargandoDatos">
-        <table class="table hover mt-2" *ngIf="dsalidas.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+        <div class="table-responsive">
+          <table class="table hover mt-2" *ngIf="dsalidas.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
 
             <thead class="bg-warning">
                 <tr>
@@ -37,13 +38,14 @@
             <tbody>
                 <tr *ngFor="let i of dsalidas; let j=index;">
                     <td class="text-start">{{i.idcsalida}}</td>
-                    <td class="text-start">{{i.Producto.nombre}}</td>
+                    <td class="text-start">{{i.Producto.nombre  | titlecase}}</td>
                     <td class="text-end">{{i.Producto.DInventarios[0].precio  | number}}</td>
                     <td class="text-center">{{i.cantidad}}</td>
                     <td class="text-end">{{i.total | number}}</td>
                 </tr>
             </tbody>
         </table>
+        </div>
       </div>
     
     </div>

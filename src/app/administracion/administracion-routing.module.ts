@@ -18,6 +18,8 @@ import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rend
 import { ListarCalculosRendicionComponent } from './paginas/listar-calculos-rendicion/listar-calculos-rendicion.component';
 import { ListarCabecerasInventarioComponent } from './paginas/listar-cabeceras-inventario/listar-cabeceras-inventario.component';
 import { InformacionComponent } from './paginas/informacion/informacion.component';
+import { ModalCloseGuard } from '../guardianes/modal-close.guard';
+import { AbmcInformacionComponent } from './paginas/abmc-informacion/abmc-informacion.component';
 
 const routes: Routes = [
   {
@@ -65,15 +67,20 @@ const routes: Routes = [
         component: SucursalComponent
       },
       {
-        path: 'informaciones',
+        path: 'informacion',
         component: InformacionComponent
       },
 
       //////////////SIN COMPONENTES DE REUTILIZACION/////////////////
-
+      {
+        path: 'abmc-informacion',
+        component: AbmcInformacionComponent,
+        canDeactivate:[ModalCloseGuard]
+      },
       {
         path: 'abmc-sucursal',
-        component: AbmcSucursalComponent
+        component: AbmcSucursalComponent,
+        canDeactivate:[ModalCloseGuard]
       },
       {
         path: 'abmc-producto',

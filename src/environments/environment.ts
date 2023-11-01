@@ -4,8 +4,7 @@
 
 export const environment = {
     production: false,
-    //EN AMBIENTE DE DESARROLLO NO NECESITAMOS UN URL PORQUE TENEMOS UN PROXY
-    API_URL:'',
+    API_URL:''  //no se utiliza
   };
   
   /*

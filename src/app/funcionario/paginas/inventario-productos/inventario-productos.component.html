@@ -4,7 +4,7 @@
   <div class="row">
 
     <div class="col-12">
-      <h1 class="text-center mt-3 text-dark-emphasis">{{'Detalle de inventario'}}</h1>
+      <h1 class="text-center mt-3 text-dark-emphasis">{{'Detalle De Inventario'}}</h1>
       <h6 class="text-secondary mt-3" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</h6>
       <h6 class="text-secondary mt-3" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</h6>
       <h6 class="mt-3 fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-secondary': invHabilitado}">{{descripcion}}</h6>
@@ -40,33 +40,37 @@
 
     <div class="col-12"  *ngIf="!cargandoTabla && !cargandoOperacion">
         <form [formGroup]="form" *ngIf="invHabilitado" class="">
-          <div class="outer-wrapper">
-            <div class="table-wrapper">
-              <table datatable [dtOptions]="dtOptions" class="table hover"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+          <!-- <div class="outer-wrapper">
+            <div class="table-wrapper"> -->
+              <!--TODO:cambio produccion-->
+              <!--<table datatable [dtOptions]="dtOptions" class="table hover">--><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+              <div class="table-responsive">
 
-                <thead class="bg-warning">
+                <table class="table hover">
+                  <thead class="bg-warning">
                     <tr>
-                        <th class="text-center">Nombre</th>
-                        <th class="text-center">Precio</th>
-                        <th class="text-center">Cantidad</th>
+                      <th class="text-center">NOMBRE</th>
+                      <th class="text-center">PRECIO</th>
+                      <th class="text-center">CANTIDAD</th>
                     </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                     <tr *ngFor="let i of productos; let j=index;">
                         <td class="text-start">{{i.nombre | titlecase}}</td>
                         <td class="text-end">{{i.precio | number}}</td>
-                        <td class="col-2">
+                        <td class="field-amount-size"><!-- class="col-2"-->
                           <div>
                               <!--El id se utiliza para agregar el contorno rojo a los inputs en donde no se ha establecido la cantidad-->
                               <input type="number" class="form-control" formControlName="{{ i.idProducto }}" [id]="i.idProducto">
-                              <span *ngIf="datoInvalido(i.idProducto.toString())" class="e-mensaje-error bg-success">{{mensaje(i.idProducto.toString())}}</span>   
-                          </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-          </div>
+                              <span *ngIf="datoInvalido(i.idProducto.toString())" class="e-mensaje-error">{{mensaje(i.idProducto.toString())}}</span>   
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+            <!-- </div>
+          </div> -->
         </form>
     </div>
   

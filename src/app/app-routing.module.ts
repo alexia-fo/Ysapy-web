@@ -11,7 +11,7 @@ const routes:Routes=[
     component:InicioComponent,
     canActivate: [ValidarTokenGuard, ValidarRolesGuard],
     data: {
-      roles: ['ROOT', 'ADMINISTRADOR'] // Roles permitidos para acceder a la ruta
+      roles: ['ROOT', 'ADMINISTRADOR', 'FUNCIONARIO'] // Roles permitidos para acceder a la ruta
     }
   },
   {

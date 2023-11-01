@@ -1,0 +1,9 @@
+.field-amount-size{
+    min-width: 150px;
+    max-width: 150px;
+}
+
+.field-description-size{
+    min-width: 400px;
+    max-width: 500px;
+}

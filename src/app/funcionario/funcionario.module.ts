@@ -14,6 +14,7 @@ import { SalidaProductosComponent } from './paginas/salida-productos/salida-prod
 import { VisualizarInventariosComponent } from './paginas/visualizar-inventarios/visualizar-inventarios.component';
 import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones/visualizar-recepciones.component';
 import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
+import { VerProductosComponent } from './paginas/ver-productos/ver-productos.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visuali
     VisualizarInventariosComponent,
     VisualizarRecepcionesComponent,
     VisualizarSalidasComponent,
+    VerProductosComponent,
 
   ],
   imports: [

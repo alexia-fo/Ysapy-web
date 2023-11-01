@@ -30,7 +30,7 @@ export class MenuFuncionarioComponent {
       this.menuOptions= [
         {
           title: 'Inicio',
-          route: '',
+          route: '/inicio',
           isDropdown: false
         },
         {
@@ -51,6 +51,11 @@ export class MenuFuncionarioComponent {
             {
               title: 'Sucursal',
               route: '/sucursal',
+              isDropdown: false
+            },
+            {
+              title: 'Informacion',
+              route: '/informacion',
               isDropdown: false
             },
           ]
@@ -93,6 +98,11 @@ export class MenuFuncionarioComponent {
               route: '/abmc-sucursal',
               isDropdown: false
             },
+            {
+              title: 'Informacion',
+              route: '/abmc-informacion',
+              isDropdown: false
+            },
           ]
         },
 
@@ -114,7 +124,7 @@ export class MenuFuncionarioComponent {
       this.menuOptions= [
         {
           title: 'Inicio',
-          route: '',
+          route: '/inicio',
           isDropdown: false
         },
         {
@@ -135,6 +145,11 @@ export class MenuFuncionarioComponent {
             {
               title: 'Sucursal',
               route: '/sucursal',
+              isDropdown: false
+            },
+            {
+              title: 'Informacion',
+              route: '/informacion',
               isDropdown: false
             },
           ]
@@ -240,6 +255,11 @@ export class MenuFuncionarioComponent {
           route: '/funcionario',
           isDropdown: true,
           dropdownItems: [
+            {
+              title: 'Productos',
+              route: '/visualizarProductos',
+              isDropdown: false
+            },
             {
               title: 'Inventarios',
               route: '/visualizarInventarios',

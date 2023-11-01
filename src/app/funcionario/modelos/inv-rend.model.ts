@@ -149,7 +149,7 @@ export interface DetInventario{
     cantidadTotal:number; // para inventarios cerrados
     totalMultiplicado:number; // para inventarios cerrados
     Producto:{
-        nombre:String;
+        nombre:string;
     }
 }
 

@@ -23,6 +23,8 @@ import { ListarCabecerasInventarioComponent } from './paginas/listar-cabeceras-i
 import { ListarCalculosRendicionComponent } from './paginas/listar-calculos-rendicion/listar-calculos-rendicion.component';
 import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rendicion.component';
 import { InformacionComponent } from './paginas/informacion/informacion.component';
+import { AbmcInformacionComponent } from './paginas/abmc-informacion/abmc-informacion.component';
+
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { InformacionComponent } from './paginas/informacion/informacion.componen
     ListarCabecerasInventarioComponent,
     ListarCalculosRendicionComponent,
     ListarRendicionComponent,
-    InformacionComponent
+    InformacionComponent,
+    AbmcInformacionComponent,
+
   ],
   imports: [
     CommonModule,
