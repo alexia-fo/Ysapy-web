@@ -179,19 +179,20 @@ table {
 */
 
  /*-----------------datatable-------------*/
- /*
+ 
  .outer-wrapper .table-wrapper table.dataTable thead > tr > th.sorting,
  table.dataTable thead > tr > th.sorting{
-  background-color: #f33b3e;
+  background-color: #ffc107;
     position: sticky; 
-    top: 56.2px;
+    /* top: 56.2px; */
+    top: 0px;
     
     text-align: center;
     font-weight: normal;
     font-size: 18px;
     outline: 0.5px solid white;
 
-    color: var(--cuarto-color-claro)  ;
+    /* color: var(--cuarto-color-claro)  ; */
 
     margin: 0;
 }
@@ -203,7 +204,7 @@ table {
     box-sizing: border-box;
     padding: 10px;
 
-    background-color: var(--cuarto-color);
+    /* background-color: var(--segundo-color); */
 
     
     margin: 0;
@@ -214,7 +215,7 @@ input[type="search"]{
     font-size: var(--sm);
 }
 .dataTables_wrapper .dataTables_filter input{
-  background-color: #77ff92;
+  /* background-color: #77ff92; */
 }
 
 

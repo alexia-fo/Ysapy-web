@@ -50,7 +50,8 @@
                             <div class="col-md-3">
                                 <label for="idProducto" class="form-label">Id</label>
                                 <!-- <input formControlName="idProducto" type="text" id="idProducto" class="form-control"> -->
-                                <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (keydown)="onInputClick($event)">
+                                <!-- <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (keydown)="onInputClick($event)"> -->
+                                <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (blur)="onInputBlur($event)">
                                 <small *ngIf="datoInvalido('idProducto')"
                                     class="e-mensaje-error">{{mensaje('idProducto')}}</small>
                             </div>

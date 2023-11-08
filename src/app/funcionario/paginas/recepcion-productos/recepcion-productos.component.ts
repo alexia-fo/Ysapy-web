@@ -497,30 +497,24 @@ export class RecepcionProductosComponent {
   }
 
   /*FIXME: para buscar producto mediante clicks en el campo id */
-  onInputClick(event: KeyboardEvent) {
-    /*if (event.key === 'F1') {
-      // Muestra un mensaje cualquiera (puedes ajustar esto según tus necesidades)
-      console.log('Se presionó F10');
-      this.mostrarModal('smodal', true);
-    }else*/ if(event.key==='Enter'){
-        // Realiza la petición HTTP para obtener la información del producto
+  // onInputClick(event: KeyboardEvent) {
+  //   if(event.key==='Enter'){
+  //       // Realiza la petición HTTP para obtener la información del producto
         
-        console.log('Se presionó Enter');
-        this.obtenerProducto();
-    }
-
-    // console.log('presionado')
-    // const target = event.target as HTMLInputElement;
-    // const inputValue = target.value;
-    // if (inputValue === 'F1') {
-    //   console.log('Se presionó F1');
-    // } else if(inputValue==='Enter'){
+  //       console.log('Se presionó Enter');
+  //       this.obtenerProducto();
+  //   }
+  // }
+  onInputBlur(event: FocusEvent) {
+    // // Verifica si la razón del evento blur es Enter
+    // if (event.relatedTarget === null) {
     //   // Realiza la petición HTTP para obtener la información del producto
-      
-    //   console.log('Se presionó Enter');
+    //   console.log('Se presionó Enter o se perdió el foco');
     //   this.obtenerProducto();
     // }
+    this.obtenerProducto();
   }
+  
 
   obtenerProducto(){
     let idProducto = this.formRecepcion.get('idProducto')?.value;

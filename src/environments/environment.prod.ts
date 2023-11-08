@@ -7,4 +7,3 @@ export const environment = {
     // API_URL:'http://localhost:8080',//desarrollo funciona  y produccion funciona(en local)
     API_URL:'',//produccion funciona y desarrollo no (en local) (en hosting funciona '')
 };
-  

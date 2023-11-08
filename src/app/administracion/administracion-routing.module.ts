@@ -7,19 +7,12 @@ import { SucursalComponent } from './paginas/sucursal/sucursal.component';
 import { VerCalculosRendicionComponent } from './paginas/ver-calculos-rendicion/ver-calculos-rendicion.component';
 import { VerCabecerasInventarioComponent } from './paginas/ver-cabeceras-inventario/ver-cabeceras-inventario.component';
 import { VerDetalleRendicionComponent } from './paginas/ver-detalle-rendicion/ver-detalle-rendicion.component';
-import { AbmcUsuarioComponent } from './paginas/abmc-usuario/abmc-usuario.component';
-import { AbmcProductoComponent } from './paginas/abmc-producto/abmc-producto.component';
-import { AbmcSucursalComponent } from './paginas/abmc-sucursal/abmc-sucursal.component';
 import { VerRendicionComponent } from './paginas/ver-rendicion/ver-rendicion.component';
 import { VerDetalleInventarioComponent } from './paginas/ver-detalle-inventario/ver-detalle-inventario.component';
 import { VerDetalleRecepcionComponent } from './paginas/ver-detalle-recepcion/ver-detalle-recepcion.component';
 import { VerDetalleSalidaComponent } from './paginas/ver-detalle-salida/ver-detalle-salida.component';
-import { ListarRendicionComponent } from './paginas/listar-rendicion/listar-rendicion.component';
-import { ListarCalculosRendicionComponent } from './paginas/listar-calculos-rendicion/listar-calculos-rendicion.component';
-import { ListarCabecerasInventarioComponent } from './paginas/listar-cabeceras-inventario/listar-cabeceras-inventario.component';
 import { InformacionComponent } from './paginas/informacion/informacion.component';
 import { ModalCloseGuard } from '../guardianes/modal-close.guard';
-import { AbmcInformacionComponent } from './paginas/abmc-informacion/abmc-informacion.component';
 
 const routes: Routes = [
   {
@@ -52,56 +45,32 @@ const routes: Routes = [
       },
       {
         path: 'inventarios',
-        component: VerCabecerasInventarioComponent
+        component: VerCabecerasInventarioComponent,
+        canDeactivate: [ModalCloseGuard]
       },
       {
         path: 'usuario',
-        component: UsuarioComponent
+        component: UsuarioComponent,
+        canDeactivate: [ModalCloseGuard]
       },
       {
         path: 'producto',
-        component: ProductoComponent
+        component: ProductoComponent,
+        canDeactivate: [ModalCloseGuard]
       },
       {
         path: 'sucursal',
-        component: SucursalComponent
+        component: SucursalComponent,
+        canDeactivate: [ModalCloseGuard]
       },
       {
         path: 'informacion',
-        component: InformacionComponent
+        component: InformacionComponent,
+        canDeactivate: [ModalCloseGuard]
       },
 
       //////////////SIN COMPONENTES DE REUTILIZACION/////////////////
-      {
-        path: 'abmc-informacion',
-        component: AbmcInformacionComponent,
-        canDeactivate:[ModalCloseGuard]
-      },
-      {
-        path: 'abmc-sucursal',
-        component: AbmcSucursalComponent,
-        canDeactivate:[ModalCloseGuard]
-      },
-      {
-        path: 'abmc-producto',
-        component: AbmcProductoComponent
-      },
-      {
-        path: 'abmc-usuario',
-        component: AbmcUsuarioComponent
-      },
-      {
-        path: 'listar-cabeceras',
-        component: ListarCabecerasInventarioComponent
-      },
-      {
-        path: 'listar-calculosRendicion/:idCabecera',
-        component: ListarCalculosRendicionComponent
-      },
-      {
-        path: 'listar-Rendicion/:idCabecera',
-        component: ListarRendicionComponent
-      },
+    
       {
         path: '**',
         redirectTo: 'usuario'

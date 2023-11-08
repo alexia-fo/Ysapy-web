@@ -18,20 +18,20 @@
       <div class="col-12">
         <div class="table-responsive">
           <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
-            <thead>
+            <thead class="bg-warning">
               <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Descripcion</th>
+                <th class="text-center">ID</th>
+                <th class="text-center">NOMBRE</th>
+                <th class="text-center">PRECIO</th>
+                <th class="text-center">DESCRIPCION</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let item of productos">
-                <td>{{item.idProducto}}</td>
-                <td>{{item.nombre | titlecase}}</td>
-                <td>{{item.precio | number}}</td>
-                <td>{{item.descripcion | titlecase}}</td>
+                <td class="text-center">{{item.idProducto}}</td>
+                <td>{{item.nombre}}</td>
+                <td class="text-center">{{item.precio | number}}</td>
+                <td>{{item.descripcion}}</td>
               </tr>
             </tbody>
           </table>

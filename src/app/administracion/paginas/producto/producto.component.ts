@@ -44,11 +44,13 @@ export class ProductoComponent implements OnInit{
   // }
 
   //utilizar pipes instanciados para formatear los datos
-  tabla:TablaItemPipe<Producto>={ //propiedades de la tabla para el listado
-    propiedades: [{campo:'idProducto'}, {campo:'nombre'}, {campo: 'precio', pipe:this.decimalPipe}, {campo:'descripcion'}, {campo:'Clasificacion.nombre'}, {campo:'activo', pipe:this.stringPipe}, {campo:'facturable', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
-    datos: [], 
-    campos:['Id', 'Producto', 'Precio', 'Descripcion', 'Clasificacion', 'Activo', 'Facturable', 'Usuario'], 
-  }
+  //!para no utilizar el compoenente reutilizable
+  // tabla:TablaItemPipe<Producto>={ //propiedades de la tabla para el listado
+  //   propiedades: [{campo:'idProducto'}, {campo:'nombre'}, {campo: 'precio', pipe:this.decimalPipe}, {campo:'descripcion'}, {campo:'Clasificacion.nombre'}, {campo:'activo', pipe:this.stringPipe}, {campo:'facturable', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
+  //   datos: [], 
+  //   campos:['Id', 'Producto', 'Precio', 'Descripcion', 'Clasificacion', 'Activo', 'Facturable', 'Usuario'], 
+  // }
+  productos!:Producto[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
   //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a actualiar
@@ -76,15 +78,15 @@ export class ProductoComponent implements OnInit{
   cargandoTabla = true; //obteniendo los datos a mostrar en la tabla
 
   dtOpciones: DataTables.Settings = {//configuracion del datatable
-    paging: true,
-    responsive:true,
+    paging: false,
+    responsive:false,
     info: true,
-    pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
+    // pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
     lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
     */
     lengthChange: false, // deshabilita el selector de cantidad de registros
-    pageLength: 10, // establece la cantidad de registros por página en 10
+    pageLength: 5, // establece la cantidad de registros por página en 10
 
     language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
@@ -312,7 +314,9 @@ export class ProductoComponent implements OnInit{
     this.cargandoTabla=true;
     this.servicioProd.obtenerProductos().subscribe({
       next: (respuesta: RespuestaProductos) => {
-        this.tabla.datos = respuesta.producto;
+        //!para no utilizar el compoenente reutilizable
+        //this.tabla.datos = respuesta.producto;
+        this.productos=respuesta.producto;
         this.cargandoTabla = false;
       },
       error: (errores) => {

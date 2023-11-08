@@ -73,52 +73,8 @@ export class MenuFuncionarioComponent {
 
           ]
         },
-        {
-          title: 'Informaciones',
-          route: '/administracion/informaciones',
-          isDropdown: false
-        },
-        {
-          title: 'ABMC NoReut.',
-          route: '/administracion',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Usuario',
-              route: '/abmc-usuario',
-              isDropdown: false
-            },
-            {
-              title: 'Producto',
-              route: '/abmc-producto',
-              isDropdown: false
-            },
-            {
-              title: 'Sucursal',
-              route: '/abmc-sucursal',
-              isDropdown: false
-            },
-            {
-              title: 'Informacion',
-              route: '/abmc-informacion',
-              isDropdown: false
-            },
-          ]
-        },
 
-        {
-          title: 'Rendiciones No Reut',
-          route: '/administracion',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Cabeceras',
-              route: '/listar-cabeceras',
-              isDropdown: false
-            },
-
-          ]
-        },
+        
       ];
     }else if(this.usuario.Rol.rol=="ADMINISTRADOR"){
       this.menuOptions= [
@@ -164,43 +120,6 @@ export class MenuFuncionarioComponent {
               route: '/inventarios',
               isDropdown: false
             },
-
-          ]
-        },
-        {
-          title: 'ABMC NoReut.',
-          route: '/administracion',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Usuario',
-              route: '/abmc-usuario',
-              isDropdown: false
-            },
-            {
-              title: 'Producto',
-              route: '/abmc-producto',
-              isDropdown: false
-            },
-            {
-              title: 'Sucursal',
-              route: '/abmc-sucursal',
-              isDropdown: false
-            },
-          ]
-        },
-
-        {
-          title: 'Rendiciones No Reut',
-          route: '/administracion',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Cabeceras',
-              route: '/listar-cabeceras',
-              isDropdown: false
-            },
-
           ]
         },
       ];

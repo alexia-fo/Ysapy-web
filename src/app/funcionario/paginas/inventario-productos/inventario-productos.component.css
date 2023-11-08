@@ -71,7 +71,25 @@ table td {
     
 } */
 
-.field-amount-size{
-    min-width: 150px;
-    max-width: 150px;
-}
+/* Aplica un alto máximo a la tabla y habilita el desplazamiento vertical */
+.table-responsive {
+    max-height: 60vh; 
+    overflow-y: auto;
+  }
+  
+  /* Establece un ancho máximo para evitar el desplazamiento horizontal innecesario */
+  .table {
+    max-width: 100%; 
+  }
+  
+  /* Fija el encabezado en la parte superior de la tabla */
+  .table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #ffc107; /* Puedes establecer el fondo que desees para el encabezado */
+  }
+
+  
+  
+  
+  

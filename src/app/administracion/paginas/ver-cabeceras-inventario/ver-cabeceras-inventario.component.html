@@ -25,6 +25,7 @@
         </div>
 
         <div class="col-12">
+            <div class="table-responsive">
                 <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
 
                     <thead class="bg-warning">
@@ -50,11 +51,13 @@
                             <td class="text-end">{{i.montoCierre |number}}</td>
                             <td class="text-end">{{i.montoPendiente |number}}</td>
                             <td class="text-end">{{i.montoDiferencia |number}}</td>
-                            <td  class="text-center" *ngIf="i.estado==='CC'"><button id="btnCalculos_{{i.idCabecera}}" class="btn btn-danger"><i class="bi bi-calculator"></i></button></td> <!-- (click)="verCalculos(i.idCabecera)" -->
-                            <td  class="text-center" *ngIf="i.estado!=='CC'"><button id="btnDetalle_{{i.idCabecera}}" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
+                            <!-- <td  class="text-center" *ngIf="i.estado==='CC'"><button id="btnCalculos_{{i.idCabecera}}" class="btn btn-danger"><i class="bi bi-calculator"></i></button></td> (click)="verCalculos(i.idCabecera)" -->
+                            <td  class="text-center" *ngIf="i.estado==='CC'"><button (click)="verCalculos(i.idCabecera)" class="btn btn-danger"><i class="bi bi-calculator"></i></button></td> <!-- (click)="verCalculos(i.idCabecera)" -->
+                            <td  class="text-center" *ngIf="i.estado!=='CC'"><button (click)="verDetalle(i.idCabecera)" class="btn btn-secondary"><i class="bi bi-arrow-up-right-square"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
                         </tr>
                     </tbody>
                 </table>
+            </div>
         </div>
     </div>
 </div>

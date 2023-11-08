@@ -41,13 +41,20 @@
                             <!-- Detalle de recepcion -->
                             <div class="col-md-6">
                                 <label for="idProducto" class="form-label" >Id</label>
-                                <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (keydown)="onInputClick($event)">
-                                <!-- <small *ngIf="datoInvalido('idProducto')" class="e-mensaje-error">{{mensaje('idProducto')}}</small> -->
+                                <!-- <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (keydown)="onInputClick($event)"> -->
+                                <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (blur)="onInputBlur($event)">
                             </div>
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label">Nombre</label>
                                 <input formControlName="nombre" type="text" id="nombre" class="form-control">
                                 <!-- <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small> -->
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- <div class="col-md-6"> -->
+                                    <label for="cantidad" class="form-label">Cantidad</label>
+                                    <input formControlName="cantidad" type="number" id="cantidad" class="form-control">
+                                    <small *ngIf="datoInvalido('cantidad')" class="e-mensaje-error">{{mensaje('cantidad')}}</small>
                             </div>
                             
                             <div class="col-md-6">
@@ -58,13 +65,8 @@
                                 <small *ngIf="datoInvalido('salida')" class="e-mensaje-error">{{mensaje('salida')}}</small>
                             </div>
                             
-                            <div class="col-md-6">
-                                <!-- <div class="col-md-6"> -->
-                                    <label for="cantidad" class="form-label">Cantidad</label>
-                                    <input formControlName="cantidad" type="number" id="cantidad" class="form-control">
-                                    <small *ngIf="datoInvalido('cantidad')" class="e-mensaje-error">{{mensaje('cantidad')}}</small>
-                                </div>
-                            </div>
+
+                        </div>
 
                     </form>
                 

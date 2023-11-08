@@ -3,7 +3,7 @@ import {Validators, FormGroup,FormBuilder} from '@angular/forms';
 import { Router} from '@angular/router';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { AutentificacionService } from '../../servicios/autentificacion.service';
-import { Perfil, RespuestaPerfil } from '../../modelos/autentificacion';
+import { RespuestaPerfil } from '../../modelos/autentificacion';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +12,9 @@ import { Perfil, RespuestaPerfil } from '../../modelos/autentificacion';
 })
 export class LoginComponent {
 
-  //controladores agrupados del formulario
   form!:FormGroup;
-  //--
   mensaje='';
+  cargando=false;
 
   constructor(
     //inyecciones de dependencias
@@ -34,14 +33,12 @@ export class LoginComponent {
   }
 
   login(){
-    console.log("Login")
-
-    console.log('correo ', this.form.get('correo')?.value)
-
+    this.cargando=true;
     if(this.form.valid){
       this.authService.ingresarRetornarPerfil(this.form.get('correo')?.value, this.form.get('contra')?.value)
       .subscribe({
-        next:(respuesta:RespuestaPerfil)=>{        
+        next:(respuesta:RespuestaPerfil)=>{    
+          this.cargando=true;    
           
           if(this.authService.usuario.Rol.rol=="ROOT"){
             this.mensaje="Root";
@@ -58,13 +55,10 @@ export class LoginComponent {
           this.mensajeAlertify.mensajeExito(
             `Has ingresado como ${this.mensaje}`
           );
-
-          console.log('funciona next')
           
           this.router.navigate(['/autentificacion/perfil']); 
         },
         error:(errores: string[])=>{
-          console.log('errores ', errores);
           errores.forEach((error: string) => {
             this.mensajeAlertify.mensajeError(error);
           });

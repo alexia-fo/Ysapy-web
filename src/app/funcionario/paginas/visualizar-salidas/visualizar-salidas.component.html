@@ -28,17 +28,19 @@
 
             <thead class="bg-warning">
                 <tr>
-                    <th class="text-center">Id Salida</th>
-                    <th class="text-center">Producto</th>
-                    <th class="text-center">Precio</th>
-                    <th class="text-center">Cantidad</th>
-                    <th class="text-center">Total</th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">ID INV</th>
+                    <th class="text-center">PRODUCTO</th>
+                    <th class="text-center">PRECIO</th>
+                    <th class="text-center">CANTIDAD</th>
+                    <th class="text-center">TOTAL</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let i of dsalidas; let j=index;">
                     <td class="text-start">{{i.idcsalida}}</td>
-                    <td class="text-start">{{i.Producto.nombre  | titlecase}}</td>
+                    <td class="text-start">{{i.idcabinventario}}</td>
+                    <td class="text-start">{{i.Producto.nombre | titlecase}}</td>
                     <td class="text-end">{{i.Producto.DInventarios[0].precio  | number}}</td>
                     <td class="text-center">{{i.cantidad}}</td>
                     <td class="text-end">{{i.total | number}}</td>

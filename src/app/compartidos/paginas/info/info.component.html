@@ -1,0 +1,55 @@
+<!--
+
+    la principal funcion del sistema consiste en llevar 
+    un control de los productos encontrados en las diferentes sucursales ademas del control de caja que se realiza en los mismos. Las funcionalidades con las que cuenta el 
+    sistema son los siguientes en este orden. En el menu inventarios se encuentra los siguientes items: inventario apertura el cual se utiliza para realizar la apertura del 
+    inventario en donde se puede especificar alguna observacion y se puede observar la sucursal del usuario al cual va a perteneces el inventario, luego se encuentra las 
+    opciones inventario y rendicion estos dos item se pueden utilizar posteriormente al registro de la apertura del item anterior, se puede primero registrar el inventario 
+    o la rendicion indistintamente, luego de que se haya registrado la apertura del detalle de inventario en el menu productos se encuentran dos opciones: recepcion y salida 
+    estas paginas se utilizan para registrar las recepciones de productos y salidas de productos que se pueden generar por diferentes motivos, vencimiento, destruccion, 
+    transferencia a otras sucursales.. las recepciones y salidas solo se pueden registrar durante la vigencia de un inventario, es decir, luego de realizar la apertura del 
+    detalle de inventario en el item inventario y antes de cerrar el detalle de inventario en la misma ventana, una vez que el se haya cerrado ya no hay posibilidad de registrar 
+    recepciones (en este caso se recomienda que si existen productos recepcionados se aparte de los productos registrados para que funcionarios del siguiente turno luego de 
+    registrar sus detalles de apertura registren las cantidades de productos recepcionadas), en el menu visualizar se encuentran las opciones "productos para visualizar el 
+    listado de productos" inventarios para visualizar el detalle de apertura y cierre de inventario y las opciones recepciones y salidas para visualizar el listado de 
+    recepciones y salidas registradas
+
+-->
+<app-menu-funcionario></app-menu-funcionario>
+<div class="container mt-3">
+    <h1 class="text-center">Funcionalidad del Sistema</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Menú Inventarios</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><b>Inventario Apertura:</b> Utilizado para realizar la apertura del inventario. Se puede especificar una observación sobre la apertura realizada.</li>
+                <li class="list-group-item"><b>Inventario:</b> Opción para registrar detalles de inventario: Productos con sus respectivas cantidades.</li>
+                <li class="list-group-item"><b>Rendición:</b> Opción para registrar detalles de rendición: Billetes con sus respectivas cantidades.</li>
+            </ul>
+            <p><em>
+                Nota: En el caso de que al registrar la rendición que la fila corresponde a un billete se establece el número de billetes de ese tipo, es decir, la cantidad; 
+                en caso de que sean: creditos a clientes, cobros con tarjeta, pagos realizados y cobros por créditos es necesario establecer el monto total cobrado o pagado.
+            </em></p>
+        </div>
+
+        <div class="col-md-12">
+            <h2>Menú Productos</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><b>Recepción:</b> Registra la recepción de productos.</li>
+                <li class="list-group-item"><b>Salida:</b> Registra la salida de productos por diversos motivos como vencimiento, destrucción o transferencia a otras sucursales</li>
+            </ul>
+            <p><em>Nota: Las recepciones y salidas solo se pueden registrar durante la vigencia de un inventario. Una vez que se cierra el detalle de inventario, no es posible registrar más recepciones. 
+                Se recomienda apartar los productos recepcionados si existen para que el usuario del próximo turno los registre luego de su apertura como sus recepciones.</em></p>
+        </div>
+    </div>
+
+    <div class="mt-12">
+        <h2>Menú Visualizar</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><b>Productos:</b> Visualiza el listado de productos.</li>
+            <li class="list-group-item"><b>Inventarios:</b> Visualiza el detalle de apertura y cierre de inventario.</li>
+            <li class="list-group-item"><b>Recepciones y Salidas:</b> Visualiza el listado de recepciones y salidas registradas.</li>
+        </ul>
+    </div>
+</div>

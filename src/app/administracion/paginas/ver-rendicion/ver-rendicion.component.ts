@@ -15,10 +15,7 @@ export class VerRendicionComponent {
   idCabecera!:number;
 
   constructor(
-    private mensajeAlertify: AlertifyService,
-    private servicioC: InventariosRegistradosService,
     private route: ActivatedRoute,
-    private servicioU: UsuarioService
   ){
   }
 

@@ -27,9 +27,8 @@ export class InventarioProductosComponent {
     info:false,
     responsive:true,
     searching: false,
-    ordering: false, // Deshabilitar el ordenamiento por defecto
-
-    language: {
+    
+    language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
       info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',

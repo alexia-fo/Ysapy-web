@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AbmcSucursalComponent } from './abmc-sucursal.component';
+import { InfoComponent } from './info.component';
 
-describe('AbmcSucursalComponent', () => {
-  let component: AbmcSucursalComponent;
-  let fixture: ComponentFixture<AbmcSucursalComponent>;
+describe('InfoComponent', () => {
+  let component: InfoComponent;
+  let fixture: ComponentFixture<InfoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AbmcSucursalComponent ]
+      declarations: [ InfoComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AbmcSucursalComponent);
+    fixture = TestBed.createComponent(InfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

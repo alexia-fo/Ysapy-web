@@ -22,11 +22,12 @@ export class SucursalComponent {
   //para construir la tabla se requieren ciertos datos como las propiedades, que corresponden a los campos retornados de la BD mediante el backend;
   //los datos, corresponde al array de informacion que se quiere listar 
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
-  tabla:TablaItemPipe<Sucursal>={ //propiedades de la tabla para el listado
-    propiedades: [{campo:'idSucursal'}, {campo:'nombre'}, {campo:'estado', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
-    datos: [], 
-    campos:['Id', 'Sucursal', 'Estado', 'Usuario'], 
-  }
+  // tabla:TablaItemPipe<Sucursal>={ //propiedades de la tabla para el listado
+  //   propiedades: [{campo:'idSucursal'}, {campo:'nombre'}, {campo:'estado', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
+  //   datos: [], 
+  //   campos:['Id', 'Sucursal', 'Estado', 'Usuario'], 
+  // }
+  sucursales!:Sucursal[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
   //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a guardar
@@ -54,15 +55,15 @@ export class SucursalComponent {
   cargandoTabla = true; //obteniendo los datos a mostrar en la tabla
 
   dtOpciones: DataTables.Settings = {//configuracion del datatable
-    paging: true,
-    responsive:true,
+    paging: false,
+    responsive:false,
     info: true,
     pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
     lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
     */
     lengthChange: false, // deshabilita el selector de cantidad de registros
-    pageLength: 10, // establece la cantidad de registros por página en 10
+    pageLength: 5, // establece la cantidad de registros por página en 10
 
     language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
@@ -221,7 +222,8 @@ export class SucursalComponent {
     this.cargandoTabla=true;
     this.servicioSucur.obtenerSucursales().subscribe({
       next: (respuesta: RespuestaSucursales) => {
-        this.tabla.datos = respuesta.sucursal;
+        // this.tabla.datos = respuesta.sucursal;
+        this.sucursales = respuesta.sucursal;
         this.cargandoTabla = false;
       },
       error: (errores) => {

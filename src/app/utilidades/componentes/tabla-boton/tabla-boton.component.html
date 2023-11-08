@@ -8,18 +8,19 @@
     </div> -->
 </div>
   
-  <!-- <div class="table-responsive"> -->
+  <div class="table-responsive"> <!--TODO: comentario 1: la responsividad del datatable debe estar desactivada-->
     <table class="table" class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
         
-        <thead>
+        <thead class="bg-warning">
           <tr>
-            <th *ngFor="let campo of tabla.campos; let i=index" [ngClass]="getAlineacionClase(alineaciones[i])">{{ campo }}</th>
-            <th>Detalle</th>
+            <th *ngFor="let campo of tabla.campos; let i=index" [ngClass]="getAlineacionClase(alineaciones[i])">{{ campo | uppercase}}</th>
+            <!--TODO: comentario 1: la responsividad del datatable debe estar desactivada-->
+            <!-- <th>Detalle</th> -->
           </tr>
         </thead>
         
         <tbody>
-          <tr *ngFor="let item of tabla.datos; let index=index" ><!--(dblclick)="seleccionarItem(item)"-->
+          <tr *ngFor="let item of tabla.datos; let index=index" (dblclick)="onItemButtonClicked(item)"><!--(dblclick)="seleccionarItem(item)"-->
             <!--
               Esta expresión [ngClass]="getAlineacionClase(alineaciones[i])" se utiliza para asignar dinámicamente una clase CSS 
               a un elemento HTML en función de la lógica definida en la función getAlineacionClase y el valor del elemento en el arreglo
@@ -27,9 +28,10 @@
               o datos en tiempo de ejecución.
             -->
             <td *ngFor="let propiedad of tabla.propiedades; let i=index" [ngClass]="getAlineacionClase(alineaciones[i])">{{ getValorConPipe(item, propiedad)}}</td>
-            <td><button id="btnDetalle_{{getPropiedadValor(item, idNombre)}}" class="btn btn-secondary bi bi-arrow-up-right-square"></button></td>
+            <!--TODO: comentario 1: la responsividad del datatable debe estar desactivada-->
+            <!-- <td><button id="btnDetalle_{{getPropiedadValor(item, idNombre)}}" class="btn btn-secondary bi bi-arrow-up-right-square"></button></td> -->
           </tr>
         </tbody>
     
       </table>
-  <!-- </div> -->
+  </div>

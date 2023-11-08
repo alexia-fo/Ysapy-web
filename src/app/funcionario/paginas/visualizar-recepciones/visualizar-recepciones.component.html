@@ -25,17 +25,17 @@
 
   
       <div class="col-12"  *ngIf="!cargandoDatos">
-        <table class="responsive">
-          <table class="table hover mt-2" *ngIf="drecpciones.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
+        <div class="table-responsive">
+          <table class="table hover" *ngIf="drecpciones.length>0"><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
 
             <thead class="bg-warning">
                 <tr>
-                    <th class="text-center">Id Recepcion</th>
+                    <th class="text-center">ID</th>
                     <!-- <th class="text-center">Fecha</th> -->
-                    <th class="text-center">Producto</th>
-                    <th class="text-center">Precio</th>
-                    <th class="text-center">Cantidad</th>
-                    <th class="text-center">Total</th>
+                    <th class="text-center">PRODUCTO</th>
+                    <th class="text-center">PRECIO</th>
+                    <th class="text-center">CANTIDAD</th>
+                    <th class="text-center">TOTAL</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
                 </tr>
             </tbody>
         </table>
-        </table>
+        </div>
       </div>
     
     </div>

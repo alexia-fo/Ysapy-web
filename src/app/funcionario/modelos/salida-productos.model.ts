@@ -45,6 +45,7 @@ export interface GuardarSalida{
 
 export interface SalidaVisualizar{
     idcsalida:number;
+    idcabinventario:number;
     idproducto:number;
     idsalida:number;
     cantidad:number;

@@ -13,38 +13,40 @@
         </div>
 
         <div class="col-12">
-            <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
+            <div class="table-responsive">
+                <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
 
-                <thead class="bg-warning">
-                    <tr> 
-                        <th class="text-center">Dinero</th>
-                        <th class="text-center">Monto</th>
-                        <th class="text-center">Cantidad Apertura</th>
-                        <th class="text-center">Cantidad Cierre</th>
-                        <th class="text-center">Total Apertura</th>
-                        <th class="text-center">Total Cierre</th>
-                        <!-- <th class="text-center">Diferencia C-A</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let i of detalles">
-                        <td class="text-start">{{i.Dinero.nombreBillete}}</td>
-                        <td class="text-start">{{i.Dinero.monto}}</td>
-                        <td class="text-center">{{i.cantidadApertura}}</td>
-                        <td class="text-center">{{i.cantidadCierre}}</td>
-                        <td class="text-end">{{i.totalApertura}}</td>
-                        <td class="text-end">{{i.totalCierre}}</td>
-                        <!-- <td class="text-end fw-bold">{{i.montoTotal}}</td> -->
-                    </tr>
-                </tbody>
-            </table>
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Dinero</th>
+                            <th class="text-center">Monto</th>
+                            <th class="text-center">Cantidad Apertura</th>
+                            <th class="text-center">Cantidad Cierre</th>
+                            <th class="text-center">Total Apertura</th>
+                            <th class="text-center">Total Cierre</th>
+                            <!-- <th class="text-center">Diferencia C-A</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of detalles">
+                            <td class="text-start">{{i.Dinero.nombreBillete}}</td>
+                            <td class="text-start">{{i.Dinero.monto}}</td>
+                            <td class="text-center">{{i.cantidadApertura}}</td>
+                            <td class="text-center">{{i.cantidadCierre}}</td>
+                            <td class="text-end">{{i.totalApertura}}</td>
+                            <td class="text-end">{{i.totalCierre}}</td>
+                            <!-- <td class="text-end fw-bold">{{i.montoTotal}}</td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="col-12">
             <br>
             <br>
             <br>
-            <p class="fw-bold text-primary"  [routerLink]="['/administracion/calculoRendicion', 98]">Regresar a la pagina anterior</p>
+            <p class="fw-bold text-primary"  [routerLink]="['/administracion/calculoRendicion', idCabecera]">Regresar a la pagina anterior</p>
         </div>
     </div>
 </div>

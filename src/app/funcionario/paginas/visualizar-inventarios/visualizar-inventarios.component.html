@@ -18,19 +18,19 @@
         </div>
   
     
-        <div class="col-12"  *ngIf="!cargandoDatos">
+        <div class="col-12" *ngIf="!cargandoDatos">
           <div class="table-responsive">
-            <table class="table hover mt-2" *ngIf="dinventario.length>0">
+            <table class="table hover" *ngIf="dinventario.length>0">
   
               <thead class="bg-warning">
                   <tr>
-                    <th class="text-center">Id</th>
-                    <th class="text-center">Producto</th>
-                    <th class="text-center">Apertura</th>
-                    <th class="text-center">Cierre</th>
-                    <th class="text-center">Recepcion</th>
-                    <th class="text-center">Salida</th>
-                    <th class="text-center">Precio</th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">PRODUCTO</th>
+                    <th class="text-center">APERTURA</th>
+                    <th class="text-center">CIERRE</th>
+                    <th class="text-center">RECEPCION</th>
+                    <th class="text-center">SALIDA</th>
+                    <th class="text-center">PRECIO</th>
                   </tr>
               </thead>
               <tbody>
@@ -41,7 +41,7 @@
                     <td class="text-center">{{i.cantidadCierre}}</td>
                     <td class="text-center">{{i.cantidadRecepcion}}</td>
                     <td class="text-center">{{i.cantidadSalida}}</td>
-                    <td class="text-end fw-bold">{{i.precio}}</td>
+                    <td class="text-end fw-bold">{{i.precio | number }}</td>
                   </tr>
               </tbody>
           </table>

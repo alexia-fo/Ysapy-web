@@ -29,11 +29,12 @@ export class InformacionComponent {
   //los campos son los encabezados que tendrá la tabla (las propiedades y los campos deben estar en el mismo orden)
 
   //utilizar pipes instanciados para formatear los datos
-  tabla:TablaItemPipe<Informacion>={ //propiedades de la tabla para el listado
-    propiedades: [{campo:'idInformacion'}, {campo:'titulo'}, {campo:'descripcion'}, {campo:'fecha'}, {campo:'activo', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
-    datos: [], 
-    campos:['Id', 'Titulo', 'Descripcion', 'Fecha', 'Activo', 'Usuario'], 
-  }
+  // tabla:TablaItemPipe<Informacion>={ //propiedades de la tabla para el listado
+  //   propiedades: [{campo:'idInformacion'}, {campo:'titulo'}, {campo:'descripcion'}, {campo:'fecha'}, {campo:'activo', pipe:this.stringPipe}, {campo:'Usuario.nombre'}], 
+  //   datos: [], 
+  //   campos:['Id', 'Titulo', 'Descripcion', 'Fecha', 'Activo', 'Usuario'], 
+  // }
+  informaciones!:Informacion[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
   //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id de la informacion editado a actualiar
@@ -56,15 +57,15 @@ export class InformacionComponent {
   cargandoTabla = true; //obteniendo los datos a mostrar en la tabla
 
   dtOpciones: DataTables.Settings = {//configuracion del datatable
-    paging: true,
-    responsive:true,
+    paging: false,
+    responsive:false,
     info: true,
     pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
     lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
     */
     lengthChange: false, // deshabilita el selector de cantidad de registros
-    pageLength: 10, // establece la cantidad de registros por página en 10
+    pageLength: 5, // establece la cantidad de registros por página en 10
 
     language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
@@ -274,7 +275,8 @@ export class InformacionComponent {
     this.cargandoTabla=true;
     this.servicioI.obtenerInformaciones().subscribe({
       next: (respuesta: RespuestaInformaciones) => {
-        this.tabla.datos = respuesta.informacion;
+        // this.tabla.datos = respuesta.informacion;
+        this.informaciones = respuesta.informacion;
         this.cargandoTabla = false;
       },
       error: (errores) => {

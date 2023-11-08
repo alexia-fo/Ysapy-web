@@ -3,9 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { ValidarRolesGuard } from './guardianes/validar-roles.guard';
 import { ValidarTokenGuard } from './guardianes/validar-token.guard';
 import { InicioComponent } from './compartidos/paginas/inicio/inicio.component';
+import { InfoComponent } from './compartidos/paginas/info/info.component';
 
 const routes:Routes=[
-  
+  {
+    path:'info',
+    component:InfoComponent,
+    canActivate: [ValidarTokenGuard, ValidarRolesGuard],
+    data: {
+      roles: ['ROOT', 'ADMINISTRADOR', 'FUNCIONARIO'] // Roles permitidos para acceder a la ruta
+    }
+  },
   {
     path:'inicio',
     component:InicioComponent,

@@ -10,7 +10,7 @@ import { ActualizarInformacion, EliminadoInformaicion, GuardarInformacion, Infor
 })
 export class InformacionService {
  //ruta
- private apiUrl = `${environment.API_URL}/api/informaciones`;
+ private apiUrl = `${environment.API_URL}/api/informaciones/admin`;
 
  //para enviar parametros de filtrado de los get's
 

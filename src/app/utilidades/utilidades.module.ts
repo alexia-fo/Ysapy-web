@@ -44,6 +44,7 @@ import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.compo
     TablaPipeComponent,
     BooleanToStringPipe,
     TablaBotonComponent,
+    ActivoInactivoPipe
   ],
 })
 export class UtilidadesModule { }

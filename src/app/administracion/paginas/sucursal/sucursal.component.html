@@ -4,19 +4,55 @@
       <!--Boton Nuevo-->
       <div class="col offset-md-9 col-md-3">
         <div class="d-grid gap-2 my-2">
-          <button class="btn e-segundo-boton" (click)="nuevo()">Nuevo</button>
+          <button class="btn btn-danger" (click)="nuevo()">Nuevo</button>
         </div>
       </div>
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <app-tabla-boton 
+        <!-- <app-tabla-boton 
         [tabla]="tabla" 
         [cargandoTabla]="cargandoTabla" 
         (itemSeleccionado)="obtenerSeleccionado($event)"
         [dtOpciones]="dtOpciones"
         [alineaciones]="['left','left','center','left']"
         [idNombre]="'idSucursal'"
-        ></app-tabla-boton>
+        ></app-tabla-boton> -->
+
+        <div class="table-responsive">
+          <table class="table" class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
+          
+            <thead class="bg-warning">
+              <tr>
+                <!-- <th *ngFor="let campo of tabla.campos; let i=index" [ngClass]="getAlineacionClase(alineaciones[i])">{{ campo | uppercase}}</th> -->
+                <!--TODO: comentario 1: la responsividad del datatable debe estar desactivada-->
+                <!-- <th>Detalle</th> -->
+                <th class="text-center">ID</th>
+                <th class="text-center">NOMBRE</th>
+                <th class="text-center">ESTADO</th>
+                <th class="text-center">USUARIO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr *ngFor="let item of tabla.datos; let index=index" (dblclick)="onItemButtonClicked(item)">(dblclick)="seleccionarItem(item)" -->
+              <tr *ngFor="let item of sucursales; let index=index" (dblclick)="obtenerSeleccionado(item)"><!--(dblclick)="seleccionarItem(item)"-->
+                <!--
+                  Esta expresión [ngClass]="getAlineacionClase(alineaciones[i])" se utiliza para asignar dinámicamente una clase CSS 
+                  a un elemento HTML en función de la lógica definida en la función getAlineacionClase y el valor del elemento en el arreglo
+                  alineaciones en la posición i. Esto permite aplicar estilos CSS específicos de manera dinámica a elementos según ciertas condiciones 
+                  o datos en tiempo de ejecución.
+                -->
+                <!-- <td *ngFor="let propiedad of tabla.propiedades; let i=index" [ngClass]="getAlineacionClase(alineaciones[i])">{{ getValorConPipe(item, propiedad)}}</td> -->
+                <!--TODO: comentario 1: la responsividad del datatable debe estar desactivada-->
+                <!-- <td><button id="btnDetalle_{{getPropiedadValor(item, idNombre)}}" class="btn btn-secondary bi bi-arrow-up-right-square"></button></td> -->
+                <td class="text-center">{{item.idSucursal}}</td>
+                <td>{{item.nombre}}</td>
+                <td class="text-center">{{item.estado | activoInactivo}}</td>
+                <td>{{item.Usuario.nombre}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   </div>

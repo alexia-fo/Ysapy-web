@@ -11,7 +11,7 @@ import { TablaItem, TablaItemPipe, definicionColumnas } from '../../modelos/moda
   templateUrl: './tabla-boton.component.html',
   styleUrls: ['./tabla-boton.component.css']
 })
-export class TablaBotonComponent<T> implements AfterViewInit{
+export class TablaBotonComponent<T> /*implements AfterViewInit*/{
   @Input() tabla!: TablaItemPipe<T>;//Datos necesarios para constuir a tabla: {array de objetos,array de objetos con propiedades a mostrar y su pipe si es necesario, array de cadenas para los encabezados de la tabla}
   @Output() itemSeleccionado: EventEmitter<T> = new EventEmitter<T>();
   @Input() cargandoTabla:boolean=true;//para no tratar de construir el template antes de obtener completamente los datos
@@ -82,6 +82,8 @@ export class TablaBotonComponent<T> implements AfterViewInit{
 
     Si se encuentra un objeto que coincida con el itemId, se llama a this.onItemButtonClicked(item) el cual emite el objeto(evento) al componente padre.
   */
+  /*TODO: comentario 1: la responsividad del datatable debe estar desactivada*/
+ /*TODO: SE HABILITA SI SE QUIERE USAR LOS BOTONES PARA RETORNAR LOS ID SELECCIONADOS
   ngAfterViewInit(): void {
     this.dtOpciones.initComplete = () => {
       $('table').on('click', '[id^="btnDetalle_"]', (event) => {
@@ -95,6 +97,7 @@ export class TablaBotonComponent<T> implements AfterViewInit{
       });
     }
   }
+  */
   
   onItemButtonClicked(item: T): void {
     this.itemSeleccionado.emit(item);

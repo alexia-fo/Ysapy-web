@@ -41,11 +41,13 @@ export class UsuarioComponent implements OnInit {
   // }
 
   //utilizar pipes instanciados para formatear los datos
-  tabla: TablaItemPipe<Usuario> = { //propiedades de la tabla para el listado
-    propiedades: [{campo:'idUsuario'}, {campo:'nombre'}, {campo:'nusuario'}, {campo:'correo'},{campo:'Sucursal.nombre'},{campo:'Rol.rol'}, {campo:'activo', pipe: this.stringPipe}, {campo:'google', pipe:this.stringPipe}],
-    datos: [],
-    campos: ['Id', 'Nombre', 'Usuario', 'Correo', 'Sucursal','Rol', 'Activo', 'Google'],
-  }
+    //!para no utilizar el compoenente reutilizable
+  // tabla: TablaItemPipe<Usuario> = { //propiedades de la tabla para el listado
+  //   propiedades: [{campo:'idUsuario'}, {campo:'nombre'}, {campo:'nusuario'}, {campo:'correo'},{campo:'Sucursal.nombre'},{campo:'Rol.rol'}, {campo:'activo', pipe: this.stringPipe}, {campo:'google', pipe:this.stringPipe}],
+  //   datos: [],
+  //   campos: ['Id', 'Nombre', 'Usuario', 'Correo', 'Sucursal','Rol', 'Activo', 'Google'],
+  // }
+  usuarios!:Usuario[];
 
   //almacena el objeto de la fila (a editar o eliminar) seleccionada en la tabla 
   //se utiliza para agregar los valores al formulario - tambien se utiliza para obtener el id del producto editado a actualiar
@@ -73,15 +75,15 @@ export class UsuarioComponent implements OnInit {
   cargandoTabla = true; //obteniendo los datos a mostrar en la tabla
 
   dtOpciones: DataTables.Settings = {//configuracion del datatable
-    paging: true,
-    responsive:true,
+    paging: false,
+    responsive:false,
     info: true,
     pagingType: 'simple_numbers', //para paginacion de abajo //full_numbers
     /*
     lengthMenu: [5, 10, 15, 20],//habilita el selector de cantidad de registros con los siguiente numeros (lengthChange: false --> debe quitarse para que funcione)
     */
     lengthChange: false, // deshabilita el selector de cantidad de registros
-    pageLength: 10, // establece la cantidad de registros por página en 10
+    pageLength: 5, // establece la cantidad de registros por página en 10
 
     language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
@@ -354,7 +356,9 @@ export class UsuarioComponent implements OnInit {
     this.cargandoTabla = true;
     this.servicioUsu.obtenerUsuarios().subscribe({
       next: (respuesta: RespuestaUsuarios) => {
-        this.tabla.datos = respuesta.usuarios;
+         //!para no utilizar el compoenente reutilizable 
+        // this.tabla.datos = respuesta.usuarios;
+        this.usuarios = respuesta.usuarios;
         this.cargandoTabla = false;
       },
       error: (errores) => {

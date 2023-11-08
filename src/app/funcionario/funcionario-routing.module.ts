@@ -10,6 +10,7 @@ import { VisualizarInventariosComponent } from './paginas/visualizar-inventarios
 import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones/visualizar-recepciones.component';
 import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
 import { VerProductosComponent } from './paginas/ver-productos/ver-productos.component';
+import { ModalCloseGuard } from '../guardianes/modal-close.guard';
 
 const routes: Routes = [
   {
@@ -34,11 +35,14 @@ const routes: Routes = [
       },
       {
         path:'salidaProductos',
-        component:SalidaProductosComponent
+        component:SalidaProductosComponent,
+        canDeactivate: [ModalCloseGuard]
       },
       {
         path:'recepcion',
-        component:RecepcionProductosComponent
+        component:RecepcionProductosComponent,
+        canDeactivate: [ModalCloseGuard]
+
       },
       {
         path:'rendicion',

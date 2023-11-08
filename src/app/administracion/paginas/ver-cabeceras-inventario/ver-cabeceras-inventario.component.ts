@@ -32,23 +32,37 @@ export class VerCabecerasInventarioComponent implements OnInit{
   dtOpciones: DataTables.Settings = {
     paging: false,
     info: false,
-    responsive: true,
+    responsive: false,
     lengthChange: false,
     order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
-    language: {
-  
+    language: { //traducimos porque por defecto esta en ingles
+      search: 'Buscar:',
+      zeroRecords: 'No se encontraron resultados',
+      info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+      infoEmpty: 'Mostrando 0 a 0 de 0 registros',
+      infoFiltered: '(filtrados de _MAX_ registros en total)',
+      lengthMenu: 'Mostrar _MENU_ registros',
+      loadingRecords: 'Cargando...',
+      processing: 'Procesando...',
+      emptyTable: 'No hay datos disponibles en la tabla',
+      paginate: {
+        first: 'Primero',
+        last: 'Último',
+        next: 'Siguiente',
+        previous: 'Anterior',
+      },
     },
-    initComplete: () => {
-      $('table').on('click', '[id^="btnCalculos_"]', (event) => {
-        const idCabecera = event.currentTarget.id.split('_')[1];
-        this.verCalculos(idCabecera);
-      });
+    // initComplete: () => {
+    //   $('table').on('click', '[id^="btnCalculos_"]', (event) => {
+    //     const idCabecera = event.currentTarget.id.split('_')[1];
+    //     this.verCalculos(idCabecera);
+    //   });
   
-      $('table').on('click', '[id^="btnDetalle_"]', (event) => {
-        const idCabecera = event.currentTarget.id.split('_')[1];
-        this.verDetalle(idCabecera);
-      });
-    }
+    //   $('table').on('click', '[id^="btnDetalle_"]', (event) => {
+    //     const idCabecera = event.currentTarget.id.split('_')[1];
+    //     this.verDetalle(idCabecera);
+    //   });
+    // }
   };
 
   fechaHoy!:Date; //para establecer las fechas por defecto al filtro de las cabeceras (fecha desde)

@@ -7,7 +7,14 @@ import * as alertify from 'alertifyjs';
 
 export class AlertifyService {
 
-  constructor() { }
+  constructor() {
+    // Configura las opciones globales de alertify para quitar el título
+    // alertify.set('notifier', 'position', 'top-center');
+    // alertify.set('notifier', 'delay', 5);
+    // alertify.set()
+  }
+
+  // constructor() { }
   //!Se utilizan en todos los componentes
   /*
   Esta clase se utiliza para mostrar notificaciones o mensajes al usuario utilizando la biblioteca externa alertifyjs.

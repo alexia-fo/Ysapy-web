@@ -1,11 +1,16 @@
 <app-menu-funcionario></app-menu-funcionario>
 <div class="container">
     <div class="row">
+      <div class="col-12">
+        <h2 class="text-center">Informaciones</h2>
+      </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6 mb-3 mb-sm-0 mt-2" *ngFor="let informacion of datos">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{informacion.titulo}}</h5>
-              <p class="card-text">{{informacion.descripcion}}</p>
+              <h5 class="card-title">{{informacion.titulo | uppercase}}</h5>
+              <p class="card-text">{{informacion.descripcion | titlecase}}</p>
               <img [src]="apiUrl+informacion.idInformacion" alt="" width="100%" height="auto">
             </div>
           </div>

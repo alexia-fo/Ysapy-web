@@ -14,7 +14,7 @@ export class VerProductosComponent {
 
   
   dtOpciones: DataTables.Settings = {//configuracion del datatable
-    paging: true,
+    paging: false,
     info: true,
     //desactivar la responsividad del datatable
     responsive:false,
