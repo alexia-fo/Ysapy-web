@@ -73,7 +73,7 @@ table td {
 
 /* Aplica un alto máximo a la tabla y habilita el desplazamiento vertical */
 .table-responsive {
-    max-height: 60vh; 
+    max-height: 55vh; 
     overflow-y: auto;
   }
   
@@ -86,7 +86,8 @@ table td {
   .table thead th {
     position: sticky;
     top: 0;
-    background-color: #ffc107; /* Puedes establecer el fondo que desees para el encabezado */
+    background-color: #ffc107; 
+    font-size: 18px;
   }
 
   

@@ -35,6 +35,7 @@ export class VisualizarSalidasComponent implements OnInit {
         if(respuesta.mostrar){
           this.invHabilitado=true;
           this.dsalidas=respuesta.dsalida!;
+          console.log(this.dsalidas)
           
           
         }

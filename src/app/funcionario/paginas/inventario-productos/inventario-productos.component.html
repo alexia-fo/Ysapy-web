@@ -1,21 +1,13 @@
 <!------ TABLA ------>
 
-<div class="container">
+<div class="container py-2">
+
+  <h3 class="text-center text-dark-emphasis">{{'Detalle De Inventario'}}</h3>
+  <p class="fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-secondary': invHabilitado}">{{descripcion}}</p>
+  <p class="text-secondary" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</p>
+  <p class="text-secondary" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</p>
+
   <div class="row">
-
-    <div class="col-12">
-      <h1 class="text-center mt-3 text-dark-emphasis">{{'Detalle De Inventario'}}</h1>
-      <h6 class="text-secondary mt-3" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</h6>
-      <h6 class="text-secondary mt-3" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</h6>
-      <h6 class="mt-3 fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-secondary': invHabilitado}">{{descripcion}}</h6>
-    </div>
-
-    <div class="col offset-md-9 col-md-3" *ngIf="invHabilitado">
-      <div class="d-grid gap-2 my-2">
-        <button class="btn btn-danger" (click)="enviar()">Enviar</button>
-      </div>
-    </div>
-
     <div class="col-12">
       <div class="text-center" *ngIf="cargandoOperacion">
           <div class="spinner-border text-danger" role="status">
@@ -37,16 +29,27 @@
           Obteniendo productos...
         </div> -->
     </div>
+  </div>
+
+  <div class="row" *ngIf="!cargandoOperacion">
+
+    <!-- <div class="col offset-md-9 col-md-3" *ngIf="invHabilitado"> -->
+    <div class="col offset-md-9 col-md-3" *ngIf="invHabilitado">
+      <div class="d-grid gap-2 my-2">
+        <button class="btn btn-danger" (click)="enviar()">Enviar</button>
+      </div>
+    </div>
+
 
     <div class="col-12"  *ngIf="!cargandoTabla && !cargandoOperacion">
+      <div class="table-responsive pb-4">
         <form [formGroup]="form" *ngIf="invHabilitado" class="">
           <!-- <div class="outer-wrapper">
             <div class="table-wrapper"> -->
               <!--TODO:cambio produccion-->
               <!--<table datatable [dtOptions]="dtOptions" class="table hover">--><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
-              <div class="table-responsive">
 
-                <table class="table hover">
+                <table class="table hover" datatable [dtOptions]="dtOptions">
                   <thead class="bg-warning">
                     <tr>
                       <th class="text-center">NOMBRE</th>
@@ -56,7 +59,7 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let i of productos; let j=index;">
-                        <td class="text-start">{{i.nombre | titlecase}}</td>
+                        <td translate="no" class="text-start">{{i.nombre | titlecase}}</td>
                         <td class="text-end">{{i.precio | number}}</td>
                         <td class="field-amount-size"><!-- class="col-2"-->
                           <div>
@@ -68,10 +71,10 @@
                         </tr>
                       </tbody>
                     </table>
+                    <!-- </div>
+                    </div> -->
+                  </form>
                 </div>
-            <!-- </div>
-          </div> -->
-        </form>
     </div>
   
   </div>

@@ -38,7 +38,7 @@ export class LoginComponent {
       this.authService.ingresarRetornarPerfil(this.form.get('correo')?.value, this.form.get('contra')?.value)
       .subscribe({
         next:(respuesta:RespuestaPerfil)=>{    
-          this.cargando=true;    
+          this.cargando=false;    
           
           if(this.authService.usuario.Rol.rol=="ROOT"){
             this.mensaje="Root";
@@ -59,6 +59,7 @@ export class LoginComponent {
           this.router.navigate(['/autentificacion/perfil']); 
         },
         error:(errores: string[])=>{
+          this.cargando=false;  
           errores.forEach((error: string) => {
             this.mensajeAlertify.mensajeError(error);
           });

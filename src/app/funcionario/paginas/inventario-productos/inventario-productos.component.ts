@@ -23,10 +23,14 @@ export class InventarioProductosComponent {
   cargandoOperacion!: boolean; //registro de inv en proceso
   
   dtOptions = {
+    //deshabiitar ordenamiento
+    ordering: false, // Deshabilitar el ordenamiento
+
+
     paging:false,
     info:false,
     responsive:true,
-    searching: false,
+    searching: true,
     
     language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
@@ -123,6 +127,8 @@ export class InventarioProductosComponent {
       return;
     }
 
+    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+
     this.cargandoOperacion = true;
     let inventario:GuardarInventario = {productos:this.form.value } ;
 
@@ -144,6 +150,7 @@ export class InventarioProductosComponent {
       },
     });
 
+    })//todo:add
   }
 
   /*FIXME:en caso que se cargue la pagina, se crean los controladores
@@ -154,6 +161,7 @@ export class InventarioProductosComponent {
     this.servicioI.obtenerDatosProducto()
     .subscribe({
       next:(respuesta:RespuestaDatosProducto)=>{
+        console.log(respuesta)
         this.descripcion=respuesta.descripcion;
         this.fechaApertura=respuesta.fechaApertura;
         this.idCabeceraInv=respuesta.idCabeceraInv;

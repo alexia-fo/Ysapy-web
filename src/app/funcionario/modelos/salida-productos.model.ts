@@ -50,9 +50,13 @@ export interface SalidaVisualizar{
     idsalida:number;
     cantidad:number;
     total:number;
+    precio:number;
     Producto:{
         nombre:string;
-        DInventarios:{precio:number, idproducto:number}[];// array de objetos de tipo dInventario --> es para obtener el precio del producto del inventario al cual corresponde(el array simpre tendra un solo objeto)
+        // DInventarios:{precio:number, idproducto:number}[];// array de objetos de tipo dInventario --> es para obtener el precio del producto del inventario al cual corresponde(el array simpre tendra un solo objeto)
+    };
+    Salida:{
+        descripcion:string;
     }
 }
 

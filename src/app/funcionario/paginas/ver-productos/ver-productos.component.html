@@ -1,9 +1,13 @@
 <!-- PANTALLA --> 
-<div class="container">
+<div class="container mt-2">
+
+    <h3 class="text-center text-dark-emphasis">Listado de productos</h3>
+
+
     <div class="row">
 
       <!--Spinner de la tabla-->
-      <div class="col-12 my-2">
+      <div class="col-12">
         <div class="text-center mt-3" *ngIf="cargandoTabla">
           <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -16,11 +20,11 @@
 
       <!--Tabla Para Listar Datos-->
       <div class="col-12">
-        <div class="table-responsive">
+        <div class="table-responsive pb-4">
           <table class="table hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoTabla">
             <thead class="bg-warning">
               <tr>
-                <th class="text-center">ID</th>
+                <th class="text-center">ID P</th>
                 <th class="text-center">NOMBRE</th>
                 <th class="text-center">PRECIO</th>
                 <th class="text-center">DESCRIPCION</th>
@@ -29,7 +33,7 @@
             <tbody>
               <tr *ngFor="let item of productos">
                 <td class="text-center">{{item.idProducto}}</td>
-                <td>{{item.nombre}}</td>
+                <td translate="no">{{item.nombre}}</td>
                 <td class="text-center">{{item.precio | number}}</td>
                 <td>{{item.descripcion}}</td>
               </tr>

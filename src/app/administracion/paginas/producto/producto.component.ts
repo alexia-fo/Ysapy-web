@@ -220,7 +220,7 @@ export class ProductoComponent implements OnInit{
   eliminar() {
     this.cargandoOperacion=true; //empieza la operacion
     this.mostrarModal(this.modProductoId, false);
-    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion del producto ${this.seleccionado.nombre}`,()=>{
+    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion/habilicion del producto ${this.seleccionado.nombre}`,()=>{
       this.servicioProd.eliminar(this.seleccionado.idProducto).subscribe({
         next: (respuesta: EliminadoProducto) => {
           this.cargandoOperacion = false;
@@ -264,7 +264,7 @@ export class ProductoComponent implements OnInit{
 
     if(this.form.get(campo)?.hasError('minlength')){
       if(campo == "nombre"){
-        mensaje="Nombre: min 5 caracteres";
+        mensaje="Nombre: min 3 caracteres";
       }
 
     }
@@ -356,7 +356,7 @@ export class ProductoComponent implements OnInit{
       this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
         nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
         {
-          validators:[Validators.required, Validators.minLength(5), Validators.maxLength(100)],
+          validators:[Validators.required, Validators.minLength(3), Validators.maxLength(100)],
           asyncValidators:[Validaciones.validacionProducto(this.servicioProd, this.seleccionado.nombre)],
           updateOn:"blur"
         }],    
@@ -370,7 +370,7 @@ export class ProductoComponent implements OnInit{
       this.form=this.formulario.group({//Validators.pattern(/^[a-zA-Z() ñ]+$/)
         nombre:['',//https://www.youtube.com/watch?v=J2cgd9Ii8Xk
             {
-          validators:[Validators.required, Validators.minLength(5), Validators.maxLength(100)],
+          validators:[Validators.required, Validators.minLength(3), Validators.maxLength(100)],
           asyncValidators:[Validaciones.validacionProducto(this.servicioProd, undefined)],
           updateOn:"blur"
         }],

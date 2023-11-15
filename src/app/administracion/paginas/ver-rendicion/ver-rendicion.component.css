@@ -1,0 +1,7 @@
+/*
+el scroll por defecto agregado por el navegador en ocaciones no funciona
+es decir, no se desplaza el contenido apesar de deslizar la pagina en el celular
+*/
+.container{
+    max-height: 80vh; overflow-y: auto;
+}

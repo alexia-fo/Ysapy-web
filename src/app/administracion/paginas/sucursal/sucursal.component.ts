@@ -157,7 +157,7 @@ export class SucursalComponent {
   eliminar() {
     this.cargandoOperacion=true;
     this.mostrarModal(this.modSucursalId, false);
-    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion de la sucursal ${this.seleccionado.nombre}`,() => {
+    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion/habilicion de la sucursal ${this.seleccionado.nombre}`,() => {
       this.servicioSucur
         .eliminar(this.seleccionado.idSucursal)
         .subscribe({

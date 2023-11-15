@@ -439,6 +439,9 @@ export class SalidaProductosComponent {
       return;
     }
 
+    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+
+
     let data:GuardarSalida={
       observacion:this.formCabecera.value.observacion || "",
       productos:this.productosBaja,
@@ -461,6 +464,9 @@ export class SalidaProductosComponent {
         this.cargandoOperacion = false;
       },
     });
+
+  })//todo:add
+
   }
 
   //FIXME: se limpian todos los formularios y tabla para que la pagina se limpie sin recargar

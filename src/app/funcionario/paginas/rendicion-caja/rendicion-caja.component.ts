@@ -132,6 +132,9 @@ export class RendicionCajaComponent {
       return;
     }
 
+    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+
+
     this.cargandoOperacion = true;
     let rendicion: GuardarRendicion = this.form.getRawValue();
 
@@ -152,6 +155,9 @@ export class RendicionCajaComponent {
         this.cargandoOperacion = false;
       },
     });
+
+  })//todo:add
+
 
   }
 

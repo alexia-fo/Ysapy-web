@@ -1,33 +1,32 @@
 <!--PAGINA PRINCIPAL: Resumen de la rendicion-->
 <div class="container">
-    <h1 class="text-center mt-3">Calculos de la Rendicion</h1>
+    <h3 class="text-center mt-3">Calculos de la Rendicion</h3>
     <div class="row" *ngIf="calculoRendicion">
 
         <div class="col-md-12">
             <br>
-            <h2>Cobro por creditos de fechas anteriores</h2>
+            <h5>Cobro por creditos de fechas anteriores</h5>
             <h6>Total cobrado: {{calculoRendicion.totalOtrosCobros | number }}</h6>
 
         </div>
 
         <div class="col-12">
             <br>
-            <h2>Detalles de la Rendicion</h2>
-            <h6>Total Apertura Efectivo: {{calculoRendicion.totalAperturaDinero | number}}</h6>
-            <h6>Total Cierre  Efectivo: {{calculoRendicion.totalCierreDinero | number}} </h6>
-            <h6>Total Diferencia  Efectivo (Apertura-Cierre): {{calculoRendicion.totalDiferenciaDinero | number}}</h6>
-            <h6>Total Creditos dados, Cobro con tarjetas y Pagos realizados por recepciones: {{calculoRendicion.totalPendiente | number}}</h6>
+            <h5 class="fw-bold">Detalles de la Rendicion</h5>
+            <p><b>Total Apertura Efectivo:</b> {{calculoRendicion.totalAperturaDinero | number}}</p>
+            <p><b>Total Cierre  Efectivo:</b> {{calculoRendicion.totalCierreDinero | number}} </p>
+            <p><b>Total Diferencia  Efectivo (Apertura-Cierre):</b> {{calculoRendicion.totalDiferenciaDinero | number}}</p>
+            <p><b>Total Creditos dados, Cobro con tarjetas y Pagos realizados por recepciones:</b> {{calculoRendicion.totalPendiente | number}}</p>
         </div>
 
         <div class="col-12">
-            <br>
-            <h2>Resultados de la Rendicion</h2>
+            <h5 class="fw-bold">Resultados de la Rendicion</h5>
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h5>Total Venta: </h5>
+                    <h6>Total Venta: </h6>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="text-end">{{calculoRendicion.totalVenta | number}}</h5>
+                    <h6 class="text-end">{{calculoRendicion.totalVenta | number}}</h6>
                 </div>
             </div>
         </div>
@@ -35,10 +34,10 @@
         <div class="col-12">
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h5>Total Cobrado (efectivo + creditos + tarjetas + pagos ): </h5>
+                    <h6>Total Cobrado (efectivo + creditos + tarjetas + pagos ): </h6>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="text-end">{{calculoRendicion.totalDiferenciaDinero+calculoRendicion.totalPendiente | number}}</h5>
+                    <h6 class="text-end">{{calculoRendicion.totalDiferenciaDinero+calculoRendicion.totalPendiente | number}}</h6>
                 </div>
             </div>
         </div>
@@ -47,11 +46,11 @@
             <hr>
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h4 class="fw-bold">Total Venta - Total Cierre: </h4>
+                    <h5 class="fw-bold">Total Venta - Total Cierre: </h5>
                 </div>
                 <div class="col-md-4">
-                    <h4 class="text-end fw-bold">{{calculoRendicion.diferenciaVentaCaja | number}}</h4>
-                    <h4 class="text-end fw-bold text-danger">{{calculoRendicion.descVentaCaja}}</h4>
+                    <h5 class="text-end fw-bold">{{calculoRendicion.diferenciaVentaCaja | number}}</h5>
+                    <h5 class="text-end fw-bold text-danger">{{calculoRendicion.descVentaCaja}}</h5>
                 </div>
  
             </div>
@@ -70,11 +69,10 @@
             </div>
         </div>
 
-        <div class="col-12">
-            <br>
-            <br>
-            <br>
+        <!-- <div class="col-12 ">
+
             <p class="fw-bold text-primary" routerLink="../../inventarios">Regresar a la pagina anterior</p>
-        </div>
+        </div> -->
     </div>
 </div>
+

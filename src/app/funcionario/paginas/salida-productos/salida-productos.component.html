@@ -2,11 +2,36 @@
 <div class="container mt-2">
 
     <h1 class="text-center text-dark-emphasis">Salida de productos</h1>
-    <h6 class="text-secondary mt-3" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</h6>
-    <h6 class="text-secondary mt-3" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</h6>
-    <p class="text-danger mt-3 fw-bold" *ngIf="!invHabilitado">{{descripcion}}</p>
+    <p class="text-danger fw-bold" *ngIf="!invHabilitado">{{descripcion}}</p>
+    <p class="text-secondary" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</p>
+    <p class="text-secondary" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</p>
 
-    <div class="row" *ngIf="invHabilitado">
+    <div class="row">
+        <!--GUARDANDO LA SALIDA-->
+        <div class="col-12">
+        <div class="text-center" *ngIf="cargandoOperacion">
+            <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- <div class="text-center text-danger">
+                Registrando el Salida..
+            </div> -->
+        </div>
+        </div>
+
+        <div class="col-12" *ngIf="cargandoTablaSalida || cargandoTablaSalida">
+            <div class="text-center">
+                <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <!-- <div class="text-center text-danger">
+                Obteniendo productos...
+            </div> -->
+        </div>
+    </div>
+
+    <div class="row" *ngIf="invHabilitado && !cargandoOperacion">
 
         <!--ACCIONES PARA LA SALIDA-->
         <div class="col-12 d-flex justify-content-end my-3">
@@ -97,28 +122,7 @@
             </div>
         </div>
 
-         <!--GUARDANDO LA SALIDA-->
-        <div class="col-12">
-            <div class="text-center" *ngIf="cargandoOperacion">
-                <div class="spinner-border text-danger" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <!-- <div class="text-center text-danger">
-                    Registrando el Salida..
-                </div> -->
-            </div>
-        </div>
 
-        <div class="col-12" *ngIf="cargandoTablaSalida || cargandoTablaSalida">
-            <div class="text-center">
-                <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-            <!-- <div class="text-center text-danger">
-                Obteniendo productos...
-            </div> -->
-        </div>
 
         <!--TABLA DE PRODUCTOS EN BAJA-->
         <div class="col-12">
@@ -130,20 +134,22 @@
                     <thead *ngIf="!cargandoTablaSalida">
                         <tr>
                             <!-- <th> Id </th> -->
+                            <th class="text-center"> No</th>
                             <th class="text-center"> Nombre</th>
                             <th class="text-center"> Cantidad </th>
                             <th class="text-center"> Descripcion </th>
-                            <th class="text-center"> Eliminar </th>
-                            <th class="text-center"> Modificar </th>
+                            <th class="text-center"> Elim </th>
+                            <th class="text-center"> Mod </th>
                         </tr>
                     </thead>
                     <!--
                         <tbody *ngIf="!cargandoT">
                     -->
                     <tbody *ngIf="!cargandoTablaSalida">
-                        <tr *ngFor="let i of productosBaja">
+                        <tr *ngFor="let i of productosBaja; let j=index">
                             <!-- <td>{{i.idProducto}}</td> -->
-                            <td>{{i.nombre | titlecase}}</td>
+                            <td class="text-center">{{j+1}}</td>
+                            <td translate="no">{{i.nombre | titlecase}}</td>
                             <td class="text-center">{{i.cantidad}}</td>
                             <td>{{i.salida.descripcion}}</td>
                             <td class="text-center"><button class="btn btn-danger" (click)="confirmarEliminacion(i)"><i class="bi bi-trash3"></i></button></td>
@@ -167,33 +173,33 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
+                <div class="table-responsive pb-2">
                     <table *ngIf="productos.length>0" class="table" datatable [dtOptions]="dtOptionsProductos">
                         <thead>
                             <tr>
                                 <th class="text-center"> Id </th>
-                                <th class="text-center"> Nombre</th>
+                                <th translate="no" class="text-center"> Nombre</th>
                                 <th class="text-center"> Precio </th>
-                                <th class="text-center"> Descripicon </th>
-                                <th class="text-center">Seleccionar</th>
+                                <!-- <th class="text-center"> Descripicon </th> -->
+                                <!-- <th class="text-center">Seleccionar</th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let i of productos">
+                            <tr *ngFor="let i of productos" (dblclick)="seleccionarProducto(i)">
                                 <td>{{i.idProducto}}</td>
                                 <td>{{i.nombre | titlecase}}</td>
                                 <td>{{i.precio | number}}</td>
-                                <td>{{i.descripcion | titlecase}}</td>
-                                <td  class="text-center"><button class="btn btn-secondary" (click)="seleccionarProducto(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>      
+                                <!-- <td>{{i.descripcion | titlecase}}</td> -->
+                                <!-- <td  class="text-center"><button class="btn btn-secondary" (click)="seleccionarProducto(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>       -->
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
                 <button class="btn e-tercer-boton">guardar</button>
                 <button class="btn e-primer-boton">Eliminar</button>
-            </div>
+            </div> -->
         </div>
     </div>
 

@@ -1,18 +1,55 @@
 <!-------------------PANTALLA-------------------->
 <div class="container mt-2">
 
-    <h1 class="text-center text-dark-emphasis">Recepcion de productos</h1>
-    <h6 class="text-secondary mt-3" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</h6>
-    <h6 class="text-secondary mt-3" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</h6>
-    <p class="text-danger mt-3  fw-bold" *ngIf="!invHabilitado">{{descripcion}}</p>
+    <h3 class="text-center text-dark-emphasis">Recepcion de productos</h3>
+    <p class="text-danger fw-bold" *ngIf="!invHabilitado">{{descripcion}}</p>
+    <p class="text-secondary" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</p>
+    <p class="text-secondary" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</p>
 
-    <div class="row" *ngIf="invHabilitado">
+    <div class="row">
+        <!--GUARDANDO LA RECEPCION-->
+        <div class="col-12">
+            <div class="text-center" *ngIf="cargandoOperacion">
+                <div class="spinner-border text-danger" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <!-- <div class="text-center text-danger">
+                    Registrando el recepcion..
+                </div> -->
+            </div>
+        </div>
+
+        <div class="col-12" *ngIf="cargandoProductos || cargandoTabRecepcion">
+            <div class="text-center">
+                <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <!-- <div class="text-center text-danger">
+                Obteniendo productos...
+            </div> -->
+        </div>
+    </div>
+
+    <div class="row" *ngIf="invHabilitado && !cargandoOperacion">
 
         <!--ACCIONES PARA LA RECEPCION-->
-        <div class="col-12 d-flex justify-content-end my-3">
+        <div class="col-12 d-flex justify-content-end my-3" >
             <button class="btn btn-warning me-2" (click)="guardar()">Enviar</button>
             <button class="btn btn-danger" (click)="borrarDatos()">Cancelar</button>
         </div>
+
+
+
+        <!--ACCION PARA EL PRODUCTO RECEPCIONADO-->
+        
+        <div class="col-12 offset-md-9 col-md-3">
+            <div class="d-grid gap-2">
+                <button class="btn e-tercer-boton fw-bold my-4" (click)="nuevo()">Nuevo</button>
+            </div>
+        </div>
+
+
 
         <div class="col-12">
 
@@ -92,37 +129,6 @@
         </div>
 
 
-        <!--ACCION PARA EL PRODUCTO RECEPCIONADO-->
-        <div class="col-12 offset-md-9 col-md-3">
-            <div class="d-grid gap-2">
-                <button class="btn e-tercer-boton fw-bold my-4" (click)="nuevo()">Nuevo</button>
-            </div>
-        </div>
-
-        <!--GUARDANDO LA RECEPCION-->
-        <div class="col-12">
-            <div class="text-center" *ngIf="cargandoOperacion">
-                <div class="spinner-border text-danger" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <!-- <div class="text-center text-danger">
-                    Registrando el recepcion..
-                </div> -->
-            </div>
-        </div>
-
-        <div class="col-12" *ngIf="cargandoProductos || cargandoTabRecepcion">
-            <div class="text-center">
-                <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-            <!-- <div class="text-center text-danger">
-                Obteniendo productos...
-            </div> -->
-        </div>
-
-
         <!--TABLA DE PRODUCTOS RECEPCIONADOS-->
         <div class="col-12">
             <div class="table-responsive">
@@ -133,19 +139,23 @@
                     <thead>
                         <tr>
                             <!-- <th> Id </th> -->
+
+                            <th class="text-center"> No</th>
                             <th class="text-center"> Nombre</th>
                             <th class="text-center"> Cantidad </th>
-                            <th class="text-center"> Eliminar </th>
-                            <th class="text-center"> Modificar </th>
+                            <th class="text-center"> Elim </th>
+                            <th class="text-center"> Modif </th>
                         </tr>
                     </thead>
                     <!--
                         <tbody *ngIf="!cargandoT">
                     -->
                     <tbody *ngIf="!cargandoTabRecepcion">
-                        <tr *ngFor="let i of productosRecibidos">
+                        <tr *ngFor="let i of productosRecibidos; let j=index">
                             <!-- <td>{{i.idProducto}}</td> -->
-                            <td>{{i.nombre | titlecase}}</td>
+
+                            <td class="text-center">{{j+1}}</td>
+                            <td translate="no">{{i.nombre | titlecase}}</td>
                             <td class="text-center">{{i.cantidad}}</td>
                             <td class="text-center"><button class="btn btn-danger" (click)="confirmarEliminacion(i)"><i class="bi bi-trash3"></i></button></td>
                             <td class="text-center"><button class="btn btn-warning" (click)="modificar(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>
@@ -167,7 +177,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
+                <div class="table-responsive pb-2">
                     <table *ngIf="productos.length>0" class="table" datatable [dtOptions]="dtOptionsProductos">
                         <thead>
                             <tr>
@@ -175,25 +185,25 @@
                                 <th class="text-center"> Nombre</th>
                                 <th class="text-center"> Precio </th>
                                 <!-- <th class="text-center"> Descripicon </th> -->
-                                <th class="text-center">Seleccionar</th>
+                                <!-- <th class="text-center">Seleccionar</th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let i of productos">
+                            <tr *ngFor="let i of productos" (dblclick)="seleccionarProducto(i)">
                                 <td>{{i.idProducto}}</td>
-                                <td>{{i.nombre | titlecase}}</td>
+                                <td translate="no">{{i.nombre | titlecase}}</td>
                                 <td>{{i.precio | number}}</td>
                                 <!-- <td>{{i.descripcion | titlecase}}</td> -->
-                                <td  class="text-center"><button class="btn btn-secondary" (click)="seleccionarProducto(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>      
+                                <!-- <td  class="text-center"><button class="btn btn-secondary" (click)="seleccionarProducto(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>       -->
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
                 <button class="btn e-tercer-boton">guardar</button>
                 <button class="btn e-primer-boton">Eliminar</button>
-            </div>
+            </div> -->
         </div>
     </div>
 

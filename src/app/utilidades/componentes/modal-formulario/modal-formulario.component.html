@@ -26,7 +26,7 @@
         
         <div class="modal-footer">
           <button *ngIf="cargandoOperacion!=true" (click)="guardar()" class="btn e-tercer-boton">{{(accion=='M')?'Actualizar':'Guardar'}}</button>
-          <button *ngIf="accion=='M' && cargandoOperacion!=true" (click)="eliminar()" class="btn e-primer-boton">Eliminar</button>
+          <button *ngIf="accion=='M' && cargandoOperacion!=true" (click)="eliminar()" class="btn e-primer-boton">Anular/Habilitar</button>
         </div>
 
       </div>

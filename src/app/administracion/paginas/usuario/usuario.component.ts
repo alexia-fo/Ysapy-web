@@ -223,7 +223,7 @@ export class UsuarioComponent implements OnInit {
   eliminar() {
     this.cargandoOperacion = true;//empieza la operacion
     this.mostrarModal(this.modUsuarioId, false); //empieza la operacion
-    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion del producto ${this.seleccionado.nombre}`, () => {
+    this.mensajeAlertify.mensajeConfirmacion(`Confirma la anulacion/habilicion del producto ${this.seleccionado.nombre}`, () => {
       this.servicioUsu.eliminar(this.seleccionado.idUsuario).subscribe({
         next: (respuesta: EliminadoUsuario) => {
           this.cargandoOperacion = false;

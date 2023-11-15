@@ -1,5 +1,6 @@
-<div class="container">
-    <div class="row mt-4">
+<div class="container mt-2">
+    <h3 class="text-center text-dark-emphasis">Detalle de Recepción</h3>
+    <div class="row">
 
         <!--Spinner de la tabla-->
         <div class="col-12">
@@ -31,7 +32,7 @@
                     <tbody>
                         <tr *ngFor="let i of detalles">
                             <td class="text-start">{{i.Producto.nombre}}</td>
-                            <td class="text-center">{{i.cantidad | number}}</td>
+                            <td class="text-center">{{i.cantidad}}</td>
                             <td class="text-end">{{i.total | number}}</td>
                             <td class="text-start">{{i.Crecepcion.fecha | date}}</td>
                             <td class="text-start">{{i.Crecepcion.observacion}}</td>
@@ -43,12 +44,10 @@
             </div>
         </div>
 
-        <div class="col-12">
-            <br>
-            <br>
+        <!-- <div class="col-12">
             <br>
             <p class="fw-bold text-primary"  [routerLink]="['/administracion/detalleInvetario', idCabecera]">Regresar a la pagina anterior</p>
-        </div>
+        </div> -->
     </div>
 </div>
 

@@ -6,7 +6,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { GuardarRecepcion, ProdRecibido, RespuestaDatos } from '../../modelos/recepcion-productos.model';
 import { RecepcionProductosService } from '../../servicios/recepcion-productos.service';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
-import { Producto, RespuestaProducto, RespuestaSucursal } from '../../modelos/inv-rend.model';
+import { Producto, RespuestaProducto } from '../../modelos/inv-rend.model';
 import { InvRendService } from '../../servicios/inv-rend.service';
 
 @Component({
@@ -447,6 +447,8 @@ export class RecepcionProductosComponent {
       return;
     }
 
+    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+
     let data:GuardarRecepcion={
       nroComprobante: this.formCabecera.value.nroComprobante || "",
       observacion:this.formCabecera.value.observacion || "",
@@ -473,6 +475,11 @@ export class RecepcionProductosComponent {
         this.cargandoOperacion = false;
       },
     });
+
+    
+  })//todo:add
+
+
   }
 
   //FIXME: se limpian todos los formularios y tabla para que la pagina se limpie sin recargar

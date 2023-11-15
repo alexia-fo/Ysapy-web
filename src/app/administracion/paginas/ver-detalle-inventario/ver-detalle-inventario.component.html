@@ -1,5 +1,6 @@
-<div class="container">
-    <div class="row mt-4">
+<div class="container mt-2">
+    <h3 class="text-center text-dark-emphasis">Detalle de Inventario</h3>
+    <div class="row">
         <!--Spinner de la tabla-->
         <div class="col-12">
             <div class="text-center mt-3" *ngIf="cargandoDetalle">
@@ -38,9 +39,9 @@
                             <td class="text-center">{{i.cantidadCierre}}</td>
                             <td class="text-center">{{i.cantidadRecepcion}}</td>
                             <td class="text-center">{{i.cantidadSalida}}</td>
-                            <td class="text-center fw-bold">{{i.cantidadTotal}}</td>
-                            <td class="text-end fw-bold">{{i.precio}}</td>
-                            <td class="text-end fw-bold">{{i.totalMultiplicado}}</td>   
+                            <td class="text-center fw-bold">{{i.cantidadTotal | number}}</td>
+                            <td class="text-end fw-bold">{{i.precio  | number}}</td>
+                            <td class="text-end fw-bold">{{i.totalMultiplicado  | number}}</td>   
                             <td class="text-center"><button class="btn btn-warning" (click)="verRecepcion(i.idproducto)"><i class="bi bi-box-arrow-in-left"></i></button></td>
                             <td class="text-center"><button class="btn btn-secondary" (click)="verSalida(i.idproducto)"><i class="bi bi-box-arrow-right"></i></button></td>
                             <!-- <td class="text-center"><button class="btn btn-warning" id="btnRecepcion_{{i.idproducto}}"><i class="bi bi-box-arrow-in-left"></i></button></td>
@@ -51,12 +52,10 @@
             </div>
         </div>
 
-        <div class="col-12">
-            <br>
-            <br>
+        <!-- <div class="col-12">
             <br>
             <p class="fw-bold text-primary"  [routerLink]="['/administracion/calculoRendicion', idCabecera]">Regresar a la pagina anterior</p>
-        </div>
+        </div> -->
     </div>
 </div>
 
