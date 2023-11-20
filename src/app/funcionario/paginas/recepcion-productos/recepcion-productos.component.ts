@@ -447,7 +447,7 @@ export class RecepcionProductosComponent {
       return;
     }
 
-    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+    // this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
 
     let data:GuardarRecepcion={
       nroComprobante: this.formCabecera.value.nroComprobante || "",
@@ -477,7 +477,7 @@ export class RecepcionProductosComponent {
     });
 
     
-  })//todo:add
+  // })//todo:add
 
 
   }
@@ -594,4 +594,12 @@ export class RecepcionProductosComponent {
       }});
 
   }
+
+    ////////prueba mensaje
+
+  
+    confirmarOperacionEnvio(){
+        //prueba
+        this.mostrarModal('modMensajeId',true)
+    }
 }

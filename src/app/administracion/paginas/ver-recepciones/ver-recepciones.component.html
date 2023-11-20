@@ -1,0 +1,59 @@
+<div class="container mt-2">
+    <h3 class="text-center text-dark-emphasis">Detalle de Recepción</h3>
+    <div class="row">
+
+        <!--Spinner de la tabla-->
+        <div class="col-12">
+            <div class="text-center mt-3" *ngIf="cargandoDatos">
+            <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- <div class="text-center text-danger">
+                Obteniendo los Datos...
+            </div> -->
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos" id="my-table">
+
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Nro Comprobante</th>
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Observacion</th>
+                            <th class="text-center">Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of detalles">
+                            <td class="text-center">{{i.Crecepcion.nroComprobante}}</td>
+                            <td class="text-start">{{i.Producto.nombre}}</td>
+                            <td class="text-center">{{i.cantidad}}</td>
+                            <td class="text-end">{{i.total | number}}</td>
+                            <td class="text-start">{{i.Crecepcion.fecha | date}}</td>
+                            <td class="text-start">{{i.Crecepcion.observacion}}</td>
+                            <td class="text-start">{{i.Crecepcion.Usuario.nombre}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- <div class="col-12">
+            <br>
+            <p class="fw-bold text-primary"  [routerLink]="['/administracion/detalleInvetario', idCabecera]">Regresar a la pagina anterior</p>
+        </div> -->
+    </div>
+</div>
+
+
+   
+  
+  
+  
+  

@@ -1,0 +1,34 @@
+
+<div class="modal fade" [id]="idModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Confirme la operación</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <!--Spinner-->
+          <!-- <div class="text-center" *ngIf="cargandoOperacion">
+            <div class="spinner-border text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+            </div>
+          </div> -->
+          <!--
+            El contenido personalizado se inserta en el lugar marcado por <ng-content></ng-content>, 
+            lo que permite que el contenido dentro del modal sea definido por el componente que utiliza este modal.
+          -->
+          <ng-content>
+            <!--falta el cuerpo que seria el formulario-->
+          </ng-content>
+        </div>
+        
+        <div class="modal-footer">
+          <button (click)="guardar()" class="btn e-tercer-boton">Aceptar</button>
+          <button (click)="eliminar()" class="btn e-primer-boton">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>

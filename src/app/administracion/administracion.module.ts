@@ -17,6 +17,9 @@ import { VerDetalleSalidaComponent } from './paginas/ver-detalle-salida/ver-deta
 import { VerDetalleRecepcionComponent } from './paginas/ver-detalle-recepcion/ver-detalle-recepcion.component';
 import { VerRendicionComponent } from './paginas/ver-rendicion/ver-rendicion.component';
 import { InformacionComponent } from './paginas/informacion/informacion.component';
+import { VerRecepcionesComponent } from './paginas/ver-recepciones/ver-recepciones.component';
+import { VerSalidasComponent } from './paginas/ver-salidas/ver-salidas.component';
+import { VerVentasComponent } from './paginas/ver-ventas/ver-ventas.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,9 @@ import { InformacionComponent } from './paginas/informacion/informacion.componen
     VerDetalleRecepcionComponent,
     VerRendicionComponent,
     InformacionComponent,
+    VerRecepcionesComponent,
+    VerSalidasComponent,
+    VerVentasComponent,
   ],
   imports: [
     CommonModule,

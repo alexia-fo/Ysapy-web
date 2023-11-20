@@ -127,7 +127,7 @@ export class InventarioProductosComponent {
       return;
     }
 
-    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+    // this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
 
     this.cargandoOperacion = true;
     let inventario:GuardarInventario = {productos:this.form.value } ;
@@ -150,7 +150,7 @@ export class InventarioProductosComponent {
       },
     });
 
-    })//todo:add
+    // })//todo:add
   }
 
   /*FIXME:en caso que se cargue la pagina, se crean los controladores
@@ -220,6 +220,21 @@ export class InventarioProductosComponent {
         this.cargandoTabla = false;
       }
     });
+  }
+
+  ////////prueba mensaje
+
+  mostrarModal(id: string, mostrar:boolean) {
+    if(mostrar){
+      $(`#${id}`).modal('show');
+    }else{
+      $(`#${id}`).modal('hide');
+    }
+  }
+
+  confirmarOperacionEnvio(){
+      //prueba
+      this.mostrarModal('modMensajeId',true)
   }
 
 }

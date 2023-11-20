@@ -34,10 +34,10 @@
         <div class="col-12">
             <div class="row justify-content-around">
                 <div class="col-md-8">
-                    <h6>Total Cobrado (efectivo + creditos + tarjetas + pagos ): </h6>
+                    <h6>Total Cobrado (efectivo + creditos + tarjetas + pagos - anteriores creditos ): </h6>
                 </div>
                 <div class="col-md-4">
-                    <h6 class="text-end">{{calculoRendicion.totalDiferenciaDinero+calculoRendicion.totalPendiente | number}}</h6>
+                    <h6 class="text-end">{{calculoRendicion.totalDiferenciaDinero+calculoRendicion.totalPendiente-calculoRendicion.totalOtrosCobros | number}}</h6>
                 </div>
             </div>
         </div>
@@ -66,6 +66,18 @@
         <div class="col-12 offset-md-9 col-md-3">
             <div class="d-grid gap-2 mt-3">
                 <button class="btn btn-warning" [routerLink]="['/administracion/detalleRendicion', idCabecera]">Detallede Caja</button>
+            </div>
+        </div>
+
+        <div class="col-12 offset-md-9 col-md-3">
+            <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-secondary" [routerLink]="['/administracion/recepciones', idCabecera]">Recepciones</button>
+            </div>
+        </div>
+
+        <div class="col-12 offset-md-9 col-md-3">
+            <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-secondary" [routerLink]="['/administracion/salidas', idCabecera]">Salidas</button>
             </div>
         </div>
 

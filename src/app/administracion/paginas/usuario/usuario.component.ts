@@ -314,7 +314,7 @@ export class UsuarioComponent implements OnInit {
       }
 
       if (campo == "contra") {
-        mensaje = "Contraseña: max 12 caracteres";
+        mensaje = "Contraseña: max 50 caracteres";
       }
     }
 
@@ -423,7 +423,7 @@ export class UsuarioComponent implements OnInit {
         idrol: ['', [Validators.required,]],
         idsucursal: ['', [Validators.required]],
         turno: ['M', [Validators.required, Validators.maxLength(1)]],
-        contra: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],//invenstigar a cuantos caracteres equivale en jwt
+        contra: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],//invenstigar a cuantos caracteres equivale en jwt
         contrasena2: ['', [Validators.required]]
       }, {
         validators: [this.formatos.camposIguales('contra', 'contrasena2')]
@@ -642,7 +642,7 @@ export class UsuarioComponent implements OnInit {
     if (this.formContra.get(campo)?.hasError('maxlength')) {
       if (campo == "contrasenaNueva") {
         console.log("Maximo")
-        mens = "Caracteres máximo: 12";
+        mens = "Caracteres máximo: 50";
       }
     }
 
@@ -679,7 +679,7 @@ contrasenaInvalida(campo: string) {
     this.formContra = this.formulario.group(
       {
         //contrasenaActual: ['', [Validators.required]],//invenstigar a cuantos caracteres equivale en jwt
-        contrasenaNueva: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
+        contrasenaNueva: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],
         contrasenaConfirm: ['', [Validators.required]]
       }
       , {

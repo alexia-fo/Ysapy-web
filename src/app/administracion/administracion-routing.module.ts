@@ -13,12 +13,23 @@ import { VerDetalleRecepcionComponent } from './paginas/ver-detalle-recepcion/ve
 import { VerDetalleSalidaComponent } from './paginas/ver-detalle-salida/ver-detalle-salida.component';
 import { InformacionComponent } from './paginas/informacion/informacion.component';
 import { ModalCloseGuard } from '../guardianes/modal-close.guard';
+import { VerSalidasComponent } from './paginas/ver-salidas/ver-salidas.component';
+import { VerRecepcionesComponent } from './paginas/ver-recepciones/ver-recepciones.component';
+import { VerVentasComponent } from './paginas/ver-ventas/ver-ventas.component';
 
 const routes: Routes = [
   {
     path: "",
     component: MainComponent,
     children: [
+      {
+        path: 'recepciones/:idCabecera',
+        component: VerRecepcionesComponent
+      },
+      {
+        path: 'salidas/:idCabecera',
+        component: VerSalidasComponent
+      },
       {
         path: 'detalleSalida/:idCabecera/:idProducto',
         component: VerDetalleSalidaComponent
@@ -30,6 +41,10 @@ const routes: Routes = [
       {
         path: 'detalleRendicion/:idCabecera',
         component: VerDetalleRendicionComponent
+      },
+      {
+        path: 'ventas/:idCabecera',
+        component: VerVentasComponent
       },
       {
         path: 'detalleInvetario/:idCabecera',

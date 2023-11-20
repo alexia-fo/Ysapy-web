@@ -13,6 +13,7 @@ import { TablaPipeComponent } from './componentes/tabla-pipe/tabla-pipe.componen
 import { ActivoInactivoPipe } from './pipes/activo-inactivo.pipe';
 import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.component';
+import { ModalConfirmarComponent } from './componentes/modal-confirmar/modal-confirmar.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.compo
     ActivoInactivoPipe,
     BooleanToStringPipe,
     TablaBotonComponent,
+    ModalConfirmarComponent,
   ],
   imports: [
     CommonModule,
@@ -44,7 +46,8 @@ import { TablaBotonComponent } from './componentes/tabla-boton/tabla-boton.compo
     TablaPipeComponent,
     BooleanToStringPipe,
     TablaBotonComponent,
-    ActivoInactivoPipe
+    ActivoInactivoPipe,
+    ModalConfirmarComponent
   ],
 })
 export class UtilidadesModule { }

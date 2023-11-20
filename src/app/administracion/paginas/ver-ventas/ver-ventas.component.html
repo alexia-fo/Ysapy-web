@@ -1,0 +1,54 @@
+<div class="container mt-2">
+    <h3 class="text-center text-dark-emphasis">Detalle de Ventas</h3>
+
+    <div class="row">
+        <!--Spinner de la tabla-->
+        <div class="col-12">
+            <div class="text-center mt-3" *ngIf="cargandoDetalle">
+            <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <!--No utilizo una tabla reutilizable se necesitan dos botones (es mas complejo)-->
+            <div class="table-responsive">
+                <table class="table table-hover" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDetalle">
+
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Venta</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Total</th>
+
+                        </tr>
+                    </thead>
+                    <!--TODO: NO FUNCIONA EN PRODUCCION MUESTRA EL MENSAJE DE NO HAY REGISTROS-->
+                    <!-- <tbody *ngFor="let i of detalleRendicion">
+                        <tr  *ngIf="i.cantidadTotal>0">
+                            <td class="text-start">{{i.Producto.nombre}}</td>
+                            <td class="text-center fw-bold">{{i.cantidadTotal | number}}</td>
+                            <td class="text-end fw-bold">{{i.precio  | number}}</td>
+                            <td class="text-end fw-bold">{{i.totalMultiplicado  | number}}</td>   
+                        </tr>
+                    </tbody>  -->
+
+                    <tbody>
+                        <ng-container *ngFor="let i of detalleRendicion">
+                          <tr *ngIf="i.cantidadTotal > 0">
+                            <td class="text-start">{{ i.Producto.nombre }}</td>
+                            <td class="text-center fw-bold">{{ i.cantidadTotal | number }}</td>
+                            <td class="text-end fw-bold">{{ i.precio | number }}</td>
+                            <td class="text-end fw-bold">{{ i.totalMultiplicado | number }}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

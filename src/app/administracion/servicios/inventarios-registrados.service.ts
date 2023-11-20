@@ -4,7 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
-import { RespuestaCabecera, RespuestaCalculosRendicion, RespuestaDetRecepcion, RespuestaDetSalida, DatosFiltro, RespuestaFiltros, RespuestaRendicion, RespuestaDetalleRendicion, RespuestaCalculos } from '../modelos/inventariosRegistrados';
+import { RespuestaCabecera, RespuestaCalculosRendicion, RespuestaDetRecepcion, RespuestaDetSalida, DatosFiltro, RespuestaFiltros, RespuestaRendicion, RespuestaDetalleRendicion, RespuestaCalculos, RecepcionVisualizar, RespuestaRecepcionesVisualizar, RespuestaSalidasVisualiza } from '../modelos/inventariosRegistrados';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +94,20 @@ export class InventariosRegistradosService {
      );
  }
 
+ obtenerRecepciones(idCabecera:number): Observable<RespuestaRecepcionesVisualizar> {
+  this.params={
+    idCabecera,
+  }
+
+  return this.http.get<RespuestaRecepcionesVisualizar>(`${this.apiUrl}/inventariosRegistrados/obtenerRecepciones`, {
+    params:this.params
+  })
+    .pipe(
+      catchError(this.errorS.handleError)
+    );
+}
+
+
  obtenerDetalleSalida(idCabecera:number, idProducto:number): Observable<RespuestaDetSalida> {
    this.params={
      idCabecera,
@@ -108,6 +122,20 @@ export class InventariosRegistradosService {
        catchError(this.errorS.handleError)
      );
  }
+
+
+ obtenerSalidas(idCabecera:number): Observable<RespuestaSalidasVisualiza> {
+  this.params={
+    idCabecera,
+  }
+
+  return this.http.get<RespuestaSalidasVisualiza>(`${this.apiUrl}/inventariosRegistrados/obtenerSalidas`, {
+    params:this.params
+  })
+    .pipe(
+      catchError(this.errorS.handleError)
+    );
+}
 
  //////////////// PDF ///////////
 

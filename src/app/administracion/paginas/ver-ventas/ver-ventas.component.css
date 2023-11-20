@@ -1,0 +1,10 @@
+/* Aplica un alto máximo a la tabla y habilita el desplazamiento vertical */
+.table-responsive {
+    max-height: 70vh; 
+    overflow-y: auto;
+}
+
+/* Establece un ancho máximo para evitar el desplazamiento horizontal innecesario */
+.table {
+    max-width: 100%; 
+}

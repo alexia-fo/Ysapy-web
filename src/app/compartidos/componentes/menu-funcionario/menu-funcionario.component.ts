@@ -70,7 +70,6 @@ export class MenuFuncionarioComponent {
               route: '/inventarios',
               isDropdown: false
             },
-
           ]
         },
 
@@ -179,21 +178,21 @@ export class MenuFuncionarioComponent {
               route: '/visualizarProductos',
               isDropdown: false
             },
-            {
-              title: 'Inventarios',
-              route: '/visualizarInventarios',
-              isDropdown: false
-            },
-            {
-              title: 'Recepciones',
-              route: '/visualizarRecepciones',
-              isDropdown: false
-            },
-            {
-              title: 'Salidas',
-              route: '/visualizarSalidas',
-              isDropdown: false
-            },
+            // {
+            //   title: 'Inventarios',
+            //   route: '/visualizarInventarios',
+            //   isDropdown: false
+            // },
+            // {
+            //   title: 'Recepciones',
+            //   route: '/visualizarRecepciones',
+            //   isDropdown: false
+            // },
+            // {
+            //   title: 'Salidas',
+            //   route: '/visualizarSalidas',
+            //   isDropdown: false
+            // },
           ]
         },
         // Agrega más opciones de menú aquí según tus necesidades

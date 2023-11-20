@@ -1,15 +1,13 @@
 <div class="container mt-2">
     <h3 class="text-center text-dark-emphasis">Detalle de Rendición</h3>
     <div class="row">
-        <!--Spinner de la tabla-->
+        
         <div class="col-12">
             <div class="text-center mt-3" *ngIf="cargandoDatos">
             <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <!-- <div class="text-center text-danger">
-                Obteniendo los Datos...
-            </div> -->
+
             </div>
         </div>
 
@@ -25,7 +23,6 @@
                             <th class="text-center">Cantidad Cierre</th>
                             <th class="text-center">Total Apertura</th>
                             <th class="text-center">Total Cierre</th>
-                            <!-- <th class="text-center">Diferencia C-A</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -36,17 +33,12 @@
                             <td class="text-center">{{i.cantidadCierre}}</td>
                             <td class="text-end">{{i.totalApertura | number}}</td>
                             <td class="text-end">{{i.totalCierre | number}}</td>
-                            <!-- <td class="text-end fw-bold">{{i.montoTotal}}</td> -->
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-<!-- 
-        <div class="col-12 mb-2">
-            <br>
-            <p class="fw-bold text-primary"  [routerLink]="['/administracion/calculoRendicion', idCabecera]">Regresar a la pagina anterior</p>
-        </div> -->
+
     </div>
 </div>
 

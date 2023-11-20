@@ -127,6 +127,9 @@ export class InvRendService {
       switchMap((respuesta: invProdHabilitado): Observable<RespuestaDatosProducto> => {
         if (respuesta.habilitado) {
           return this.productosInventario().pipe(
+            tap((respuestapr:any)=>{
+              console.log('tap ', respuestapr)
+            }),
             map((respuestaProductos: RespuestaProductos): RespuestaDatosProducto => {
               return ({ mostrar: true, descripcion:respuesta.descripcion ,productos: respuestaProductos.producto, idCabeceraInv:respuesta.idCabeceraInv, fechaApertura: respuesta.fechaApertura  })
             })

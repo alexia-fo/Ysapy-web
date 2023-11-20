@@ -135,6 +135,32 @@ export interface RespuestaDetRecepcion{
     dRecepcion:DatosDetRecepcion[];
 }
 
+//para mostrar todas las recepciones de un inventario
+export interface RecepcionVisualizar{
+    idcrecepcion:number;
+    idproducto:number;
+    cantidad:number;
+    precio:number;
+    total:number;
+    Crecepcion:{
+        fecha:Date
+        observacion:string;
+        nroComprobante:number;
+        Usuario:{
+            nombre:string
+        }
+    };
+    Producto:{
+        nombre:string;
+        idproducto:number;
+    }
+  
+}
+
+export interface RespuestaRecepcionesVisualizar{
+    dRecepcion:RecepcionVisualizar[];
+}
+
 export interface DatosDetSalida{
     idcsalida: number,
     idproducto: number,
@@ -164,6 +190,36 @@ export interface DatosDetSalida{
 
 export interface RespuestaDetSalida{
     dSalida:DatosDetSalida[];
+}
+
+//para ver todas las salidas de un inventario
+//para mostrar todas las recepciones de un inventario
+export interface SalidasVisualiza{
+    idcsalida:number;
+    idproducto:number;
+    cantidad:number;
+    precio:number;
+    total:number;
+    Csalida:{
+        idCabecera:number
+        fecha:Date
+        observacion:string;
+        Usuario:{
+            nombre:string
+        }
+    };
+    Producto:{
+        nombre:string;
+        idproducto:number;
+    };
+    Salida:{
+        descripcion:string;
+    }
+  
+}
+
+export interface RespuestaSalidasVisualiza{
+    dSalida:SalidasVisualiza[];
 }
 
 

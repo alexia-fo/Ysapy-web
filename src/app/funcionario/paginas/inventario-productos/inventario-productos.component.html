@@ -3,7 +3,7 @@
 <div class="container py-2">
 
   <h3 class="text-center text-dark-emphasis">{{'Detalle De Inventario'}}</h3>
-  <p class="fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-secondary': invHabilitado}">{{descripcion}}</p>
+  <p class="fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-warning': invHabilitado}">{{descripcion}}</p>
   <p class="text-secondary" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</p>
   <p class="text-secondary" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</p>
 
@@ -36,7 +36,7 @@
     <!-- <div class="col offset-md-9 col-md-3" *ngIf="invHabilitado"> -->
     <div class="col offset-md-9 col-md-3" *ngIf="invHabilitado">
       <div class="d-grid gap-2 my-2">
-        <button class="btn btn-danger" (click)="enviar()">Enviar</button>
+        <button class="btn btn-danger" (click)="confirmarOperacionEnvio()">Enviar</button>
       </div>
     </div>
 
@@ -81,6 +81,13 @@
 </div>
 
  
+<!--PRUEBA MENSAJE-->
 
+<app-modal-confirmar 
+[idModal]="'modMensajeId'" 
+(guardarClick)="enviar()"
+>
+<p>Desea Guardar los Datos ?</p>
+</app-modal-confirmar>
 
-
+<!-- (eliminarClick)="eliminar()" -->

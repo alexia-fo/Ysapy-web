@@ -35,7 +35,7 @@
 
         <!--ACCIONES PARA LA RECEPCION-->
         <div class="col-12 d-flex justify-content-end my-3" >
-            <button class="btn btn-warning me-2" (click)="guardar()">Enviar</button>
+            <button class="btn btn-warning me-2" (click)="confirmarOperacionEnvio()">Enviar</button>
             <button class="btn btn-danger" (click)="borrarDatos()">Cancelar</button>
         </div>
 
@@ -208,3 +208,14 @@
     </div>
 
 </div>
+
+<!--PRUEBA MENSAJE-->
+
+<app-modal-confirmar 
+[idModal]="'modMensajeId'" 
+(guardarClick)="guardar()"
+>
+<p>Desea Guardar los Datos ?</p>
+</app-modal-confirmar>
+
+<!-- (eliminarClick)="eliminar()" -->

@@ -132,7 +132,7 @@ export class RendicionCajaComponent {
       return;
     }
 
-    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+    // this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
 
 
     this.cargandoOperacion = true;
@@ -156,7 +156,7 @@ export class RendicionCajaComponent {
       },
     });
 
-  })//todo:add
+  // })//todo:add
 
 
   }
@@ -254,6 +254,21 @@ export class RendicionCajaComponent {
     })
 
     return total;
+  }
+
+  ////////prueba mensaje
+
+  mostrarModal(id: string, mostrar:boolean) {
+    if(mostrar){
+      $(`#${id}`).modal('show');
+    }else{
+      $(`#${id}`).modal('hide');
+    }
+  }
+
+  confirmarOperacionEnvio(){
+      //prueba
+      this.mostrarModal('modMensajeId',true)
   }
 
 }

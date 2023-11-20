@@ -21,18 +21,19 @@ const routes: Routes = [
         path:'visualizarProductos',
         component:VerProductosComponent
       },
-      {
-        path:'visualizarInventarios',
-        component:VisualizarInventariosComponent
-      },
-      {
-        path:'visualizarRecepciones',
-        component:VisualizarRecepcionesComponent
-      },
-      {
-        path:'visualizarSalidas',
-        component:VisualizarSalidasComponent
-      },
+      //FIXME: DESHABILITADO POR AHORA
+      // {
+      //   path:'visualizarInventarios',
+      //   component:VisualizarInventariosComponent
+      // },
+      // {
+      //   path:'visualizarRecepciones',
+      //   component:VisualizarRecepcionesComponent
+      // },
+      // {
+      //   path:'visualizarSalidas',
+      //   component:VisualizarSalidasComponent
+      // },
       {
         path:'salidaProductos',
         component:SalidaProductosComponent,
@@ -46,15 +47,20 @@ const routes: Routes = [
       },
       {
         path:'rendicion',
-        component:RendicionCajaComponent
+        component:RendicionCajaComponent,
+        canDeactivate: [ModalCloseGuard]
       },
       {
         path:'inventario',
-        component:InventarioProductosComponent
+        component:InventarioProductosComponent,
+        canDeactivate: [ModalCloseGuard]
+
       },
       {
         path:'aperturaInventario',
-        component:InvRendCabeceraComponent
+        component:InvRendCabeceraComponent,
+        canDeactivate: [ModalCloseGuard]
+
       },
       {
         path:'**',

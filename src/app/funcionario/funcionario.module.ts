@@ -15,6 +15,7 @@ import { VisualizarInventariosComponent } from './paginas/visualizar-inventarios
 import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones/visualizar-recepciones.component';
 import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
 import { VerProductosComponent } from './paginas/ver-productos/ver-productos.component';
+import { UtilidadesModule } from '../utilidades/utilidades.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,9 @@ import { VerProductosComponent } from './paginas/ver-productos/ver-productos.com
     FuncionarioRoutingModule,
     ReactiveFormsModule,
     DataTablesModule,
-    CompartidosModule
+    CompartidosModule,
+    /////////prueba 16-11
+    UtilidadesModule
   ]
 })
 export class FuncionarioModule { }

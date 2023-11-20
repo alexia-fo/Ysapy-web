@@ -439,7 +439,7 @@ export class SalidaProductosComponent {
       return;
     }
 
-    this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
+    // this.mensajeAlertify.mensajeConfirmacion('Desea guardar el inventario',()=>{//todo:add
 
 
     let data:GuardarSalida={
@@ -465,7 +465,7 @@ export class SalidaProductosComponent {
       },
     });
 
-  })//todo:add
+  // })//todo:add
 
   }
 
@@ -531,5 +531,10 @@ export class SalidaProductosComponent {
       }
     }
   
+    confirmarOperacionEnvio(){
+      //prueba
+      this.mostrarModal('modMensajeId',true)
+  }
+
 
 }

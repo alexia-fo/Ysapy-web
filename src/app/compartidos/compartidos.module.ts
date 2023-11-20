@@ -4,6 +4,7 @@ import { MenuFuncionarioComponent } from './componentes/menu-funcionario/menu-fu
 import { UtilidadesModule } from '../utilidades/utilidades.module';
 import { InicioComponent } from './paginas/inicio/inicio.component';
 import { InfoComponent } from './paginas/info/info.component';
+import { ModalConfirmarComponent } from './componentes/modal-confirmar/modal-confirmar.component';
 
 
 
@@ -11,7 +12,8 @@ import { InfoComponent } from './paginas/info/info.component';
   declarations: [
     MenuFuncionarioComponent,
     InicioComponent,
-    InfoComponent
+    InfoComponent,
+    ModalConfirmarComponent
   ],
   imports: [
     CommonModule,
