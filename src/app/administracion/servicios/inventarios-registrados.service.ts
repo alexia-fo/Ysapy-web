@@ -139,9 +139,17 @@ export class InventariosRegistradosService {
 
  //////////////// PDF ///////////
 
- obtenerCabecerasPDF(): Observable<Blob> {
+ obtenerDetalleInventarioPDF(idCabecera:number): Observable<Blob> {
    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-   return this.http.get(`${this.apiUrl}/pdf/pdfCabecerasInventario`, { headers, responseType: 'blob' });
+   return this.http.get(`${this.apiUrl}/informesAdmin/obtenerDetalleInventario/${idCabecera}`, { headers, responseType: 'blob' });
+ }
+ obtenerVentasPDF(idCabecera:number): Observable<Blob> {
+   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+   return this.http.get(`${this.apiUrl}/informesAdmin/obtenerVentasInventario/${idCabecera}`, { headers, responseType: 'blob' });
+ }
+ obtenerDetalleRendicionPDF(idCabecera:number): Observable<Blob> {
+   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+   return this.http.get(`${this.apiUrl}/informesAdmin/obtenerRendicion/${idCabecera}`, { headers, responseType: 'blob' });
  }
 
 }

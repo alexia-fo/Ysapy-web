@@ -529,6 +529,7 @@ export class RecepcionProductosComponent {
     if(idProducto){
       this.servicioC.obtenerProductoPorId(idProducto).subscribe({
         next: (respuesta: RespuestaProducto) => {
+          console.log(respuesta)
           this.formRecepcion.get('nombre')?.setValue(respuesta.nombre);
           //para evitar la modificacion del idProducto en el formulario
           this.idProductoSeleccionado=idProducto;

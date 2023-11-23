@@ -169,6 +169,7 @@ export class InventarioProductosComponent {
         if(respuesta.mostrar){
           this.invHabilitado=true;
           this.productos=respuesta.productos!;
+          console.log(this.productos)
            
           this.productos.forEach(product => {
             const controlName = product.idProducto.toString();

@@ -4,6 +4,7 @@ import { DatosDetalleInventario, RespuestaDetalleInventario } from '../../modelo
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
+import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 
 @Component({
   selector: 'app-ver-ventas',
@@ -72,6 +73,20 @@ ngOnInit(): void {
         this.mensajeAlertify.mensajeError(error);
       });
       this.cargandoDetalle=false;
+    },
+  });
+}
+
+mostrarPdf(){
+  this.servicioC.obtenerVentasPDF(this.idCabecera)
+  .subscribe({
+    next: (respuesta:Blob) => {
+      ObtenerPDF.visualizarPDF(respuesta);
+    },
+    error: (errores) => {
+      errores.forEach((error: string) => {
+        this.mensajeAlertify.mensajeError(error);
+      });
     },
   });
 }

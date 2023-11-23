@@ -4,6 +4,12 @@
     <p class="fw-bold text-primary"  [routerLink]="['/administracion/ventas', idCabecera]">Ver solo los productos vendidos</p>
 
     <div class="row">
+        <div class="col offset-md-9 col-md-3">
+                <div class="d-grid gap-2 my-2">
+                <button class="btn btn-danger" (click)="mostrarPdf()">Pdf</button>
+                </div>
+        </div>
+
         <!--Spinner de la tabla-->
         <div class="col-12">
             <div class="text-center mt-3" *ngIf="cargandoDetalle">
