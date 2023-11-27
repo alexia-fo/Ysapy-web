@@ -124,6 +124,7 @@ export class InventarioProductosComponent {
     //Para mostrar error en las cantidades no establecidas de los productos 
     if (!this.form.valid) {
       this.form.markAllAsTouched();
+      this.mensajeAlertify.mensajeError('No agregó la cantidad de algún producto')
       return;
     }
 
@@ -155,73 +156,73 @@ export class InventarioProductosComponent {
 
   /*FIXME:en caso que se cargue la pagina, se crean los controladores
   en caso de de que se recargue la tabla se limpian los controladores existentes*/
-  consultarDetalle(){
-    
-    this.cargandoTabla = true;
-    this.servicioI.obtenerDatosProducto()
-    .subscribe({
-      next:(respuesta:RespuestaDatosProducto)=>{
-        console.log(respuesta)
-        this.descripcion=respuesta.descripcion;
-        this.fechaApertura=respuesta.fechaApertura;
-        this.idCabeceraInv=respuesta.idCabeceraInv;
+    consultarDetalle(){
+      
+      this.cargandoTabla = true;
+      this.servicioI.obtenerDatosProducto()
+      .subscribe({
+        next:(respuesta:RespuestaDatosProducto)=>{
+          console.log(respuesta)
+          this.descripcion=respuesta.descripcion;
+          this.fechaApertura=respuesta.fechaApertura;
+          this.idCabeceraInv=respuesta.idCabeceraInv;
+              
+          if(respuesta.mostrar){
+            this.invHabilitado=true;
+            this.productos=respuesta.productos!;
+            console.log(this.productos)
             
-        if(respuesta.mostrar){
-          this.invHabilitado=true;
-          this.productos=respuesta.productos!;
-          console.log(this.productos)
-           
-          this.productos.forEach(product => {
-            const controlName = product.idProducto.toString();
-            /*FIXME:
-            Se verifica si el formulario (this.form) ya contiene un control con el nombre obtenido. 
-            Si ya existen los controladores se limpian los mismos.
-            Si aun no existen se crean
-            */
-           if (this.form.contains(controlName)) {
-                //Resetear un controlador: Usar reset() en un controlador existente restablecerá el valor del controlador a su valor inicial (no establece el valor inicial 0, por eso es mejor limpiarlos y establecer sus valores)
-                // this.form.get(controlName)?.reset();
-                            
-                this.form.get(controlName)?.setValue(0); // Establece el valor a 0
-                this.form.get(controlName)?.markAsUntouched(); // Marca como no tocado
-                this.form.get(controlName)?.markAsPristine(); // Marca como no modificado
-                this.form.get(controlName)?.updateValueAndValidity(); // Actualiza la validez
-            } else {
-                // Agrega un nuevo control si no existe un controlador con el nombre idProducto
-                this.form.addControl(controlName, new FormControl(0, [Validators.required, Validators.min(0)]));
-            }
+            this.productos.forEach(product => {
+              const controlName = product.idProducto.toString();
+              /*FIXME:
+              Se verifica si el formulario (this.form) ya contiene un control con el nombre obtenido. 
+              Si ya existen los controladores se limpian los mismos.
+              Si aun no existen se crean
+              */
+            if (this.form.contains(controlName)) {
+                  //Resetear un controlador: Usar reset() en un controlador existente restablecerá el valor del controlador a su valor inicial (no establece el valor inicial 0, por eso es mejor limpiarlos y establecer sus valores)
+                  // this.form.get(controlName)?.reset();
+                              
+                  this.form.get(controlName)?.setValue(0); // Establece el valor a 0
+                  this.form.get(controlName)?.markAsUntouched(); // Marca como no tocado
+                  this.form.get(controlName)?.markAsPristine(); // Marca como no modificado
+                  this.form.get(controlName)?.updateValueAndValidity(); // Actualiza la validez
+              } else {
+                  // Agrega un nuevo control si no existe un controlador con el nombre idProducto
+                  this.form.addControl(controlName, new FormControl(0, [Validators.required, Validators.min(0)]));
+              }
+            });
+
+            //TODO: Eliminar un controlador y luego agregarlo nuevamente: Si eliminas un controlador y luego lo agregas nuevamente, estás creando un nuevo controlador con las mismas propiedades. Esto es útil si deseas volver a crear completamente el controlador, incluidas sus validaciones y otros metadatos, y establecerlo en un estado específico.
+            // this.productos.forEach(product => {
+
+            //   const controlName = product.idProducto.toString();
+
+            //   if (this.form.contains(controlName)) {
+            //       this.form.removeControl(controlName); // Elimina el control existente
+            //   }
+
+            //   this.form.addControl(controlName, new FormControl(0, [Validators.required, Validators.min(0)]));
+            // });
+  
+          }else{
+            this.invHabilitado=false;
+            //NO ES NECESARIO PQ SE RECARGA LA PAGINA
+            // this.productos=[];
+            // this.form.reset();
+            // this.form= new FormGroup({});
+          }
+          this.cargandoTabla = false;      
+        },
+        error:(errores)=>{
+          errores.forEach((error: string) => {
+            this.mensajeAlertify.mensajeError(error);
           });
-
-          //TODO: Eliminar un controlador y luego agregarlo nuevamente: Si eliminas un controlador y luego lo agregas nuevamente, estás creando un nuevo controlador con las mismas propiedades. Esto es útil si deseas volver a crear completamente el controlador, incluidas sus validaciones y otros metadatos, y establecerlo en un estado específico.
-          // this.productos.forEach(product => {
-
-          //   const controlName = product.idProducto.toString();
-
-          //   if (this.form.contains(controlName)) {
-          //       this.form.removeControl(controlName); // Elimina el control existente
-          //   }
-
-          //   this.form.addControl(controlName, new FormControl(0, [Validators.required, Validators.min(0)]));
-          // });
- 
-        }else{
-          this.invHabilitado=false;
-          //NO ES NECESARIO PQ SE RECARGA LA PAGINA
-          // this.productos=[];
-          // this.form.reset();
-          // this.form= new FormGroup({});
+          
+          this.cargandoTabla = false;
         }
-        this.cargandoTabla = false;      
-      },
-      error:(errores)=>{
-        errores.forEach((error: string) => {
-          this.mensajeAlertify.mensajeError(error);
-        });
-        
-        this.cargandoTabla = false;
-      }
-    });
-  }
+      });
+    }
 
   ////////prueba mensaje
 

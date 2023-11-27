@@ -54,7 +54,7 @@
       
           <!-- <table class="table hover mt-2" datatable [dtOptions]="dtOptions"> -->
             <div class="table-responsive pb-4">
-              <table class="table hover">
+              <table class="table hover tablaFormulario">
                 <!--
                   table: Crea una tabla HTML.
                   class="table hover mt-2": Aplica clases CSS para dar formato a la tabla.
@@ -126,7 +126,25 @@
 [idModal]="'modMensajeId'" 
 (guardarClick)="enviar()"
 >
-<p>Desea Guardar los Datos ?</p>
+<h3 class="text-center text-danger">Desea Guardar los Datos ?</h3>
+<!--todo: por ahora no esta imprimiendo la cantidad-->
+<!-- <table class="table hover tablaFormulario">
+  <thead class="bg-warning">
+    <tr>
+      <th class="text-center">NOMBRE</th>
+      <th class="text-center">CANTIDAD</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr *ngFor="let dinero of dineros">
+      <td>{{ dinero.nombreBillete }}</td>
+      <td>{{ obtenerCantidadPorIdBillete(dinero.idBillete) | number}}</td>
+    </tr>
+    
+  </tbody>
+</table> -->
+
 </app-modal-confirmar>
 
 <!-- (eliminarClick)="eliminar()" -->

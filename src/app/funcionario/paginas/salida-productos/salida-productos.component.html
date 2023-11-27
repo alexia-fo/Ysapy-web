@@ -126,14 +126,10 @@
 
         <!--TABLA DE PRODUCTOS EN BAJA-->
         <div class="col-12">
-            <div class="table-responsive">
-                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table hover">
-                    <!--
-                        <thead *ngIf="!cargandoT">
-                    -->
-                    <thead *ngIf="!cargandoTablaSalida">
+            <div class="table-responsive" *ngIf="!cargandoTablaSalida">
+                <table datatable [dtOptions]="dtOptions" class="table hover">
+                    <thead >
                         <tr>
-                            <!-- <th> Id </th> -->
                             <th class="text-center"> No</th>
                             <th class="text-center"> Nombre</th>
                             <th class="text-center"> Cantidad </th>
@@ -142,12 +138,9 @@
                             <th class="text-center"> Mod </th>
                         </tr>
                     </thead>
-                    <!--
-                        <tbody *ngIf="!cargandoT">
-                    -->
-                    <tbody *ngIf="!cargandoTablaSalida">
+
+                    <tbody>
                         <tr *ngFor="let i of productosBaja; let j=index">
-                            <!-- <td>{{i.idProducto}}</td> -->
                             <td class="text-center">{{j+1}}</td>
                             <td translate="no">{{i.nombre | titlecase}}</td>
                             <td class="text-center">{{i.cantidad}}</td>
@@ -157,6 +150,29 @@
                         </tr>
                     </tbody>
                 </table>
+                <!-- <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table hover">
+                    <thead *ngIf="!cargandoTablaSalida">
+                        <tr>
+                            <th class="text-center"> No</th>
+                            <th class="text-center"> Nombre</th>
+                            <th class="text-center"> Cantidad </th>
+                            <th class="text-center"> Descripcion </th>
+                            <th class="text-center"> Elim </th>
+                            <th class="text-center"> Mod </th>
+                        </tr>
+                    </thead>
+
+                    <tbody *ngIf="!cargandoTablaSalida">
+                        <tr *ngFor="let i of productosBaja; let j=index">
+                            <td class="text-center">{{j+1}}</td>
+                            <td translate="no">{{i.nombre | titlecase}}</td>
+                            <td class="text-center">{{i.cantidad}}</td>
+                            <td>{{i.salida.descripcion}}</td>
+                            <td class="text-center"><button class="btn btn-danger" (click)="confirmarEliminacion(i)"><i class="bi bi-trash3"></i></button></td>
+                            <td class="text-center"><button class="btn btn-warning" (click)="modificar(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table> -->
             </div>
         </div>
     </div>
@@ -187,7 +203,7 @@
                         <tbody>
                             <tr *ngFor="let i of productos" (dblclick)="seleccionarProducto(i)">
                                 <td>{{i.idProducto}}</td>
-                                <td>{{i.nombre | titlecase}}</td>
+                                <td translate="no">{{i.nombre | titlecase}}</td>
                                 <td>{{i.precio | number}}</td>
                                 <!-- <td>{{i.descripcion | titlecase}}</td> -->
                                 <!-- <td  class="text-center"><button class="btn btn-secondary" (click)="seleccionarProducto(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>       -->
@@ -215,3 +231,11 @@
 </app-modal-confirmar>
 
 <!-- (eliminarClick)="eliminar()" -->
+
+<!--para eliminar producto de productos recepcionados-->
+<app-modal-confirmar 
+[idModal]="'modEliminarProducto'" 
+(guardarClick)="eliminar(idProductoSeleccionado)"
+>
+<p>Desea quitar este producto ?</p>
+</app-modal-confirmar>

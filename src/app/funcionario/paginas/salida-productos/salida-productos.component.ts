@@ -52,8 +52,8 @@ export class SalidaProductosComponent {
     El código @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective; se utiliza para obtener acceso a la instancia de la directiva DataTableDirective que está asociada a una tabla DataTable en el componente actual. Esto permite al componente interactuar con la tabla DataTable, realizar operaciones en ella (como destruirla) o configurar su comportamiento.
     En resumen, este código es esencial para tener control sobre la tabla DataTable y poder manipularla desde el componente de Angular en el que se encuentra. La propiedad dtElement contendrá la referencia a la directiva DataTableDirective, lo que facilita la interacción con la tabla dentro del componente.
   */
-  dtTrigger: Subject<any> = new Subject<any>();
-  @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective;
+  // dtTrigger: Subject<any> = new Subject<any>();
+  // @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective;
 
   dtOptionsProductos = {
     paging:false,
@@ -139,11 +139,11 @@ export class SalidaProductosComponent {
         this.fechaApertura=response.fechaApertura;
         this.idCabeceraInv=response.idCabeceraInv;
 
-        console.log(' this.idCabeceraInv',  this.idCabeceraInv)
 
         if(this.invHabilitado){//si ya existe una apertura de inventario se puede registrar salida
           this.productos=response.producto!;//se obtienen los productos si existe apertura
           this.salidas=response.salida!;
+          console.log('this.salidas ', this.salidas)
           //si el inventario esta habilitado quiere decir que existe una cabecera por lo que si va a haber la fecha y el id
           // this.fechaApertura=response.fechaApertura!;
           // this.idCabeceraInv=response.idCabeceraInv!;
@@ -152,22 +152,25 @@ export class SalidaProductosComponent {
           //si ya se han agregado productos en baja y luego se ha recargado la pagina por alguna razon, se obtendrán nuevamente
           //esos productos ya que estan almacenados en el localStorage(que sean del usuario activo, y que sean de la fecha)
           let datosAlmacenados=this.servicioP.getItems();
-
+          
           if(datosAlmacenados.items){
             this.productosBaja=datosAlmacenados.items;//se obtinen los productos ya agregados y no registrados del dia de hoy
+            console.log('oninit ', this.productosBaja)
             this.formCabecera.get('observacion')?.setValue(datosAlmacenados.observacion);
           }
         }
+        //una vez que se obtuvieron las salidas del localStorage, si es que existen, se formatea el datatable
+        //para evitar errores en la tabla al modificar el array al obtener los que fueron agregados previamente
+        //TODO:CORREGIR ERROR
+        // this.establecerDatos();
         this.cargandoProductos=false;
-          //una vez que se obtuvieron las salidas del localStorage, si es que existen, se formatea el datatable
-          //para evitar errores en la tabla al modificar el array al obtener los que fueron agregados previamente
-        this.establecerDatos();
         this.cargandoTablaSalida=false;
       },
       error:(errores)=>{
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
+        this.cargandoProductos=false;
         this.cargandoTablaSalida=false;
       }});
 
@@ -184,10 +187,11 @@ export class SalidaProductosComponent {
   Observable que se utiliza para notificar a la tabla de que debe actualizarse. Llamar al método next(0) notifica a la tabla que se deben cargar los datos.
   Es posible que esto sea necesario después de que los datos se hayan actualizado en el componente para asegurarse de que la tabla refleje esos cambios.
   */
-  establecerDatos() {
-    this.detectorCambio.detectChanges();
-    this.dtTrigger.next(0);
-  }
+  //TODO:CORREGIR ERROR
+  // establecerDatos() {
+  //   this.detectorCambio.detectChanges();
+  //   this.dtTrigger.next(0);
+  // }
   
   /*FIXME:
   Esta función se utiliza para destruir y desmontar la instancia de la DataTable actual, lo que puede ser útil si necesitas reemplazar o reinicializar la tabla.
@@ -195,11 +199,12 @@ export class SalidaProductosComponent {
   DataTable en el componente. Luego, se accede a la instancia de DataTable usando dtElement.dtInstance. Después, se llama al método destroy() de la instancia de DataTable 
   para destruir la tabla actual y liberar los recursos asociados.
   */
-  renderizar() {
-    this.dtElement.dtInstance.then((dtInstancia: DataTables.Api) => {
-      dtInstancia.destroy();
-    });
-  }
+  //TODO:CORREGIR ERROR
+  // renderizar() {
+  //   this.dtElement.dtInstance.then((dtInstancia: DataTables.Api) => {
+  //     dtInstancia.destroy();
+  //   });
+  // }
 
   /*FIXME:
     Esta es una función del ciclo de vida de Angular que se llama cuando se destruye el componente. En este caso, se utiliza para realizar limpieza y desvincular el observador de 
@@ -207,9 +212,11 @@ export class SalidaProductosComponent {
     this.dtTrigger.unsubscribe();: Aquí, se llama al método unsubscribe() en this.dtTrigger para desvincular el observador que podría estar escuchando cambios en la tabla DataTable. 
     Esto es importante para evitar posibles problemas de memoria o fugas de observables cuando el componente se destruye.
   */
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-  }
+
+  //TODO:CORREGIR ERROR
+  // ngOnDestroy(): void {
+  //   this.dtTrigger.unsubscribe();
+  // }
 
   // ------ MODAL DE FORMULARIO ------ //
   mostrarModal(id: string, mostrar:boolean) {
@@ -255,35 +262,56 @@ export class SalidaProductosComponent {
 
     //let {cantidad}=this.formSalida.value
     let bandera=false;
+    this.cargandoTablaSalida= true;
     if(this.accion=="Crear"){
-      this.cargandoTablaSalida= true;
 
       //this.productosRecibidos.push(producto);
       this.productosBaja.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
           this.productosBaja[i].cantidad=this.productosBaja[i].cantidad+producto.cantidad;//ya esta validado con el formSalida.markAllAsTouched();
           bandera=true;
+          //TODO:CORREGIR ERROR
+          setTimeout(() => {
+            this.cargandoTablaSalida = false;
+          }, 0.1);
         }
       });
 
       if(!bandera){
         this.productosBaja.push(producto);
+        //TODO:CORREGIR ERROR
+        
+        setTimeout(() => {
+          this.cargandoTablaSalida = false;
+        }, 0.1);
       }
       
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next(0);
-      })
+      //TODO:CORREGIR ERROR
+      // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      //   dtInstance.destroy();
+      //   this.dtTrigger.next(0);
+      // })
       
-      this.cargandoTablaSalida = false;
+      // this.cargandoTablaSalida = false;
       
     }else if(this.accion=="Modificar"){
+      this.cargandoTablaSalida=true;
+
       this.productosBaja.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
           this.productosBaja[i]=this.formSalida.value;
         }
       });
+
+      //TODO:CORREGIR ERROR
+      // this.cargandoTabRecepcion = false;
+      setTimeout(() => {
+        this.cargandoTablaSalida = false;
+      }, 0.1);
+
     }
+
+    console.log('agregar ', this.productosBaja)
 
     // this.formSalida.reset();
     this.limpiarDetalle();
@@ -302,10 +330,12 @@ export class SalidaProductosComponent {
     Muestra un mensaje para confirmar la eliminacion, en caso de que se presione aceptar se ejecuta la funcion de eliminar()
   */
   confirmarEliminacion(producto:ProdEnBaja){
-    this.mensajeAlertify.mensajeConfirmacion(
-      `Desea quitar el producto ${producto.nombre} ?`,
-      ()=>this.eliminar(producto.idProducto)
-    )
+    this.idProductoSeleccionado=producto.idProducto;
+    this.mostrarModal('modEliminarProducto', true);
+    // this.mensajeAlertify.mensajeConfirmacion(
+    //   `Desea quitar el producto ${producto.nombre} ?`,
+    //   ()=>this.eliminar(producto.idProducto)
+    // )
   }
 
   eliminar(id: number){
@@ -325,22 +355,44 @@ export class SalidaProductosComponent {
        // delete(this.productosRecibidos[i]);
       }
     }); 
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.destroy();
-      this.dtTrigger.next(0);
-    })
+    // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    //   dtInstance.destroy();
+    //   this.dtTrigger.next(0);
+    // })
     
-    this.cargandoTablaSalida = false;
+    setTimeout(() => {
+      this.cargandoTablaSalida = false;
+    }, 0.1);
 
     this.accion='Crear'
     ///actualizamos los datos del localStorage
     this.servicioP.saveItems(this.productosBaja, observacion);
   }
 
-  modificar(producto:ProdEnBaja){
-    this.accion='Modificar';
+  // modificar(producto:ProdEnBaja){
+  //   console.log('modificar ',producto)
+  //   this.accion='Modificar';
+  //   this.formSalida.setValue(producto);
+  //   let salida:Salida=producto.salida;
+  //   this.formSalida.get('salida')?.setValue(salida);
+  //   this.idProductoSeleccionado=producto.idProducto;
+  // }
+
+  modificar(producto: ProdEnBaja) {
+    console.log('modificar ', producto);
+    this.accion = 'Modificar';
     this.formSalida.setValue(producto);
+  
+    // Buscar el objeto 'salida' en la lista 'salidas' por su id
+    let salidaSeleccionada = this.salidas.find(salida => salida.idSalida === producto.salida.idSalida);
+  
+    if (salidaSeleccionada) {
+      this.formSalida.get('salida')?.setValue(salidaSeleccionada);
+    }
+  
+    this.idProductoSeleccionado = producto.idProducto;
   }
+  
 
   buscar(){
     this.mostrarModal('smodal', true);
@@ -478,10 +530,10 @@ export class SalidaProductosComponent {
     //para evitar errores del datatable
     this.cargandoTablaSalida=true;
     this.productosBaja=[];
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.destroy();
-      this.dtTrigger.next(0);
-    })
+    // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    //   dtInstance.destroy();
+    //   this.dtTrigger.next(0);
+    // })
     this.cargandoTablaSalida=false;
   
   }

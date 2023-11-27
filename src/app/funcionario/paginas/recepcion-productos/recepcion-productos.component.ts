@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { Subject } from 'rxjs';
@@ -15,7 +15,8 @@ import { InvRendService } from '../../servicios/inv-rend.service';
   styleUrls: ['./recepcion-productos.component.css']
 })
 
-export class RecepcionProductosComponent {
+export class RecepcionProductosComponent implements OnInit {
+// export class RecepcionProductosComponent implements OnDestroy, OnInit {
   
   dtOptionsRecepcion = {
     paging:false,
@@ -54,8 +55,8 @@ export class RecepcionProductosComponent {
     En resumen, este código es esencial para tener control sobre la tabla DataTable y poder manipularla desde el componente de Angular en el que se encuentra. La propiedad dtElement contendrá la referencia a la directiva DataTableDirective, lo que facilita la interacción con la tabla dentro del componente.
 
   */
-  dtTrigger: Subject<any> = new Subject<any>();
-  @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective;
+  // dtTrigger: Subject<any> = new Subject<any>();
+  // @ViewChild(DataTableDirective, {static: false}) dtElement!: DataTableDirective;
 
   dtOptionsProductos = {
     paging:false,
@@ -135,7 +136,6 @@ export class RecepcionProductosComponent {
     .subscribe({
       next:(response:RespuestaDatos)=>{
         
-        this.cargandoProductos=false;
         
         this.invHabilitado=response.mostrar;
         this.descripcion=response.descripcion; 
@@ -165,14 +165,17 @@ export class RecepcionProductosComponent {
           this.cargandoProductos=false;
           //una vez que se obtuvieron las recpciones del localStorage, si es que existen, se formatea el datatable
           //para evitar errores en la tabla al modificar el array al obtener los que fueron agregados previamente
-          this.establecerDatos();
+          //TODO:CORREGIR ERROR
+          // this.establecerDatos();
           this.cargandoTabRecepcion=false;
+          this.cargandoProductos=false;
       },
       error:(errores)=>{
         errores.forEach((error: string) => {
           this.mensajeAlertify.mensajeError(error);
         });
         this.cargandoProductos=false;
+        this.cargandoTabRecepcion=false;
       }});
   }
 
@@ -188,10 +191,12 @@ export class RecepcionProductosComponent {
   Observable que se utiliza para notificar a la tabla de que debe actualizarse. Llamar al método next(0) notifica a la tabla que se deben cargar los datos.
   Es posible que esto sea necesario después de que los datos se hayan actualizado en el componente para asegurarse de que la tabla refleje esos cambios.
   */
-  establecerDatos() {
-    this.detectorCambio.detectChanges();
-    this.dtTrigger.next(0);
-  }
+         //TODO:CORREGIR ERROR
+
+  // establecerDatos() {
+  //   this.detectorCambio.detectChanges();
+  //   this.dtTrigger.next(0);
+  // }
 
   /*FIXME:
   Esta función se utiliza para destruir y desmontar la instancia de la DataTable actual, lo que puede ser útil si necesitas reemplazar o reinicializar la tabla.
@@ -199,11 +204,13 @@ export class RecepcionProductosComponent {
   DataTable en el componente. Luego, se accede a la instancia de DataTable usando dtElement.dtInstance. Después, se llama al método destroy() de la instancia de DataTable 
   para destruir la tabla actual y liberar los recursos asociados.
   */
-  renderizar() {
-    this.dtElement.dtInstance.then((dtInstancia: DataTables.Api) => {
-      dtInstancia.destroy();
-    });
-  }
+
+  //TODO:CORREGIR ERROR
+  // renderizar() {
+  //   this.dtElement.dtInstance.then((dtInstancia: DataTables.Api) => {
+  //     dtInstancia.destroy();
+  //   });
+  // }
 
   /*FIXME:
     Esta es una función del ciclo de vida de Angular que se llama cuando se destruye el componente. En este caso, se utiliza para realizar limpieza y desvincular el observador de 
@@ -211,9 +218,12 @@ export class RecepcionProductosComponent {
     this.dtTrigger.unsubscribe();: Aquí, se llama al método unsubscribe() en this.dtTrigger para desvincular el observador que podría estar escuchando cambios en la tabla DataTable. 
     Esto es importante para evitar posibles problemas de memoria o fugas de observables cuando el componente se destruye.
   */
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-  }
+  
+    //TODO:CORREGIR ERROR
+
+  // ngOnDestroy(): void {
+  //   this.dtTrigger.unsubscribe();
+  // }
 
   // ------ MODAL DE FORMULARIO ------ //
   mostrarModal(id: string, mostrar:boolean) {
@@ -259,39 +269,58 @@ export class RecepcionProductosComponent {
     producto.idProducto=this.idProductoSeleccionado;
     producto.nombre=this.formRecepcion.get('nombre')?.value;
 
-    console.log(producto)
-
     //let {cantidad}=this.form.value
     let bandera=false;
+    this.cargandoTabRecepcion= true;
     if(this.accion=="Crear"){
-      this.cargandoTabRecepcion= true;
 
       //this.productosRecibidos.push(producto);
       this.productosRecibidos.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
           this.productosRecibidos[i].cantidad=this.productosRecibidos[i].cantidad+producto.cantidad;//ya esta validado con el form.markAllAsTouched();
           bandera=true;
+          //TODO:CORREGIR ERROR
+          setTimeout(() => {
+            this.cargandoTabRecepcion = false;
+          }, 0.1);
         }
       });
 
       if(!bandera){
         this.productosRecibidos.push(producto);
+        //TODO:CORREGIR ERROR
+        // this.cargandoTabRecepcion = false;
+        setTimeout(() => {
+          this.cargandoTabRecepcion = false;
+        }, 0.1);
+
       }
+
+      //TODO:CORREGIR ERROR
+      // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      //   dtInstance.destroy();
+      //   this.dtTrigger.next(0);
+      // });
       
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next(0);
-      });
-      
-      this.cargandoTabRecepcion = false;
+      // this.cargandoTabRecepcion = false;
 
     }else if(this.accion=="Modificar"){
+      this.cargandoTabRecepcion=true;
+
       this.productosRecibidos.forEach((p, i) => {
         if(p.idProducto==producto.idProducto){
           this.productosRecibidos[i]=this.formRecepcion.value;
         }
       });
+
+      //TODO:CORREGIR ERROR
+      // this.cargandoTabRecepcion = false;
+      setTimeout(() => {
+        this.cargandoTabRecepcion = false;
+      }, 0.1);
+
     }
+
     this.limpiarDetalle();
 
     this.accion='Crear'
@@ -308,10 +337,12 @@ export class RecepcionProductosComponent {
     Muestra un mensaje para confirmar la eliminacion, en caso de que se presione aceptar se ejecuta la funcion de eliminar()
   */
   confirmarEliminacion(producto:ProdRecibido){
-    this.mensajeAlertify.mensajeConfirmacion(
-      `Desea quitar el producto ${producto.nombre} ?`,
-      ()=>this.eliminar(producto.idProducto)
-    )
+    this.idProductoSeleccionado=producto.idProducto;
+    this.mostrarModal('modEliminarProducto', true);
+    // this.mensajeAlertify.mensajeConfirmacion(
+    //   `Desea quitar el producto ${producto.nombre} ?`,
+    //   ()=>this.eliminar(producto.idProducto)
+    // )
   }
 
   eliminar(id: number){
@@ -332,12 +363,16 @@ export class RecepcionProductosComponent {
        // delete(this.productosRecibidos[i]);
       }
     }); 
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.destroy();
-      this.dtTrigger.next(0);
-    })
+    //TODO:CORREGIR ERROR
+    // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    //   dtInstance.destroy();
+    //   this.dtTrigger.next(0);
+    // })
     
-    this.cargandoTabRecepcion = false;
+    //TODO:CORREGIR ERROR
+    setTimeout(() => {
+      this.cargandoTabRecepcion = false;      
+    }, 0.1);
 
     this.accion='Crear'
     ///actualizamos los datos del localStorage
@@ -347,6 +382,8 @@ export class RecepcionProductosComponent {
   modificar(producto:ProdRecibido){
     this.accion='Modificar';
     this.formRecepcion.setValue(producto);
+    //todo:error solucionando
+    this.idProductoSeleccionado=producto.idProducto;
   }
 
   buscar(){
@@ -491,11 +528,12 @@ export class RecepcionProductosComponent {
     //para evitar errores del datatable
     this.cargandoTabRecepcion=true;
     this.productosRecibidos=[];
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.destroy();
-      console.log('Destruyendo..');
-      this.dtTrigger.next(0);
-    })
+    //TODO:CORREGIR ERROR
+    // this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    //   dtInstance.destroy();
+    //   console.log('Destruyendo..');
+    //   this.dtTrigger.next(0);
+    // })
     this.cargandoTabRecepcion=false;
   }
 
@@ -584,7 +622,7 @@ export class RecepcionProductosComponent {
           this.cargandoProductos=false;
           //una vez que se obtuvieron las recpciones del localStorage, si es que existen, se formatea el datatable
           //para evitar errores en la tabla al modificar el array al obtener los que fueron agregados previamente
-          this.establecerDatos();
+          // this.establecerDatos();
           this.cargandoTabRecepcion=false;
       },
       error:(errores)=>{
@@ -603,4 +641,5 @@ export class RecepcionProductosComponent {
         //prueba
         this.mostrarModal('modMensajeId',true)
     }
+    
 }

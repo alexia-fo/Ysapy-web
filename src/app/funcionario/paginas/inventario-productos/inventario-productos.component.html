@@ -49,7 +49,7 @@
               <!--TODO:cambio produccion-->
               <!--<table datatable [dtOptions]="dtOptions" class="table hover">--><!-- *ngIf="!cargandoTabla && !cargandoOperacion"--> 
 
-                <table class="table hover" datatable [dtOptions]="dtOptions">
+                <table class="table hover tablaFormulario" datatable [dtOptions]="dtOptions" >
                   <thead class="bg-warning">
                     <tr>
                       <th class="text-center">NOMBRE</th>
@@ -87,7 +87,25 @@
 [idModal]="'modMensajeId'" 
 (guardarClick)="enviar()"
 >
-<p>Desea Guardar los Datos ?</p>
+<h3 class="text-center text-danger">Desea Guardar los Datos ?</h3>
+<!--todo: por ahora no esta imprimiendo la cantidad-->
+<!-- <table class="table hover">
+  <thead class="bg-warning">
+    <tr>
+      <th class="text-center">NOMBRE</th>
+      <th class="text-center">PRECIO</th>
+      <th class="text-center">CANTIDAD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let i of productos; let j=index;">
+      <td translate="no" class="text-start">{{i.nombre | titlecase}}</td>
+      <td class="text-end">{{i.precio | number}}</td>
+      <td class="text-center">{{form.get(i.idProducto.toString())?.value}}</td>
+    </tr>
+  </tbody>
+</table> -->
+
 </app-modal-confirmar>
 
 <!-- (eliminarClick)="eliminar()" -->

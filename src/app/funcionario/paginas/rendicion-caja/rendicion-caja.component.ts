@@ -129,6 +129,7 @@ export class RendicionCajaComponent {
     //Para mostrar error en las cantidades no establecidas de los billetes 
     if (!this.form.valid) {
       this.form.markAllAsTouched();
+      this.mensajeAlertify.mensajeError('No agregó la cantidad de algún billete')
       return;
     }
 
@@ -267,8 +268,26 @@ export class RendicionCajaComponent {
   }
 
   confirmarOperacionEnvio(){
+
+    console.log(this.form.get('dineroControles'))
+
       //prueba
       this.mostrarModal('modMensajeId',true)
   }
+
+  //para visualizar el listado de rendicion al querer enviar, para luego mirar y confirmar
+  obtenerCantidadPorIdBillete(idBillete: number): number {
+    const indice = this.dineroControles.controls.findIndex((control: AbstractControl) => {
+      return (control as FormGroup).get('idBillete')?.value === idBillete;
+    });
+  
+    // Asegúrate de manejar el caso en que el índice no se encuentre
+    if (indice !== -1) {
+      return this.form.get(`dineroControles.${indice}.cantidad`)?.value;
+    }
+  
+    return 0; // o el valor predeterminado que desees cuando no se encuentra
+  }
+  
 
 }

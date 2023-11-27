@@ -131,15 +131,10 @@
 
         <!--TABLA DE PRODUCTOS RECEPCIONADOS-->
         <div class="col-12">
-            <div class="table-responsive">
-                <table datatable [dtOptions]="dtOptionsRecepcion" [dtTrigger]="dtTrigger" class="table hover">
-                    <!--
-                        <thead *ngIf="!cargandoT">
-                    -->
+            <div class="table-responsive" *ngIf="!cargandoTabRecepcion">
+                <table datatable [dtOptions]="dtOptionsRecepcion" class="table hover">
                     <thead>
                         <tr>
-                            <!-- <th> Id </th> -->
-
                             <th class="text-center"> No</th>
                             <th class="text-center"> Nombre</th>
                             <th class="text-center"> Cantidad </th>
@@ -147,13 +142,9 @@
                             <th class="text-center"> Modif </th>
                         </tr>
                     </thead>
-                    <!--
-                        <tbody *ngIf="!cargandoT">
-                    -->
-                    <tbody *ngIf="!cargandoTabRecepcion">
-                        <tr *ngFor="let i of productosRecibidos; let j=index">
-                            <!-- <td>{{i.idProducto}}</td> -->
 
+                    <tbody>
+                        <tr *ngFor="let i of productosRecibidos; let j=index">
                             <td class="text-center">{{j+1}}</td>
                             <td translate="no">{{i.nombre | titlecase}}</td>
                             <td class="text-center">{{i.cantidad}}</td>
@@ -162,6 +153,27 @@
                         </tr>
                     </tbody>
                 </table>   
+                <!-- <table datatable [dtOptions]="dtOptionsRecepcion" [dtTrigger]="dtTrigger" class="table hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> No</th>
+                            <th class="text-center"> Nombre</th>
+                            <th class="text-center"> Cantidad </th>
+                            <th class="text-center"> Elim </th>
+                            <th class="text-center"> Modif </th>
+                        </tr>
+                    </thead>
+
+                    <tbody *ngIf="!cargandoTabRecepcion">
+                        <tr *ngFor="let i of productosRecibidos; let j=index">
+                            <td class="text-center">{{j+1}}</td>
+                            <td translate="no">{{i.nombre | titlecase}}</td>
+                            <td class="text-center">{{i.cantidad}}</td>
+                            <td class="text-center"><button class="btn btn-danger" (click)="confirmarEliminacion(i)"><i class="bi bi-trash3"></i></button></td>
+                            <td class="text-center"><button class="btn btn-warning" (click)="modificar(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>    -->
             </div>
         </div>
     </div>
@@ -219,3 +231,11 @@
 </app-modal-confirmar>
 
 <!-- (eliminarClick)="eliminar()" -->
+
+<!--para eliminar producto de productos recepcionados-->
+<app-modal-confirmar 
+[idModal]="'modEliminarProducto'" 
+(guardarClick)="eliminar(idProductoSeleccionado)"
+>
+<p>Desea quitar este producto ?</p>
+</app-modal-confirmar>
