@@ -247,5 +247,12 @@ export class InvRendService {
     );
   }
 
+  controlMegas(megas:{megas:string}): Observable<respuestaMensaje> {
+    return this.http.put<respuestaMensaje>(`${this.apiUrl}/inventarios/controlMegas`, { ...megas })
+      .pipe(
+        catchError(this.errorS.handleError)
+      );
+  }
+
 
 }

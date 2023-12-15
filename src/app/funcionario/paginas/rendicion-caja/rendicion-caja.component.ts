@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Dinero, GuardarRendicion, RespuestaDatosDinero } from '../../modelos/inv-rend.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InvRendService } from '../../servicios/inv-rend.service';
@@ -289,5 +289,46 @@ export class RendicionCajaComponent {
     return 0; // o el valor predeterminado que desees cuando no se encuentra
   }
   
+  canDeactivate(): boolean {
+    // Lógica para determinar si el usuario puede salir del componente
+    // Puedes devolver un valor booleano o un Observable<boolean>
+    console.log('ejecutando can deactive')
+    let salir=window.confirm('Desea recargar la pagina, las cantidades seran borradas si es que lo acepta !!');
+    // return salir;
+    return salir;
+  }
 
+  //TODO:no se puede mostrar mensajes personalizados
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   if (!this.canDeactivate()) {
+  //     // console.log('if de hostlistener')
+  //     $event.returnValue = true;
+  //   }
+  //   // console.log('no if de hostlistener')
+  // }
+
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   // if (!this.canDeactivate()) {
+  //     const mensaje = '¿Está seguro de que desea abandonar la página?'; // Puedes personalizar el mensaje según tus necesidades
+  //     window.alert(mensaje); // Muestra tu propio mensaje
+  //     $event.returnValue = true;
+  //   // }
+  // }
+
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   if (!this.canDeactivate()) {
+  //     const mensaje = '¿Está seguro de que desea abandonar la página? Las cantidades serán borradas si continúa.';
+  //     $event.returnValue = mensaje;
+  //     return mensaje;
+  //   }
+  // }
+  
+  //TODO: PARA MOSTRAR EL MENSAJE DE RECARGA POR DEFECTO DEL NAVEGADOR
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   $event.returnValue = true;
+  // }
 }

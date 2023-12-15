@@ -3,7 +3,8 @@
 <div class="container py-2">
 
   <h3 class="text-center text-dark-emphasis">{{'Detalle De Inventario'}}</h3>
-  <p class="fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-warning': invHabilitado}">{{descripcion}}</p>
+  <p class="fw-bold text-danger">{{descripcion}}</p>
+  <!-- <p class="fw-bold" [ngClass]="{'text-danger': !invHabilitado, 'text-success': invHabilitado}">{{descripcion}}</p> -->
   <p class="text-secondary" *ngIf="fechaApertura">Fecha Apertura: {{fechaApertura | date}}</p>
   <p class="text-secondary" *ngIf="idCabeceraInv">Nro Inventario: {{idCabeceraInv}}</p>
 

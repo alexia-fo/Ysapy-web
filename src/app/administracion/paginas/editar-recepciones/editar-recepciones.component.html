@@ -1,0 +1,374 @@
+<div class="container mt-2">
+    <h3 class="text-center text-dark-emphasis">Detalle de Recepción</h3>
+    <div class="row">
+        <!--Spinner de la tabla-->
+        <div class="col-12">
+            <div class="text-center mt-3" *ngIf="cargandoDatos">
+            <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- <div class="text-center text-danger">
+                Obteniendo los Datos...
+            </div> -->
+            </div>
+        </div>
+
+        
+    <div class="col offset-md-9 col-md-3">
+        <div class="d-grid gap-2 my-2">
+            <button class="btn btn-danger" (click)="nuevo()">Nuevo</button>
+        </div>
+    </div>
+
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover" *ngIf="!cargandoDatos" id="my-table">
+
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Nro Comprobante</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Observacion</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Editar</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of cabeceras">
+                            <td class="text-center">{{i.nroComprobante}}</td>
+                            <td class="text-start">{{i.fecha | date}}</td>
+                            <td class="text-start">{{i.observacion}}</td>
+                            <td class="text-start">{{i.estado | activoInactivo}}</td>
+                            <td class="text-center"><button class="btn btn-secondary" (click)="seleccionar(i)"><i class="bi bi-pencil"></i></button></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover" *ngIf="!cargandoDatos">
+
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Apertura</th>
+                            <th class="text-center">Cierre</th>
+                            <th class="text-center">Recepcion</th>
+                            <th class="text-center">Salida</th>
+                            <th class="text-center">Venta</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of detalleInventario">
+                            <td class="text-start">{{i.Producto.nombre}}</td>
+                            <td class="text-center">{{i.cantidadApertura}}</td>
+                            <td class="text-center">{{i.cantidadCierre}}</td>
+                            <td class="text-center">{{i.cantidadRecepcion}}</td>
+                            <td class="text-center">{{i.cantidadSalida}}</td>
+                            <td class="text-center fw-bold">{{i.cantidadTotal | number}}</td>
+                            <td class="text-end fw-bold">{{i.precio  | number}}</td>
+                            <td class="text-end fw-bold">{{i.totalMultiplicado  | number}}</td>   
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- <div class="col-12">
+            <br>
+            <p class="fw-bold text-primary"  [routerLink]="['/administracion/detalleInvetario', idCabecera]">Regresar a la pagina anterior</p>
+        </div> -->
+    </div>
+</div>
+
+
+<!--PARA VER DETALLES DE LA RECEPCION EN EL SE PODRA ANULAR LA RECEPCION-->
+<app-modal
+[modalId]="modalVerDetalles"
+[titulo]="'Editar Cantidad de Producto'"
+[modalTamaño]="'pantallaCompleta'"
+>
+
+<div class="row">
+
+    <div class="col offset-md-9 col-md-3">
+        <div class="d-grid gap-2 my-2">
+            <button class="btn btn-danger" (click)="anular()">Anular</button>
+        </div>
+    </div>
+
+    
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-hover" *ngIf="!cargandoDatos" id="my-table">
+
+                <thead class="bg-warning">
+                    <tr> 
+                        <th class="text-center">Nro Comprobante</th>
+                        <th class="text-center">Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Observacion</th>
+                        <th class="text-center">Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of detalles">
+                        <td class="text-center">{{i.Crecepcion.nroComprobante}}</td>
+                        <td class="text-start">{{i.Producto.nombre}}</td>
+                        <td class="text-center">{{i.cantidad}}</td>
+                        <td class="text-end">{{i.total | number}}</td>
+                        <td class="text-start">{{i.Crecepcion.fecha | date}}</td>
+                        <td class="text-start">{{i.Crecepcion.observacion}}</td>
+                        <td class="text-start">{{i.Crecepcion.Usuario.nombre}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+</app-modal>
+
+<!--MODAL PARA GUARDAR UNA NUEVA RECEPCION - LA CABECERA Y EL DETALLE -->
+
+<app-modal
+[modalId]="modalAgregarNuevo"
+[titulo]="'Editar Cantidad de Producto'"
+[modalTamaño]="'pantallaCompleta'"
+>
+<h3 class="text-center text-dark-emphasis">Recepcion de productos</h3>
+
+<div class="row">
+    <!--GUARDANDO LA RECEPCION-->
+    <div class="col-12">
+        <div class="text-center" *ngIf="cargandoOperacion">
+            <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- <div class="text-center text-danger">
+                Registrando el recepcion..
+            </div> -->
+        </div>
+    </div>
+
+    <div class="col-12" *ngIf="cargandoProductos">
+        <div class="text-center">
+            <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!-- <div class="text-center text-danger">
+            Obteniendo productos...
+        </div> -->
+    </div>
+</div>
+
+<div class="row" *ngIf="!cargandoOperacion">
+
+    <!--ACCIONES PARA LA RECEPCION-->
+    <div class="col-12 d-flex justify-content-end my-3" >
+        <button class="btn btn-warning me-2" (click)="guardar()">Enviar</button>
+        <button class="btn btn-danger" (click)="borrarDatos()">Cancelar</button>
+    </div>
+
+
+
+    <!--ACCION PARA EL PRODUCTO RECEPCIONADO-->
+    
+    <div class="col-12 offset-md-9 col-md-3">
+        <div class="d-grid gap-2">
+            <button class="btn e-tercer-boton fw-bold my-4" (click)="nuevo()">Nuevo</button>
+        </div>
+    </div>
+
+
+
+    <div class="col-12">
+
+        <h4 class="text-secondary">Accion: {{accion | titlecase}}</h4>
+        <!-- FORMULARIO PARA LA CABECERA DE LA RECEPCION -->
+        <form [formGroup]="formCabecera" class="mt-3">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <label for="nroComprobante" class="form-label">Nro. Comprobante</label>
+                    <input formControlName="nroComprobante" type="number" id="nroComprobante" class="form-control">
+                    <small *ngIf="datoInvalido('nroComprobante')"
+                        class="e-mensaje-error">{{mensaje('nroComprobante')}}</small>
+                </div>
+
+                <div class="col-md-9">
+                    <label for="observacion" class="form-label">Observacion</label>
+                    <input formControlName="observacion" type="text" id="observacion" class="form-control">
+                    <small *ngIf="datoInvalido('observacion')"
+                        class="e-mensaje-error">{{mensaje('observacion')}}</small>
+                </div>
+
+            </div>
+        </form>
+
+        <hr>
+
+        <!--FORMULARIO PARA AGREGAR O MODIFICAR EL PRODUCTO RECEPCIONADO-->
+        <div class="row">
+            <div class="col-md-9">
+                <form [formGroup]="formRecepcion">
+                    <div class="row g-3">
+                        <!-- Detalle de recepcion -->
+                        <div class="col-md-3">
+                            <label for="idProducto" class="form-label">Id</label>
+                            <!-- <input formControlName="idProducto" type="text" id="idProducto" class="form-control"> -->
+                            <!-- <input formControlName="idProducto" type="number" id="idProducto" class="form-control" (keydown)="onInputClick($event)"> -->
+                            <input formControlName="idProducto" type="number" id="idProducto" class="form-control">
+                            <small *ngIf="datoInvalido('idProducto')"
+                                class="e-mensaje-error">{{mensaje('idProducto')}}</small>
+                        </div>
+    
+                        <div class="col-md-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input formControlName="nombre" type="text" id="nombre" class="form-control">
+                            <small *ngIf="datoInvalido('nombre')" class="e-mensaje-error">{{mensaje('nombre')}}</small>
+                        </div>
+                        <div class="col-md-3 col-xl-3">
+                            <label for="cantidad" class="form-label">Cantidad</label>
+                            <input formControlName="cantidad" type="number" id="cantidad" class="form-control">
+                            <small *ngIf="datoInvalido('cantidad')" class="e-mensaje-error">{{mensaje('cantidad')}}</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            
+            <!--ACCIONES EL PRODUCTO RECEPCIONADO-->
+            <div class="col-md-3 col-xl-2" *ngIf="!cargandoProductos">
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                    <div class="text-center">
+                        <label for="cantidad" class="form-label fw-bold d-block">Buscar</label>
+                        <button class="btn btn-secondary" (click)="buscar()"><i class="bi bi-search"></i></button>
+                    </div>
+                    <div class="text-center">
+                        <label for="cantidad" class="form-label fw-bold d-block">Agregar</label>
+                        <button class="btn btn-secondary" (click)="agregar()"><i class="bi bi-plus-square"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+        <hr>
+    </div>
+
+
+    <!--TABLA DE PRODUCTOS RECEPCIONADOS-->
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table hover">
+                <thead>
+                    <tr>
+                        <th class="text-center"> No</th>
+                        <th class="text-center"> Nombre</th>
+                        <th class="text-center"> Cantidad </th>
+                        <th class="text-center"> Elim </th>
+                        <th class="text-center"> Modif </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let i of productosRecibidos; let j=index">
+                        <td class="text-center">{{j+1}}</td>
+                        <td translate="no">{{i.nombre | titlecase}}</td>
+                        <td class="text-center">{{i.cantidad}}</td>
+                        <td class="text-center"><button class="btn btn-danger" (click)="eliminar(i.idProducto)"><i class="bi bi-trash3"></i></button></td>
+                        <td class="text-center"><button class="btn btn-warning" (click)="modificar(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>   
+            <!-- <table datatable [dtOptions]="dtOptionsRecepcion" [dtTrigger]="dtTrigger" class="table hover">
+                <thead>
+                    <tr>
+                        <th class="text-center"> No</th>
+                        <th class="text-center"> Nombre</th>
+                        <th class="text-center"> Cantidad </th>
+                        <th class="text-center"> Elim </th>
+                        <th class="text-center"> Modif </th>
+                    </tr>
+                </thead>
+
+                <tbody *ngIf="!cargandoTabRecepcion">
+                    <tr *ngFor="let i of productosRecibidos; let j=index">
+                        <td class="text-center">{{j+1}}</td>
+                        <td translate="no">{{i.nombre | titlecase}}</td>
+                        <td class="text-center">{{i.cantidad}}</td>
+                        <td class="text-center"><button class="btn btn-danger" (click)="confirmarEliminacion(i)"><i class="bi bi-trash3"></i></button></td>
+                        <td class="text-center"><button class="btn btn-warning" (click)="modificar(i)"><i class="bi bi-arrow-up-right-square"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>    -->
+        </div>
+    </div>
+</div>
+</app-modal>
+
+<!-- MODAL PARA BUSCAR PRODUCTOS PARA NUEVA RECEPCION-->
+
+<div class="modal fade" [id]="modalBuscar" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Productos</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center mt-3" *ngIf="cargandoDatos">
+                        <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <!-- <div class="text-center text-danger">
+                            Obteniendo los Datos...
+                        </div> -->
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="table-responsive pb-2">
+                            <table *ngIf="productos.length>0 && !cargandoProductos" class="table" ><!--datatable [dtOptions]="dtOptionsProductos"-->
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"> Id </th>
+                                        <th class="text-center"> Nombre</th>
+                                        <th class="text-center"> Precio </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let i of productos" (dblclick)="seleccionarProducto(i)">
+                                        <td>{{i.idProducto}}</td>
+                                        <td translate="no">{{i.nombre | titlecase}}</td>
+                                        <td>{{i.precio | number}}</td>      
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

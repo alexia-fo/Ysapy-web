@@ -5,6 +5,7 @@ import { DatosDetRecepcion, RecepcionVisualizar, RespuestaDetRecepcion, Respuest
 import { switchMap } from 'rxjs';
 import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
 import { SalidaVisualizar } from 'src/app/funcionario/modelos/salida-productos.model';
+import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 
 @Component({
   selector: 'app-ver-salidas',
@@ -77,5 +78,18 @@ export class VerSalidasComponent {
     });
   }
 
+  mostrarPdf(){
+    this.servicioC.obtenerSalidasPDF(this.idCabecera)
+    .subscribe({
+      next: (respuesta:Blob) => {
+        ObtenerPDF.visualizarPDF(respuesta);
+      },
+      error: (errores) => {
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+      },
+    });
+  }
 
 }

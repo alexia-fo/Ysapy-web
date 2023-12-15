@@ -2,6 +2,12 @@
     <h3 class="text-center text-dark-emphasis">Detalle de Recepción</h3>
     <div class="row">
 
+        <div class="col offset-md-9 col-md-3">
+            <div class="d-grid gap-2 my-2">
+            <button class="btn btn-danger" (click)="mostrarPdf()">Pdf</button>
+            </div>
+        </div>
+
         <!--Spinner de la tabla-->
         <div class="col-12">
             <div class="text-center mt-3" *ngIf="cargandoDatos">
@@ -25,6 +31,7 @@
                             <th class="text-center">Cantidad</th>
                             <th class="text-center">Total</th>
                             <th class="text-center">Fecha</th>
+                            <th class="text-center">Estado</th>
                             <th class="text-center">Observacion</th>
                             <th class="text-center">Usuario</th>
                         </tr>
@@ -36,6 +43,7 @@
                             <td class="text-center">{{i.cantidad}}</td>
                             <td class="text-end">{{i.total | number}}</td>
                             <td class="text-start">{{i.Crecepcion.fecha | date}}</td>
+                            <td class="text-start">{{i.Crecepcion.estado | activoInactivo}}</td>
                             <td class="text-start">{{i.Crecepcion.observacion}}</td>
                             <td class="text-start">{{i.Crecepcion.Usuario.nombre}}</td>
                         </tr>

@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+        <h3 class="text-center">Registro de megas</h3>
+        <div class="col-12">
+            <form [formGroup]="form" class="row g-3">
+                <div class="col-12">
+                  <label for="megas" class="form-label">Megas Disponibles</label>
+                  <input formControlName="megas" type="text" id="megas" class="form-control" placeholder="megas">
+                  <small *ngIf="datoInvalido('megas')" class="e-mensaje-error">{{mensaje('megas')}}</small>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12 py-3 text-end">
+            <button (click)="guardar()" class="btn btn-warning">Registrar</button>
+        </div>
+    </div>
+</div>

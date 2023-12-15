@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { GuardarInventario, Producto, RespuestaDatosProducto } from '../../modelos/inv-rend.model';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { InvRendService } from '../../servicios/inv-rend.service';
@@ -11,6 +11,7 @@ import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
   styleUrls: ['./inventario-productos.component.css']
 })
 export class InventarioProductosComponent {
+
   productos: Producto[]=[]; //lista para tabla
   cargandoTabla:boolean = false; //obteniendo los datos a mostrar en la tabla
   
@@ -238,5 +239,30 @@ export class InventarioProductosComponent {
       //prueba
       this.mostrarModal('modMensajeId',true)
   }
+
+  //TODO:no se puede mostrar mensajes personalizados
+  // canDeactivate(): boolean {
+  //   // Lógica para determinar si el usuario puede salir del componente
+  //   // Puedes devolver un valor booleano o un Observable<boolean>
+  //   console.log('ejecutando can deactive')
+  //   let salir=window.confirm('Desea recargar la pagina, las cantidades seran borradas si es que lo acepta !!');
+  //   // return salir;
+  //   return false;
+  // }
+
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   if (!this.canDeactivate()) {
+  //     // console.log('if de hostlistener')
+  //     $event.returnValue = true;
+  //   }
+  //   // console.log('no if de hostlistener')
+  // }
+
+    //TODO: PARA MOSTRAR EL MENSAJE DE RECARGA POR DEFECTO DEL NAVEGADOR
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   $event.returnValue = true;
+  // }
 
 }

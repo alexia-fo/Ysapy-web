@@ -34,7 +34,8 @@ export class VerCabecerasInventarioComponent implements OnInit{
     info: false,
     responsive: false,
     lengthChange: false,
-    order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
+    ordering:false,
+    // order: [[0, 'desc']], // Ordenar por la primera columna (0) en orden ascendente ('asc')
     language: { //traducimos porque por defecto esta en ingles
       search: 'Buscar:',
       zeroRecords: 'No se encontraron resultados',
@@ -156,6 +157,10 @@ export class VerCabecerasInventarioComponent implements OnInit{
 
   verDetalle(idCabecera: number) {
     this.router.navigateByUrl(`/administracion/verRendicion/${idCabecera}`);
+  }
+
+  editar(idCabecera: number) {
+    this.router.navigateByUrl(`/administracion/editarInventarios/${idCabecera}`);
   }
 
   // ------ MODAL DE FORMULARIO ------ //

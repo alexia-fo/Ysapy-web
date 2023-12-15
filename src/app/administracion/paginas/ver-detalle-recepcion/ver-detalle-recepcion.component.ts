@@ -78,6 +78,6 @@ export class VerDetalleRecepcionComponent implements OnInit{
   }
 
   paginaAnterior(){
-    this.router.navigateByUrl(`/administracion/detalleInventario/${this.idCabecera}`);
+    this.router.navigateByUrl(`/administracion/detalleSalidas/${this.idCabecera}`);
   }
 }

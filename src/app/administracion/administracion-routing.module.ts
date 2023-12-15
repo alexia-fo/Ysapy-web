@@ -16,12 +16,27 @@ import { ModalCloseGuard } from '../guardianes/modal-close.guard';
 import { VerSalidasComponent } from './paginas/ver-salidas/ver-salidas.component';
 import { VerRecepcionesComponent } from './paginas/ver-recepciones/ver-recepciones.component';
 import { VerVentasComponent } from './paginas/ver-ventas/ver-ventas.component';
+import { ComparacionInventariosComponent } from './paginas/comparacion-inventarios/comparacion-inventarios.component';
+import { EditarInventariosComponent } from './paginas/editar-inventarios/editar-inventarios.component';
+import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-recepciones.component';
 
 const routes: Routes = [
   {
     path: "",
     component: MainComponent,
     children: [
+      {
+        path: 'editarRecepciones/:idCabecera',
+        component: EditarRecepcionesComponent
+      },
+      {
+        path: 'editarInventarios/:idCabecera',
+        component: EditarInventariosComponent
+      },
+      {
+        path: 'recepciones/:idCabecera',
+        component: VerRecepcionesComponent
+      },
       {
         path: 'recepciones/:idCabecera',
         component: VerRecepcionesComponent
@@ -81,6 +96,11 @@ const routes: Routes = [
       {
         path: 'informacion',
         component: InformacionComponent,
+        canDeactivate: [ModalCloseGuard]
+      },
+      {
+        path: 'comparacionInventarios',
+        component: ComparacionInventariosComponent,
         canDeactivate: [ModalCloseGuard]
       },
 

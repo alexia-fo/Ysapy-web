@@ -16,6 +16,7 @@ import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones
 import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
 import { VerProductosComponent } from './paginas/ver-productos/ver-productos.component';
 import { UtilidadesModule } from '../utilidades/utilidades.module';
+import { RegistroMegasComponent } from './paginas/registro-megas/registro-megas.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { UtilidadesModule } from '../utilidades/utilidades.module';
     VisualizarRecepcionesComponent,
     VisualizarSalidasComponent,
     VerProductosComponent,
+    RegistroMegasComponent,
 
   ],
   imports: [

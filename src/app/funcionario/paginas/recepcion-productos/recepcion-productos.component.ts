@@ -101,7 +101,6 @@ export class RecepcionProductosComponent implements OnInit {
 
   idProductoSeleccionado!:number;//para evitar agregar en el array un idProducto modificado debido a que se obtiene mediante el formulario y el campo es editable
 
-  
   productos:Producto[]=[];//Productos disponibles para buscar y seleccionar en el modal
   
   productosRecibidos:ProdRecibido[]=[];//productos agregados a la tabla de recepciones

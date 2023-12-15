@@ -1,0 +1,214 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-12">
+            <h1 class="text-center">Inventario</h1>
+
+            <hr>
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <h4>LIMPIAR CANTIDADES</h4>    
+                    
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Cantidad Apertura
+                        </label>
+                    </div>
+                    
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Cantidad Cierre
+                        </label>
+                    </div>
+                    
+                    <button class="btn btn-primary">Limpiar (NULL)</button>
+                    
+                </div>
+                
+                <div class="col-md-12">
+                    <br>
+
+                    <h4>EDITAR CANTIDADES</h4>   
+                                          
+                    <div class="col offset-md-9 col-md-3">
+                        <div class="d-grid gap-2 my-2">
+                            <button class="btn btn-danger" (click)="verProductoModificar()">Editar varias las cantidades</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover" *ngIf="!cargandoDetalle">
+        
+                            <thead class="bg-warning">
+                                <tr> 
+                                    <th class="text-center">Producto</th>
+                                    <th class="text-center">Apertura</th>
+                                    <th class="text-center">Cierre</th>
+                                    <th class="text-center">Recepcion</th>
+                                    <th class="text-center">Salida</th>
+                                    <th class="text-center">Venta</th>
+                                    <th class="text-center">Precio</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Editar una cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let i of detalleRendicion">
+                                    <td class="text-start">{{i.Producto.nombre}}</td>
+                                    <td class="text-center">{{i.cantidadApertura}}</td>
+                                    <td class="text-center">{{i.cantidadCierre}}</td>
+                                    <td class="text-center">{{i.cantidadRecepcion}}</td>
+                                    <td class="text-center">{{i.cantidadSalida}}</td>
+                                    <td class="text-center fw-bold">{{i.cantidadTotal | number}}</td>
+                                    <td class="text-end fw-bold">{{i.precio  | number}}</td>
+                                    <td class="text-end fw-bold">{{i.totalMultiplicado  | number}}</td>   
+                                    <td class="text-center"><button class="btn btn-secondary" (click)="seleccionar(i)"><i class="bi bi-pencil"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+            
+
+        <div class="col-12">
+            <h1 class="text-center">Rendicion</h1>
+            <hr>
+        </div>
+        
+        <div class="col-12">
+            <h1 class="text-center">Recepciones</h1>
+            <button class="btn btn-primary" [routerLink]="['/administracion/editarRecepciones', idCabecera]">Ir a recepciones</button>
+            <hr>
+        </div>
+        
+        <div class="col-12">
+            <h1 class="text-center">Salidas</h1>
+            <hr>
+        </div>
+
+
+    </div>
+</div>
+
+<!------------MODAL PARA EDITAR CANTIDAD DE PRODUCTOS-->
+<app-modal
+[modalId]="modalEditarCantidad"
+[titulo]="'Editar Cantidad de Producto'"
+
+>
+    <div *ngIf="productoSeleccionado">
+        <h5>Datos del Producto</h5>
+        <p>Id: {{productoSeleccionado.idproducto}}</p>
+        <p>Nombre: {{productoSeleccionado.Producto.nombre}}</p>
+
+    </div>
+
+  <!--Formulario para realizar ABMC de los datos-->
+  <form [formGroup]="form" class="row g-3">
+
+        <div class="col-12">
+        <label for="cantidadApertura" class="form-label">Cantidad Apertura</label>
+        <input formControlName="cantidadApertura" type="text" id="cantidadApertura" class="form-control" placeholder="cantidad apertura">
+        <small *ngIf="datoInvalido('cantidadApertura')" class="e-mensaje-error">{{mensaje('cantidadApertura')}}</small>
+        </div>
+
+        <div class="col-12">
+        <label for="cantidadCierre" class="form-label">Cantidad Cierre</label>
+        <input formControlName="cantidadCierre" type="text" id="cantidadCierre" class="form-control" placeholder="cantidad cierre">
+        <small *ngIf="datoInvalido('cantidadCierre')" class="e-mensaje-error">{{mensaje('cantidadCierre')}}</small>
+        </div>
+        
+        <div class="col-md-12 d-flex justify-content-end">
+            <button (click)="confirmarOperacionEnvio()" class="btn e-segundo-boton">Actualizar</button>
+          </div>
+    </form>
+
+</app-modal>
+
+<!--CONFIRMAR QUE SE DESEA GUARDAR un producto modificado-->
+
+<app-modal-confirmar 
+[idModal]="'modMensajeId'" 
+(guardarClick)="enviar()"
+>
+<h5 class="text-center text-danger">Desea Actualizar los datos ?</h5>
+
+    <div *ngIf="productoSeleccionado">
+        <h5>Datos Anteriores</h5>
+        <p>Nombre: {{productoSeleccionado.Producto.nombre}}</p>
+        <p>Cantidad Apertura: {{productoSeleccionado.cantidadApertura}}</p>
+        <p>Cantidad Cierre: {{productoSeleccionado.cantidadCierre}}</p>
+        
+        <h5>Datos a Guardar</h5>
+        <p>Nueva Cantidad Cierre: {{this.form.get('cantidadApertura')?.value}}</p>
+        <p>Nueva Cantidad Cierre: {{this.form.get('cantidadCierre')?.value}}</p>
+        
+    </div>
+</app-modal-confirmar>
+    
+<!--PARA MODIFICAR TODOS LOS PRODUCTOS-->
+<app-modal
+[modalId]="modalEditarCantidades"
+[titulo]="'Editar Cantidad de Producto'"
+[modalTamaño]="'pantallaCompleta'"
+>
+<div class="row">
+    
+    <div class="col offset-md-9 col-md-3" >
+        <div class="d-grid gap-2 my-2">
+            <button class="btn btn-danger" (click)="enviarCantidades()">Enviar</button>
+        </div>
+    </div>
+
+<form [formGroup]="formCantidades" >
+    <div formArrayName="productosControles">
+        <table class="table table-hover">
+        
+            <thead class="bg-warning">
+                <tr> 
+                    <th class="text-center">Producto</th>
+                    <th class="text-center">Apertura</th>
+                    <th class="text-center">Cierre</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr *ngFor="let det of detalleRendicion; let i = index;" [formGroupName]="i">
+                    <td class="text-start">{{det.Producto.nombre}}</td>
+          
+                    <td class="field-description-size">
+                        <div>
+                          <input type="number" class="form-control" formControlName="cantidadApertura" [id]="'productosControles-'+i+'-cantidadApertura'"><!-- [id]="'dineroControles-'+i+'-observacion'"-->
+                          <!-- Crea un campo de entrada de texto asociado al FormControl "observacion". -->
+            
+                          <!-- Muestra un mensaje de error si el campo "observacion" es inválido -->
+                          <span *ngIf="datosInvalidos('cantidadApertura', 'productosControles', i)" class="e-mensaje-error" >
+                            {{ mensajeValidacion('cantidadApertura', formCantidades.get('productosControles')!.get(i.toString())!) }}
+                          </span>
+                        </div>
+                    </td>  
+          
+                    <td class="field-description-size">
+                        <div>
+                          <input type="number" class="form-control" formControlName="cantidadCierre" [id]="'productosControles-'+i+'-cantidadCierre'"><!-- [id]="'dineroControles-'+i+'-observacion'"-->
+                          <!-- Crea un campo de entrada de texto asociado al FormControl "observacion". -->
+            
+                          <!-- Muestra un mensaje de error si el campo "observacion" es inválido -->
+                          <span *ngIf="datosInvalidos('cantidadCierre', 'productosControles', i)" class="e-mensaje-error" >
+                            {{ mensajeValidacion('cantidadCierre', formCantidades.get('productosControles')!.get(i.toString())!) }}
+                          </span>
+                        </div>
+                    </td>  
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+</div>
+
+
+</app-modal>

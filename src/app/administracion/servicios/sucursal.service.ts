@@ -31,6 +31,7 @@ export class SucursalService {
   //listar en tabla de abmc de sucursales
   //para listar sucursales en combo al crear o modificar usuario
   //para listar sucursales en la ventana de filtro del listado de cabeceras de inventario
+  //para listar sucursales en la ventana de COMPARACION DE INVENTARIOS
   obtenerSucursales(limite: number = -1, desde: number = -1): Observable<RespuestaSucursales> {
 
     if (desde > 0 && limite > desde) {

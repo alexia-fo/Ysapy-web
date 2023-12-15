@@ -29,6 +29,10 @@ export interface datosCabecera{
     Sucursal:{
         nombre:string;
     }
+
+    //todo -- > add 
+    // megasIniciales:string,
+    // megasFinales:string
 }
 
 export interface RespuestaCabecera{
@@ -47,7 +51,7 @@ export interface DatosDetalleInventario{
     cantidadTotal:number; // para inventarios cerrados
     totalMultiplicado:number; // para inventarios cerrados
     Producto:{
-        nombre:String;
+        nombre:string;
     }
 }
 
@@ -143,6 +147,8 @@ export interface RecepcionVisualizar{
     precio:number;
     total:number;
     Crecepcion:{
+        idcabinventario:number;
+        estado: boolean;
         fecha:Date
         observacion:string;
         nroComprobante:number;
@@ -261,3 +267,40 @@ export interface DatosFiltro{
     sucursal:number | 'todos';
     turno:string;
 }
+
+//para obtener pdf de comparaciones de inventarios
+export interface DatosFiltroComparacionInv{
+    idSucursal:number,
+    fecha1:string,//porque el formulario lo devuelve como string
+    fecha2:string,//porque el formulario lo devuelve como string
+    turno1:string,
+    turno2:string
+}
+
+//para editar las cantidades de productos 
+export interface ProductoControl {
+    cantidadApertura: number;
+    cantidadCierre: number;
+    idProducto: number;
+  }
+  
+export interface ActualizarCantidades {
+    productosControles: ProductoControl[];
+  }
+
+  //para editar recepciones
+
+  export interface CabeceraRecepcion {
+    idRecepcion:number;
+    fecha:Date;
+    observacion:string;
+    idusuario:number;
+    nroComprobante:number;
+    estado:boolean;  
+  }
+
+  export interface RespuestaCabeceraRecepcion{
+    cRecepcion: CabeceraRecepcion[];
+  }
+
+  

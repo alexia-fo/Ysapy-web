@@ -73,7 +73,18 @@ export class MenuFuncionarioComponent {
           ]
         },
 
-        
+        {
+          title: 'Informes',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Comparacion Inventarios',
+              route: '/comparacionInventarios',
+              isDropdown: false
+            },
+          ]
+        },
       ];
     }else if(this.usuario.Rol.rol=="ADMINISTRADOR"){
       this.menuOptions= [
@@ -117,6 +128,19 @@ export class MenuFuncionarioComponent {
             {
               title: 'Inventarios',
               route: '/inventarios',
+              isDropdown: false
+            },
+          ]
+        },
+
+        {
+          title: 'Informes',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Comparacion Inventarios',
+              route: '/comparacionInventarios',
               isDropdown: false
             },
           ]

@@ -11,6 +11,8 @@ import { VisualizarRecepcionesComponent } from './paginas/visualizar-recepciones
 import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visualizar-salidas.component';
 import { VerProductosComponent } from './paginas/ver-productos/ver-productos.component';
 import { ModalCloseGuard } from '../guardianes/modal-close.guard';
+import { SalidaPaginaGuard } from '../guardianes/salida-pagina.guard';
+import { RegistroMegasComponent } from './paginas/registro-megas/registro-megas.component';
 
 const routes: Routes = [
   {
@@ -48,12 +50,12 @@ const routes: Routes = [
       {
         path:'rendicion',
         component:RendicionCajaComponent,
-        canDeactivate: [ModalCloseGuard]
+        canDeactivate: [ModalCloseGuard]/* SalidaPaginaGuard */
       },
       {
         path:'inventario',
         component:InventarioProductosComponent,
-        canDeactivate: [ModalCloseGuard]
+        canDeactivate: [ModalCloseGuard]/* SalidaPaginaGuard */
 
       },
       {

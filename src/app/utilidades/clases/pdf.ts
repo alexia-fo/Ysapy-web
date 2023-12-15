@@ -8,11 +8,26 @@ export class ObtenerPDF{
         Luego, utiliza window.open() para abrir una nueva ventana del navegador y mostrar el PDF.
         El tercer argumento de window.open() ('height=600,width=800') especifica las dimensiones de la ventana del navegador en la que se mostrará el PDF.    
     */
+    // public static visualizarPDF(pdfData: Blob): void {
+    //     const url = URL.createObjectURL(pdfData);
+    //     window.open(url, '_blank', 'height=600,width=800');
+    // }
     public static visualizarPDF(pdfData: Blob): void {
-        const url = URL.createObjectURL(pdfData);
-        window.open(url, '_blank', 'height=600,width=800');
-    }
-    
+        try {
+          const url = URL.createObjectURL(pdfData);
+          const newWindow = window.open(url, '_blank', 'height=600,width=800');
+          
+          if (!newWindow) {
+            throw new Error('No se pudo abrir una nueva ventana. Asegúrate de que la configuración del navegador permite abrir nuevas ventanas emergentes.');
+          }
+        } catch (error) {
+          console.error('Error al abrir el PDF:', error);
+          // Puedes mostrar un mensaje al usuario o manejar el error de alguna otra manera
+        }
+      }
+      
+
+
     /*
         Este método estático se utiliza para descargar un archivo PDF en lugar de visualizarlo en el navegador.
         Al igual que el método visualizarPDF, toma un objeto Blob como argumento, que debe ser el contenido del archivo PDF que se desea descargar.

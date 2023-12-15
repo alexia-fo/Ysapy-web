@@ -33,6 +33,7 @@ export class ManejarErrorService {
   */
   
   handleError(error: HttpErrorResponse) {
+    // console.log(error)
     let errorMessage: string[];
     if (error.status === 400) {
       errorMessage = error.error.errors.map((err:errorCampo) => err.msg);
@@ -48,4 +49,5 @@ export class ManejarErrorService {
    */
     return throwError(() => errorMessage);
   }
+
 }

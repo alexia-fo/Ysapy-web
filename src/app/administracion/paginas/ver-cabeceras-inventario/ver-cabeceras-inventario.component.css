@@ -8,3 +8,16 @@
   .table {
     max-width: 100%; 
   } 
+
+
+  /* Estilo general para todas las tablas con la clase 'table' */
+.table thead th {
+  background-color: #ffc107; 
+  font-size: 18px;
+}
+
+/* Estilo adicional para las tablas con la clase 'tablaFormulario' */
+.table.tablaFormulario thead th {
+  top: 0;
+  position: sticky;
+}
