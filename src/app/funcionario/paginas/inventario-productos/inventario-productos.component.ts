@@ -133,6 +133,7 @@ export class InventarioProductosComponent {
 
     this.cargandoOperacion = true;
     let inventario:GuardarInventario = {productos:this.form.value } ;
+    // inventario.productos['11111']=88;
 
     this.servicioI.registrarInventario(inventario).subscribe({
       next: (respuesta: respuestaMensaje) => {

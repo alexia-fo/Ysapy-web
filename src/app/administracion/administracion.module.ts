@@ -23,6 +23,8 @@ import { VerVentasComponent } from './paginas/ver-ventas/ver-ventas.component';
 import { ComparacionInventariosComponent } from './paginas/comparacion-inventarios/comparacion-inventarios.component';
 import { EditarInventariosComponent } from './paginas/editar-inventarios/editar-inventarios.component';
 import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-recepciones.component';
+import { EditarSalidasComponent } from './paginas/editar-salidas/editar-salidas.component';
+import { ComparacionRendicionesComponent } from './paginas/comparacion-rendiciones/comparacion-rendiciones.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-
     ComparacionInventariosComponent,
     EditarInventariosComponent,
     EditarRecepcionesComponent,
+    EditarSalidasComponent,
+    ComparacionRendicionesComponent,
   ],
   imports: [
     CommonModule,

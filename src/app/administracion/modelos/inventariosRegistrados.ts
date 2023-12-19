@@ -303,4 +303,16 @@ export interface ActualizarCantidades {
     cRecepcion: CabeceraRecepcion[];
   }
 
-  
+
+  //para editar salidas
+  export interface CabeceraSalida {
+    idCabecera:number;
+    fecha:Date;
+    observacion:string;
+    idusuario:number;
+    estado:boolean;  
+  }
+
+  export interface RespuestaCabeceraSalida{
+    cSalida: CabeceraSalida[];
+  }

@@ -139,6 +139,10 @@ export class RendicionCajaComponent {
     this.cargandoOperacion = true;
     let rendicion: GuardarRendicion = this.form.getRawValue();
 
+    // rendicion.dineroControles[12]={ cantidad:3, observacion:'', idBillete:111}
+
+    console.log(rendicion)
+
     this.servicioR.registrarRendicion(rendicion).subscribe({
       next: (respuesta: respuestaMensaje) => {
         this.cargandoOperacion = false;

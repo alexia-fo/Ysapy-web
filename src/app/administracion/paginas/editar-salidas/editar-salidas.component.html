@@ -1,5 +1,6 @@
 <div class="container mt-2">
-    <h3 class="text-center text-dark-emphasis">Detalle de Recepción</h3>
+    <h3 class="text-center text-dark-emphasis">Detalle de Salida</h3>
+    <p class="text-danger">Recargar la pagina para actualizar los datos (luego de agregar/anular)</p>
     <div class="row">
         <!--Spinner de la tabla-->
         <div class="col-12">
@@ -21,12 +22,11 @@
     </div>
 
         <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-hover tablaFormulario" *ngIf="!cargandoDatos" id="my-table">
+            <div class="table-responsive tablaFormulario">
+                <table class="table table-hover" *ngIf="!cargandoDatos" id="my-table">
 
                     <thead class="bg-warning">
                         <tr> 
-                            <th class="text-center">Nro Comprobante</th>
                             <th class="text-center">Fecha</th>
                             <th class="text-center">Observacion</th>
                             <th class="text-center">Estado</th>
@@ -36,7 +36,6 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let i of cabeceras">
-                            <td class="text-center">{{i.nroComprobante}}</td>
                             <td class="text-start">{{i.fecha | date}}</td>
                             <td class="text-start">{{i.observacion}}</td>
                             <td class="text-start">{{i.estado | activoInactivo}}</td>
@@ -92,7 +91,7 @@
 <!--PARA VER DETALLES DE LA RECEPCION EN EL SE PODRA ANULAR LA RECEPCION-->
 <app-modal
 [modalId]="modalVerDetalles"
-[titulo]="'Editar Cantidad de Producto'"
+[titulo]="'Modificar Salida'"
 [modalTamaño]="'pantallaCompleta'"
 >
 
@@ -111,7 +110,6 @@
 
                 <thead class="bg-warning">
                     <tr> 
-                        <th class="text-center">Nro Comprobante</th>
                         <th class="text-center">Producto</th>
                         <th class="text-center">Cantidad</th>
                         <th class="text-center">Total</th>
@@ -122,13 +120,12 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let i of detalles">
-                        <td class="text-center">{{i.Crecepcion.nroComprobante}}</td>
                         <td class="text-start">{{i.Producto.nombre}}</td>
                         <td class="text-center">{{i.cantidad}}</td>
                         <td class="text-end">{{i.total | number}}</td>
-                        <td class="text-start">{{i.Crecepcion.fecha | date}}</td>
-                        <td class="text-start">{{i.Crecepcion.observacion}}</td>
-                        <td class="text-start">{{i.Crecepcion.Usuario.nombre}}</td>
+                        <td class="text-start">{{i.Csalida.fecha | date}}</td>
+                        <td class="text-start">{{i.Csalida.observacion}}</td>
+                        <td class="text-start">{{i.Csalida.Usuario.nombre}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -144,10 +141,10 @@
 
 <app-modal
 [modalId]="modalAgregarNuevo"
-[titulo]="'Editar Cantidad de Producto'"
+[titulo]="'Agregar nueva Salida'"
 [modalTamaño]="'pantallaCompleta'"
 >
-<h3 class="text-center text-dark-emphasis">Recepcion de productos</h3>
+<h3 class="text-center text-dark-emphasis">Salida de productos</h3>
 
 <div class="row">
     <!--GUARDANDO LA RECEPCION-->
@@ -202,13 +199,6 @@
 
             <div class="row g-3">
 
-                <div class="col-md-3">
-                    <label for="nroComprobante" class="form-label">Nro. Comprobante</label>
-                    <input formControlName="nroComprobante" type="number" id="nroComprobante" class="form-control">
-                    <small *ngIf="datoInvalido('nroComprobante')"
-                        class="e-mensaje-error">{{mensaje('nroComprobante')}}</small>
-                </div>
-
                 <div class="col-md-9">
                     <label for="observacion" class="form-label">Observacion</label>
                     <input formControlName="observacion" type="text" id="observacion" class="form-control">
@@ -224,7 +214,7 @@
         <!--FORMULARIO PARA AGREGAR O MODIFICAR EL PRODUCTO RECEPCIONADO-->
         <div class="row">
             <div class="col-md-9">
-                <form [formGroup]="formRecepcion">
+                <form [formGroup]="formSalida">
                     <div class="row g-3">
                         <!-- Detalle de recepcion -->
                         <div class="col-md-3">
@@ -347,7 +337,7 @@
                     
                     <div class="col-12">
                         <div class="table-responsive pb-2">
-                            <table *ngIf="productos.length>0 && !cargandoProductos" class="table" ><!--datatable [dtOptions]="dtOptionsProductos"-->
+                            <table *ngIf="productos.length>0 && !cargandoProductos" class="table" datatable [dtOptions]="dtOptionsProductos"><!--datatable [dtOptions]="dtOptionsProductos"-->
                                 <thead>
                                     <tr>
                                         <th class="text-center"> Id </th>

@@ -4,9 +4,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
-import { RespuestaCabecera, RespuestaCalculosRendicion, RespuestaDetRecepcion, RespuestaDetSalida, DatosFiltro, RespuestaFiltros, RespuestaRendicion, RespuestaDetalleRendicion, RespuestaCalculos, RecepcionVisualizar, RespuestaRecepcionesVisualizar, RespuestaSalidasVisualiza, DatosFiltroComparacionInv, ActualizarCantidades, CabeceraRecepcion, RespuestaCabeceraRecepcion, RespuestaDetalleInventario } from '../modelos/inventariosRegistrados';
+import { RespuestaCabecera, RespuestaCalculosRendicion, RespuestaDetRecepcion, RespuestaDetSalida, DatosFiltro, RespuestaFiltros, RespuestaRendicion, RespuestaDetalleRendicion, RespuestaCalculos, RecepcionVisualizar, RespuestaRecepcionesVisualizar, RespuestaSalidasVisualiza, DatosFiltroComparacionInv, ActualizarCantidades, CabeceraRecepcion, RespuestaCabeceraRecepcion, RespuestaDetalleInventario, RespuestaCabeceraSalida } from '../modelos/inventariosRegistrados';
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 import { GuardarRecepcion } from 'src/app/funcionario/modelos/recepcion-productos.model';
+import { GuardarSalida } from 'src/app/funcionario/modelos/salida-productos.model';
 
 @Injectable({
   providedIn: 'root'
@@ -294,6 +295,12 @@ editarCantidadesProductos
   );
 }
 
+editarPrecioProducto(idCabecera:number, idProducto:number, dato:{nuevoPrecio:number}){
+  return this.http.put<respuestaMensaje>(`${this.apiUrl}/inventariosRegistrados/editarPrecioProducto/${idCabecera}/${idProducto}`, { ...dato })
+  .pipe(
+    catchError(this.errorS.handleError)
+  );
+}
 
 
 //para editar recepciones 
@@ -333,5 +340,46 @@ registrarRecepcion(recepcion: GuardarRecepcion, idCabecera:number): Observable<r
       catchError(this.errorS.handleError)
   );
 }
+
+//todo para editar salidas
+
+ 
+obtenerCabecerasSalidas(idCabecera:number): Observable<RespuestaCabeceraSalida> {
+  
+  return this.http.get<RespuestaCabeceraSalida>(`${this.apiUrl}/inventariosRegistrados/obtenerCabecerasSalidas/${idCabecera}`, {
+    params:this.params
+  })
+    .pipe(
+      catchError(this.errorS.handleError)
+    );
+}
+
+
+
+obtenerDetalleSalidaCab(idCabecera:number, idCabeceraSal:number): Observable<RespuestaSalidasVisualiza> {
+  console.log('idCabecera ', idCabecera, 'idsal ', idCabeceraSal)
+  return this.http.get<RespuestaSalidasVisualiza>(`${this.apiUrl}/inventariosRegistrados/obtenerDetalleSalidaCab/${idCabecera}/${idCabeceraSal}`, {
+    params:this.params
+  })
+    .pipe(
+      catchError(this.errorS.handleError)
+    );
+}
+
+modificarEstadoSalida(id: number): Observable<respuestaMensaje> {
+  return this.http.delete<respuestaMensaje>(`${this.apiUrl}/inventariosRegistrados/modificarEstadoSalida/${id}`)
+    .pipe(
+      catchError(this.errorS.handleError)
+    )
+}
+
+//registra las recepciones TODO: POR AHORA SE OBTIENEN TODOS LOS PRODUCTOS DE LA TABLA PRODUCTO AL BUSCAR POR ENDE SI AL INICIAR LA APERTURA NO ESTABA ESE PRODUCTO LANZARA UN ERROR Y NO DE PODRA REGISTRAR
+registrarSalida(recepcion: GuardarSalida, idCabecera:number): Observable<respuestaMensaje> {
+  return this.http.post<respuestaMensaje>(`${this.apiUrl}/inventariosRegistrados/registrarMasSalida/${idCabecera}`, { ...recepcion })
+    .pipe(
+      catchError(this.errorS.handleError)
+  );
+}
+
 
 }

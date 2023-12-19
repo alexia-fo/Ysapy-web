@@ -24,6 +24,9 @@ cargandoDetalle=true; //obteniendo los datos
 
 modalEditarCantidad='modalCantidad';
 modalEditarCantidades='modalCantidades';
+modalEditarPrecio='modalPrecio';
+
+
 form:FormGroup=new FormGroup({});//para editar un dato a la vez
 productoSeleccionado!:DatosDetalleInventario;
 
@@ -37,7 +40,8 @@ productosControles!: FormArray;
 
 habilitarFormulario=false;
 
-
+//para editar precio
+formPrecio!:FormGroup; //formulario para ingresar cantidades de productos
 constructor(
   private mensajeAlertify: AlertifyService,
   private servicioC: InventariosRegistradosService,
@@ -56,6 +60,11 @@ ngOnInit(): void {
   this.form= this.formulario.group({
     cantidadApertura: [0, [Validators.required, Validators.min(0)]],
     cantidadCierre: [0, [Validators.required, Validators.min(0)]],
+  });
+
+  
+  this.formPrecio= this.formulario.group({
+    nuevoPrecio: [0, [Validators.required, Validators.min(0)]],
   });
 
   this.consultarDetalle();
@@ -197,7 +206,7 @@ enviar(){
       this.mostrarModal('modMensajeId', false);
 
       this.mensajeAlertify.mensajeExito(
-        `${respuesta.msg} se ha insertado correctamente ✓✓`
+        `${respuesta.msg}`
       );
     },
     error: (errores: string[]) => {
@@ -259,7 +268,7 @@ enviarCantidades(){
       this.mostrarModal('modMensajeId', false);
 
       this.mensajeAlertify.mensajeExito(
-      `las cantidades se han insertado correctamente ✓✓`
+      `${respuesta.msg}`
       );
     },
     error: (errores: string[]) => {
@@ -270,6 +279,33 @@ enviarCantidades(){
       
     },
   });
+}
+
+visualizarFormularioPrecio(producto:DatosDetalleInventario){
+  this.productoSeleccionado=producto;
+  this.formPrecio.get('nuevoPrecio')?.setValue( Math.floor(producto.precio));
+  this.mostrarModal(this.modalEditarPrecio, true);
+}
+
+gurdarNuevoPrecio(){
+  console.log('Nuevo Precio, ', this.formPrecio.value)
+  this.servicioC.editarPrecioProducto(this.idCabecera, this.productoSeleccionado.idproducto,this.formPrecio.value).subscribe({
+    next: (respuesta: respuestaMensaje) => {
+      this.mostrarModal('modMensajeId', false);
+
+      this.mensajeAlertify.mensajeExito(
+      `${respuesta.msg}`
+      );
+    },
+    error: (errores: string[]) => {
+      errores.forEach((error: string) => {
+        this.mensajeAlertify.mensajeError(error);
+      });
+      console.log(errores);
+      
+    },
+  });
+
 }
 
 }

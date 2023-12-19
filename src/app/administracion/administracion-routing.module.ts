@@ -19,12 +19,17 @@ import { VerVentasComponent } from './paginas/ver-ventas/ver-ventas.component';
 import { ComparacionInventariosComponent } from './paginas/comparacion-inventarios/comparacion-inventarios.component';
 import { EditarInventariosComponent } from './paginas/editar-inventarios/editar-inventarios.component';
 import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-recepciones.component';
+import { EditarSalidasComponent } from './paginas/editar-salidas/editar-salidas.component';
 
 const routes: Routes = [
   {
     path: "",
     component: MainComponent,
     children: [
+      {
+        path: 'editarSalidas/:idCabecera',
+        component: EditarSalidasComponent
+      },
       {
         path: 'editarRecepciones/:idCabecera',
         component: EditarRecepcionesComponent
