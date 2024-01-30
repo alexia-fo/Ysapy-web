@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DatosDetalleRendicion, RespuestaDetalleRendicion } from '../../modelos/inventariosRegistrados';
+import { DatosDetalleRendicion, RespuestaDetalleRendicion, datosCabeceraAmostrar } from '../../modelos/inventariosRegistrados';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,6 +15,8 @@ import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 export class VerDetalleRendicionComponent implements OnInit{
   //id de cabecera de inventario
   idCabecera!:number;
+  
+  cabecera!:datosCabeceraAmostrar;
   
   detalles:DatosDetalleRendicion[]=[]; //para el listado de cabeceras en la tabla
   
@@ -65,7 +67,8 @@ export class VerDetalleRendicionComponent implements OnInit{
     .subscribe({
       next: (respuesta: RespuestaDetalleRendicion) => {
         this.detalles=respuesta.detalleRendicion;
-        console.log(respuesta)
+        this.cabecera=respuesta.cabecera;
+        console.log(this.cabecera)
         this.cargandoDatos=false;
       },
       error: (errores) => {

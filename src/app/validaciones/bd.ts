@@ -2,6 +2,7 @@ import { AbstractControl } from "@angular/forms";
 import { map } from "rxjs/operators";
 import { UsuarioService } from "../administracion/servicios/usuario.service";
 import { ProductoService } from "../administracion/servicios/producto.service";
+import { RegistrarPedidoService } from "../funcionario/servicios/pedidos-funcionarios/registrar-pedido.service";
 
 export class Validaciones{
 
@@ -66,11 +67,26 @@ export class Validaciones{
     }
   }
 
+//!para modulo funcionario (en el componente que permite ralizar pedidos - para limitar el horario de pedidos)
+
+// static validacionPedido(service:PedidoFuncionarioService/*, noBuscar:string | undefined*/, codmarca: string){
+//   console.log("se esta ejecutando la validacion")
+//   return (control:AbstractControl)=>{
+//     let fecha = control.value;
+//     console.log("el valor es ", fecha)
+//     return service.pedidoHabilitado(fecha, codmarca)
+//       .pipe(
+//         map((response:any)=>{
+//           // if(noBuscar != undefined && control.value == noBuscar){
+//           //   return null;
+//           // }
+//           return response.isAvailable ? null : {not_available:true};
+//         })
+//       );
+//   }
+// }
+
 }
-
-
-
-
 
 
 

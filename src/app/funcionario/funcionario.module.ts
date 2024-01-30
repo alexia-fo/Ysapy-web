@@ -17,6 +17,10 @@ import { VisualizarSalidasComponent } from './paginas/visualizar-salidas/visuali
 import { VerProductosComponent } from './paginas/ver-productos/ver-productos.component';
 import { UtilidadesModule } from '../utilidades/utilidades.module';
 import { RegistroMegasComponent } from './paginas/registro-megas/registro-megas.component';
+import { RegistrarPedidosComponent } from './paginas/pedidos-funcionarios/registrar-pedidos/registrar-pedidos.component';
+import { VerPedidosEnviadosComponent } from './paginas/pedidos-funcionarios/ver-pedidos-enviados/ver-pedidos-enviados.component';
+import { VerPedidosRecibidosComponent } from './paginas/pedidos-funcionarios/ver-pedidos-recibidos/ver-pedidos-recibidos.component';
+import { EditarPedidosComponent } from './paginas/pedidos-funcionarios/editar-pedidos/editar-pedidos.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,12 @@ import { RegistroMegasComponent } from './paginas/registro-megas/registro-megas.
     VisualizarSalidasComponent,
     VerProductosComponent,
     RegistroMegasComponent,
+    RegistrarPedidosComponent,
+    VerPedidosEnviadosComponent,
+    VerPedidosRecibidosComponent,
+    EditarPedidosComponent,
+    
+    
 
   ],
   imports: [

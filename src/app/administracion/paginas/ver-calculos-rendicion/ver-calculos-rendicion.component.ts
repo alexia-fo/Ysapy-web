@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { RespuestaCalculos } from '../../modelos/inventariosRegistrados';
+import { RespuestaCalculos, datosCabeceraAmostrar } from '../../modelos/inventariosRegistrados';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
@@ -17,6 +17,7 @@ export class VerCalculosRendicionComponent implements OnInit{
 
   //solo se obtienen los totales
   calculoRendicion!:RespuestaCalculos;
+  cabecera!:datosCabeceraAmostrar;
 
   constructor(
     private mensajeAlertify: AlertifyService,
@@ -36,6 +37,7 @@ export class VerCalculosRendicionComponent implements OnInit{
       .subscribe({
         next: (respuesta: RespuestaCalculos) => {
           this.calculoRendicion=respuesta;
+          this.cabecera=respuesta.cabecera;
         },
         error: (errores) => {
           errores.forEach((error: string) => {

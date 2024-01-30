@@ -82,6 +82,16 @@ export interface RespuestaCalculosRendicion{
     descVentaCaja:string;
 }
 
+//para utilizar al visualizar los inventarios registrados 
+export interface datosCabeceraAmostrar{
+    fechaApertura:string;
+    fechaCierre:string;
+    turno:string;
+    Sucursal:{ 
+        nombre:string
+    }
+}
+
 export interface RespuestaCalculos{
     totalVenta:number;
     totalAperturaDinero:number;
@@ -92,16 +102,19 @@ export interface RespuestaCalculos{
     totalOtrosCobros:number;
     diferenciaVentaCaja:number;
     descVentaCaja:string;
+    cabecera:datosCabeceraAmostrar;
 }
 
 //FIXME:para obtener todos los datos de por separado (mostrar las tablas en paginas)
 
 export interface RespuestaDetalleInventario{
     detalleInventario:DatosDetalleInventario[];
+    cabecera:datosCabeceraAmostrar;
 }
 
 export interface RespuestaDetalleRendicion{
     detalleRendicion:DatosDetalleRendicion[];
+    cabecera:datosCabeceraAmostrar;
 }
 //FIXME:
 
@@ -137,6 +150,7 @@ export interface DatosDetRecepcion{
 
 export interface RespuestaDetRecepcion{
     dRecepcion:DatosDetRecepcion[];
+    cabecera:datosCabeceraAmostrar;
 }
 
 //para mostrar todas las recepciones de un inventario
@@ -165,6 +179,7 @@ export interface RecepcionVisualizar{
 
 export interface RespuestaRecepcionesVisualizar{
     dRecepcion:RecepcionVisualizar[];
+    cabecera:datosCabeceraAmostrar;
 }
 
 export interface DatosDetSalida{
@@ -196,6 +211,7 @@ export interface DatosDetSalida{
 
 export interface RespuestaDetSalida{
     dSalida:DatosDetSalida[];
+    cabecera:datosCabeceraAmostrar;
 }
 
 //para ver todas las salidas de un inventario
@@ -226,6 +242,7 @@ export interface SalidasVisualiza{
 
 export interface RespuestaSalidasVisualiza{
     dSalida:SalidasVisualiza[];
+    cabecera:datosCabeceraAmostrar;
 }
 
 

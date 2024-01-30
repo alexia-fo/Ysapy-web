@@ -17,6 +17,15 @@
             </div>
         </div>
 
+        
+        <div class="col-12" *ngIf="!cargandoDetalle"><!--cargandoDatos para evitar error cuando carga-->
+            <h5 class="fw-bold">Datos</h5>
+            <p>Sucursal: {{cabecera.Sucursal.nombre}}</p>
+            <p>Turno: {{cabecera.turno}}</p>
+            <p>Fecha Apertura: {{cabecera.fechaApertura | date}}</p>
+            <p>Fecha Cierre: {{cabecera.fechaCierre | date}}</p>
+        </div>
+
         <div class="col-12">
             <!--No utilizo una tabla reutilizable se necesitan dos botones (es mas complejo)-->
             <div class="table-responsive">

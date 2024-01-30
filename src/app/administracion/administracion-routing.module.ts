@@ -20,6 +20,8 @@ import { ComparacionInventariosComponent } from './paginas/comparacion-inventari
 import { EditarInventariosComponent } from './paginas/editar-inventarios/editar-inventarios.component';
 import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-recepciones.component';
 import { EditarSalidasComponent } from './paginas/editar-salidas/editar-salidas.component';
+import { ComparacionRendicionesComponent } from './paginas/comparacion-rendiciones/comparacion-rendiciones.component';
+import { VerPedidosRecibidosComponent } from '../funcionario/paginas/pedidos-funcionarios/ver-pedidos-recibidos/ver-pedidos-recibidos.component';
 
 const routes: Routes = [
   {
@@ -108,7 +110,20 @@ const routes: Routes = [
         component: ComparacionInventariosComponent,
         canDeactivate: [ModalCloseGuard]
       },
+      {
+        path: 'comparacionRendiciones',
+        component: ComparacionRendicionesComponent,
+        canDeactivate: [ModalCloseGuard]
+      },
 
+      ///agregado para ver pedidos (utiliza el mismo componente que funcionario)
+      
+        {
+          path:'verPedidosRecibidos',
+          component: VerPedidosRecibidosComponent,
+          canDeactivate: [ModalCloseGuard]
+  
+        },
       //////////////SIN COMPONENTES DE REUTILIZACION/////////////////
     
       {

@@ -25,6 +25,7 @@ import { EditarInventariosComponent } from './paginas/editar-inventarios/editar-
 import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-recepciones.component';
 import { EditarSalidasComponent } from './paginas/editar-salidas/editar-salidas.component';
 import { ComparacionRendicionesComponent } from './paginas/comparacion-rendiciones/comparacion-rendiciones.component';
+import { RecursosAdminComponent } from './paginas/recursos-admin/recursos-admin.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ComparacionRendicionesComponent } from './paginas/comparacion-rendicion
     EditarRecepcionesComponent,
     EditarSalidasComponent,
     ComparacionRendicionesComponent,
+    RecursosAdminComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,78 @@
+<div class="container">
+    <h3 class="text-center text-dark-emphasis">Pedidos Recibidos</h3>
+
+</div>
+<div class="container">
+
+    <div class="card mt-3">
+        <h5 class="card-header">Filtrar Datos</h5>
+        <div class="card-body">
+          <h5 class="card-title">Datos</h5>
+          <p class="card-text">Establecer la fecha de entrega, la marca y el turno de los pedidos</p>
+          
+          <form [formGroup]="form" class="row">
+    
+            <div class="col-md-6 mb-3">
+                <label for="fecha" class="form-label">Fecha</label>
+                <input formControlName="fecha" type="date" id="fecha" class="form-control">
+            </div>
+    
+            <div class="col-md-5">
+                <label class="form-label">Turnos</label>
+                <select formControlName="turno" class="form-select">
+                    <option [value]="null">Todos</option>
+                    <option *ngFor="let t of turnos" [value]="t.idParametro">{{t.nombre}}</option>
+                </select>
+            </div>
+            
+            <div class="col-md-5">
+                <label class="form-label">Marcas</label>
+                <select formControlName="codMarca" class="form-select">
+                    <option [value]="null">Todos</option>
+                    <option *ngFor="let m of marcas" [value]="m.codMarca">{{m.nombreMarca}}</option>
+                </select>
+            </div>
+    
+
+    
+        </form>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <h5 class="card-header">Listado de pedidos recibidos</h5>
+        <div class="card-body">
+          <h5 class="card-title">Estructurado por sucursal y marca</h5>
+          <p class="card-text">Establecer la fecha de entrega, la marca y el turno de los pedidos</p>
+
+        <div class="row">
+            <div class="col-md-6 d-grid">
+    
+                <label for="">Filtrar</label>
+                <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
+                
+            </div>
+        </div>
+          
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <h5 class="card-header">Totales de Pedidos Recibidos</h5>
+        <div class="card-body">
+          <h5 class="card-title">Suma total de cada producto</h5>
+          <p class="card-text">Es el total de productos que se deben producir para todas las sucursales</p>
+  
+            <div class="row">
+                    
+            <div class="col-md-6 d-grid">
+    
+                <label for="">Filtrar</label>
+                <button class="btn btn-warning" (click)="buscar2()" type="button">Buscar</button>
+                
+            </div>
+            </div>
+          
+        </div>
+    </div>
+</div>

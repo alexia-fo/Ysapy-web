@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { DatosDetalleInventario, RespuestaDetalleInventario } from '../../modelos/inventariosRegistrados';
+import { DatosDetalleInventario, RespuestaDetalleInventario, datosCabeceraAmostrar } from '../../modelos/inventariosRegistrados';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
@@ -14,6 +14,8 @@ import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 export class VerVentasComponent {
 //id de cabecera de inventario
 idCabecera!:number;
+
+cabecera!:datosCabeceraAmostrar;
 
 detalleRendicion!:DatosDetalleInventario[];//para la tabla
 
@@ -66,6 +68,7 @@ ngOnInit(): void {
   .subscribe({
     next: (respuesta: RespuestaDetalleInventario) => {
       this.detalleRendicion=respuesta.detalleInventario;
+      this.cabecera=respuesta.cabecera;
       this.cargandoDetalle=false;
     },
     error: (errores) => {

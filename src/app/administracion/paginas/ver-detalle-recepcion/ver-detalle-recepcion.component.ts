@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { DatosDetRecepcion, RespuestaDetRecepcion } from '../../modelos/inventariosRegistrados';
+import { DatosDetRecepcion, RespuestaDetRecepcion, datosCabeceraAmostrar } from '../../modelos/inventariosRegistrados';
 import { switchMap } from 'rxjs';
 import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
 
@@ -14,6 +14,9 @@ export class VerDetalleRecepcionComponent implements OnInit{
   
   //id de cabecera de inventario
   idCabecera!:number;
+
+  cabecera!:datosCabeceraAmostrar;
+
   //producto recepcionado a ver
   idProducto!:number;
   
@@ -66,6 +69,7 @@ export class VerDetalleRecepcionComponent implements OnInit{
     .subscribe({
       next: (respuesta: RespuestaDetRecepcion) => {
         this.detalles=respuesta.dRecepcion;
+        this.cabecera=respuesta.cabecera;
         this.cargandoDatos=false;
       },
       error: (errores) => {

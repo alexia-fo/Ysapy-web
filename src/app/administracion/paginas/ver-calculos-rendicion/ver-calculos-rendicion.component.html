@@ -3,6 +3,14 @@
     <h3 class="text-center mt-3">Calculos de la Rendicion</h3>
     <div class="row" *ngIf="calculoRendicion">
 
+        <div class="col-12">
+            <h5 class="fw-bold">Datos</h5>
+            <p>Sucursal: {{cabecera.Sucursal.nombre}}</p>
+            <p>Turno: {{cabecera.turno}}</p>
+            <p>Fecha Apertura: {{cabecera.fechaApertura | date}}</p>
+            <p>Fecha Cierre: {{cabecera.fechaCierre | date}}</p>
+        </div>
+
         <div class="col-md-12">
             <br>
             <h5>Cobro por creditos de fechas anteriores</h5>

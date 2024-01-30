@@ -72,7 +72,18 @@ export class MenuFuncionarioComponent {
             },
           ]
         },
-
+        {
+          title: 'Pedidos',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Pedido Recibidos',
+              route: '/verPedidosRecibidos',
+              isDropdown: false
+            },
+          ]
+        },
         {
           title: 'Informes',
           route: '/administracion',
@@ -83,8 +94,14 @@ export class MenuFuncionarioComponent {
               route: '/comparacionInventarios',
               isDropdown: false
             },
+            {
+              title: 'Comparacion Rendiciones',
+              route: '/comparacionRendiciones',
+              isDropdown: false
+            },
           ]
         },
+        
       ];
     }else if(this.usuario.Rol.rol=="ADMINISTRADOR"){
       this.menuOptions= [
@@ -132,7 +149,18 @@ export class MenuFuncionarioComponent {
             },
           ]
         },
-
+        {
+          title: 'Pedidos',
+          route: '/administracion',
+          isDropdown: true,
+          dropdownItems: [
+            {
+              title: 'Pedido Recibidos',
+              route: '/verPedidosRecibidos',
+              isDropdown: false
+            },
+          ]
+        },
         {
           title: 'Informes',
           route: '/administracion',
@@ -143,85 +171,216 @@ export class MenuFuncionarioComponent {
               route: '/comparacionInventarios',
               isDropdown: false
             },
+            {
+              title: 'Comparacion Rendiciones',
+              route: '/comparacionRendiciones',
+              isDropdown: false
+            },
           ]
         },
       ];
     }else if(this.usuario.Rol.rol=="FUNCIONARIO"){
-      this.menuOptions= [
-        {
-          title: 'Inicio',
-          route: '/inicio',
-          isDropdown: false
-        },
-        {
-          title: 'Inventarios',
-          route: '/funcionario',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Inventario Apertura',
-              route: '/aperturaInventario',
-              isDropdown: false
-            },
-            {
-              title: 'Inventario',
-              route: '/inventario',
-              isDropdown: false
-            },
-            {
-              title: 'Rendicion',
-              route: '/rendicion',
-              isDropdown: false
-            }
-          ]
-        },
-        {
-          title: 'Productos',
-          route: '/funcionario',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Recepcion',
-              route: '/recepcion',
-              isDropdown: false
-            },
-            {
-              title: 'Salida',
-              route: '/salidaProductos',
-              isDropdown: false
-            },
-          ]
-        },
-        {          
-          title: 'Visualizar',
-          route: '/funcionario',
-          isDropdown: true,
-          dropdownItems: [
-            {
-              title: 'Productos',
-              route: '/visualizarProductos',
-              isDropdown: false
-            },
-            // {
-            //   title: 'Inventarios',
-            //   route: '/visualizarInventarios',
-            //   isDropdown: false
-            // },
-            // {
-            //   title: 'Recepciones',
-            //   route: '/visualizarRecepciones',
-            //   isDropdown: false
-            // },
-            // {
-            //   title: 'Salidas',
-            //   route: '/visualizarSalidas',
-            //   isDropdown: false
-            // },
-          ]
-        },
-        // Agrega más opciones de menú aquí según tus necesidades
-        
-      ];
+      if(this.usuario.categoria=="V"){//funcionario de categoria venta v
+        this.menuOptions= [
+          {
+            title: 'Inicio',
+            route: '/inicio',
+            isDropdown: false
+          },
+          {
+            title: 'Inventarios',
+            route: '/funcionario',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Inventario Apertura',
+                route: '/aperturaInventario',
+                isDropdown: false
+              },
+              {
+                title: 'Inventario',
+                route: '/inventario',
+                isDropdown: false
+              },
+              {
+                title: 'Rendicion',
+                route: '/rendicion',
+                isDropdown: false
+              }
+            ]
+          },
+          {
+            title: 'Productos',
+            route: '/funcionario',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Recepcion',
+                route: '/recepcion',
+                isDropdown: false
+              },
+              {
+                title: 'Salida',
+                route: '/salidaProductos',
+                isDropdown: false
+              },
+            ]
+          },
+  
+          {
+            title: 'Pedidos',
+            route: '/funcionario/pedidos',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Registrar',
+                route: '/registrarPedidos',
+                isDropdown: false
+              },
+              {
+                title: 'Ver pedidos Enviados',
+                route: '/verPedidosEnviados',
+                isDropdown: false
+              },
+              // {
+              //   title: 'Editar Pedidos',
+              //   route: '/editarPedidos',
+              //   isDropdown: false
+              // },
+            ]
+          },
+  
+          {          
+            title: 'Visualizar',
+            route: '/funcionario',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Productos',
+                route: '/visualizarProductos',
+                isDropdown: false
+              },
+              // {
+              //   title: 'Inventarios',
+              //   route: '/visualizarInventarios',
+              //   isDropdown: false
+              // },
+              // {
+              //   title: 'Recepciones',
+              //   route: '/visualizarRecepciones',
+              //   isDropdown: false
+              // },
+              // {
+              //   title: 'Salidas',
+              //   route: '/visualizarSalidas',
+              //   isDropdown: false
+              // },
+            ]
+          },
+          // Agrega más opciones de menú aquí según tus necesidades
+          
+        ];
+      }else if(this.usuario.categoria=="C"){//funcionario de categoria cocina c
+        this.menuOptions= [
+          {
+            title: 'Inicio',
+            route: '/inicio',
+            isDropdown: false
+          },
+          {
+            title: 'Pedidos',
+            route: '/funcionario/pedidos',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Registrar',
+                route: '/registrarPedidos',
+                isDropdown: false
+              },
+              {
+                title: 'Ver Pedidos Enviados',
+                route: '/verPedidosEnviados',
+                isDropdown: false
+              },
+              {
+                title: 'Ver Pedidos a Recibidos',
+                route: '/verPedidosRecibidos',
+                isDropdown: false
+              },
+              // {
+              //   title: 'Editar Pedidos',
+              //   route: '/editarPedidos',
+              //   isDropdown: false
+              // },
+            ]
+          },
+  
+          {          
+            title: 'Visualizar',
+            route: '/funcionario',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Productos',
+                route: '/visualizarProductos',
+                isDropdown: false
+              },
+            ]
+          },
+          // Agrega más opciones de menú aquí según tus necesidades
+          
+        ];
+      }else{//funcionario de categoria fabrica f
+        this.menuOptions= [
+          {
+            title: 'Inicio',
+            route: '/inicio',
+            isDropdown: false
+          },
+          {
+            title: 'Pedidos',
+            route: '/funcionario/pedidos',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Registrar',
+                route: '/registrarPedidos',
+                isDropdown: false
+              },
+              {
+                title: 'Ver Pedidos Enviados',
+                route: '/verPedidosEnviados',
+                isDropdown: false
+              },
+              {
+                title: 'Ver Pedidos a Recibidos',
+                route: '/verPedidosRecibidos',
+                isDropdown: false
+              },
+              // {
+              //   title: 'Editar Pedidos',
+              //   route: '/editarPedidos',
+              //   isDropdown: false
+              // },
+            ]
+          },
+  
+          {          
+            title: 'Visualizar',
+            route: '/funcionario',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                title: 'Productos',
+                route: '/visualizarProductos',
+                isDropdown: false
+              },
+            ]
+          },
+          // Agrega más opciones de menú aquí según tus necesidades
+          
+        ];
+      }
     }
   }
 

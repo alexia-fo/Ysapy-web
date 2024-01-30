@@ -1,0 +1,183 @@
+<div class="container">
+    <h3 class="text-center text-dark-emphasis">Pedidos Enviados</h3>
+
+</div>
+<!-- PAGINA PRINCIPAL: LISTADO DE CABECERAS -->
+<div class="container mt-2 border border-warning rounded">
+
+    <div class="row">
+
+        <div class="col offset-md-9 col-md-3">
+            <div class="d-grid gap-2 my-2">
+              <button class="btn btn-danger" (click)="mostrarModal(modalFiltros,true)">Buscar por</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-12" *ngIf="cargandoDatos">
+            <div class="text-center">
+              <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <!-- <div class="text-center text-danger">
+              Obteniendo los Datos...
+            </div> -->
+        </div>
+
+        <div class="col-12">
+            <div class="table-responsive pb-2">
+                <table class="table table-hover tablaFormulario" datatable [dtOptions]="dtOpciones" *ngIf="!cargandoDatos">
+
+                    <thead class="bg-warning">
+                        <tr> 
+                            <th class="text-center">Id Cabecera</th>
+                            <th class="text-center">Fecha Alta</th>
+                            <th class="text-center">Fecha Entrega</th>
+                            <th class="text-center">Marca</th>
+                            <th class="text-center">Observacion</th>
+                            <th class="text-center">Sucursal</th>
+                            <th class="text-center">Turno</th>
+                            <th class="text-center">Detalle</th>
+                            <th class="text-center">Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let i of cabeceras">
+                            <td  class="text-center">{{i.idCabecera}}</td>
+                            <td  class="text-start">{{i.fechaAlta | date: 'dd/MM/yyyy' }}</td>
+                            <td  class="text-start">{{i.fechaEntrega | date: 'dd/MM/yyyy' }}</td>
+                            <td class="text-start">{{i.Marca.nombreMarca | titlecase}}</td>
+                            <td class="text-end">{{i.observacion}}</td>
+                            <td class="text-start">{{i.Sucursal.nombre | titlecase}}</td>
+                            <td class="text-start">{{i.Parametro.nombre | titlecase}}</td>
+
+                            <td  class="text-center"><button (click)="mostrarDetallePDF(i.idCabecera)" class="btn btn-secondary"><i class="bi bi-arrow-up-right"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
+                            <td  class="text-center"><button class="btn btn-success" [routerLink]="'../editarPedidos/' + i.idCabecera"><i class="bi bi-pencil"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2 border border-warning rounded">
+    <h3 class="text-center text-dark-emphasis">Total de Pedidos en una Fecha</h3>
+    <P>Suma todos los detalles de un mismo día para un usuario</P>
+    <P>Inlcuso las cantidades de diferentes turnos</P>
+
+    <div class="row">
+
+        <div class="col offset-md-9 col-md-3">
+            <div class="d-grid gap-2 my-2">
+              <button class="btn btn-danger" (click)="mostrarTotalEnvidos()">Ver</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-12" *ngIf="cargandoDatos">
+            <div class="text-center">
+              <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <!-- <div class="text-center text-danger">
+              Obteniendo los Datos...
+            </div> -->
+        </div>
+
+        <div class="col-12 mt-3">
+            <form [formGroup]="formTotalEnviados" class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input formControlName="fecha" type="date" id="fecha" class="form-control">
+                </div>
+
+
+                <div class="col-md-5">
+                    <label class="form-label">Por fecha</label>
+                    <select formControlName="tipoFecha" class="form-select">
+                        <option value="fechaAlta">Fecha Alta</option>
+                        <option value="fechaEntrega">Fecha Entrega</option>
+                    </select>
+                </div>
+
+
+            </form>
+        
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+
+<!-- MODAL PARA APLICAR FILTROS -->
+<app-modal
+[modalId]="modalFiltros"
+[modalTamaño]="'mediano'"
+[titulo]="'Filtros de Inventarios'"
+>
+
+    <div class="row">
+        <div class="col-12 mt-3">
+            <form [formGroup]="form" class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label for="desde" class="form-label">Desde</label>
+                    <input formControlName="desde" type="date" id="desde" class="form-control">
+                </div>
+              
+                <div class="col-md-6">
+                    <label for="limite" class="form-label">Hasta</label>
+                    <input formControlName="limite" type="date" id="hasta" class="form-control">
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">Por fecha</label>
+                    <select formControlName="tipoFecha" class="form-select">
+                        <option value="fechaAlta">Fecha Alta</option>
+                        <option value="fechaEntrega">Fecha Entrega</option>
+                    </select>
+                </div>
+              
+                <div class="col-md-5">
+                    <label class="form-label">Turnos</label>
+                    <select formControlName="turno" class="form-select">
+                        <option value="todos">Todos</option>
+                        <option *ngFor="let t of turnos" [value]="t.idParametro">{{t.nombre}}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">Marcas</label>
+                    <select formControlName="codMarca" class="form-select">
+                        <option value="todos">Todos</option>
+                        <option *ngFor="let m of marcas" [value]="m.codMarca">{{m.nombreMarca}}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 d-grid">
+
+                    <label for="">Filtrar</label>
+                    <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
+                    
+                </div>
+
+            </form>
+        
+        </div>
+        
+    </div>
+</app-modal>

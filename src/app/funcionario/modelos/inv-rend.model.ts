@@ -37,6 +37,7 @@ export interface invProdHabilitado{
     fechaApertura?:Date;
 }
 
+//modelo de datos recibido para ventana buscar de  inventarios y pedidos
 export interface Producto{
     idProducto:number;
     nombre:string;
@@ -49,6 +50,7 @@ export interface RespuestaProductos{
     total:number,
     producto:Producto[]
 }
+//fin
 
 export interface RespuestaDatosProducto {
     mostrar: boolean;

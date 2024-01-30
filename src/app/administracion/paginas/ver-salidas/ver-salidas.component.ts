@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
-import { DatosDetRecepcion, RecepcionVisualizar, RespuestaDetRecepcion, RespuestaRecepcionesVisualizar, RespuestaSalidasVisualiza, SalidasVisualiza } from '../../modelos/inventariosRegistrados';
+import { DatosDetRecepcion, RecepcionVisualizar, RespuestaDetRecepcion, RespuestaRecepcionesVisualizar, RespuestaSalidasVisualiza, SalidasVisualiza, datosCabeceraAmostrar } from '../../modelos/inventariosRegistrados';
 import { switchMap } from 'rxjs';
 import { InventariosRegistradosService } from '../../servicios/inventarios-registrados.service';
 import { SalidaVisualizar } from 'src/app/funcionario/modelos/salida-productos.model';
@@ -16,6 +16,8 @@ export class VerSalidasComponent {
 
   //id de cabecera de inventario
   idCabecera!:number;
+
+  cabecera!:datosCabeceraAmostrar;
   
   detalles:SalidasVisualiza[]=[];//para la tabla
   
@@ -65,7 +67,7 @@ export class VerSalidasComponent {
     .subscribe({
       next: (respuesta: RespuestaSalidasVisualiza) => {
         this.detalles=respuesta.dSalida;
-        console.log(respuesta)
+        this.cabecera=respuesta.cabecera;
         this.cargandoDatos=false;
 
       },

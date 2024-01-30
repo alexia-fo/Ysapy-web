@@ -146,21 +146,51 @@ export class InventariosRegistradosService {
    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
    return this.http.get(`${this.apiUrl}/informesAdmin/obtenerDetalleInventario/${idCabecera}`, { headers, responseType: 'blob' })
    .pipe(
-    catchError(this.errorS.handleError)
+    //no puedo utilizar la funcion handleError porque la respuesta se obtiene en formato blob o pdf y no puedo mostrar los mensajes
+    //ya que deberia de obtener en formato json
+    catchError((error: HttpErrorResponse) => {
+      // Analizar el código de estado del error
+      switch (error.status) {
+        case 500:
+          return throwError(() => (['Error al generar pdf' ]));
+        default:
+          return throwError(() => ([ 'Error desconocido' ]));
+      }
+    })
   );
  }
  obtenerVentasPDF(idCabecera:number): Observable<Blob> {
    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
    return this.http.get(`${this.apiUrl}/informesAdmin/obtenerVentasInventario/${idCabecera}`, { headers, responseType: 'blob' })
    .pipe(
-    catchError(this.errorS.handleError)
+    //no puedo utilizar la funcion handleError porque la respuesta se obtiene en formato blob o pdf y no puedo mostrar los mensajes
+    //ya que deberia de obtener en formato json
+    catchError((error: HttpErrorResponse) => {
+      // Analizar el código de estado del error
+      switch (error.status) {
+        case 500:
+          return throwError(() => (['Error al generar pdf' ]));
+        default:
+          return throwError(() => ([ 'Error desconocido' ]));
+      }
+    })
   );
  }
  obtenerDetalleRendicionPDF(idCabecera:number): Observable<Blob> {
    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
    return this.http.get(`${this.apiUrl}/informesAdmin/obtenerRendicion/${idCabecera}`, { headers, responseType: 'blob' })
    .pipe(
-    catchError(this.errorS.handleError)
+    //no puedo utilizar la funcion handleError porque la respuesta se obtiene en formato blob o pdf y no puedo mostrar los mensajes
+    //ya que deberia de obtener en formato json
+    catchError((error: HttpErrorResponse) => {
+      // Analizar el código de estado del error
+      switch (error.status) {
+        case 500:
+          return throwError(() => (['Error al generar pdf' ]));
+        default:
+          return throwError(() => ([ 'Error desconocido' ]));
+      }
+    })
   );
  }
 
@@ -168,7 +198,17 @@ export class InventariosRegistradosService {
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   return this.http.get(`${this.apiUrl}/informesAdmin/obtenerRecepciones/${idCabecera}`, { headers, responseType: 'blob' })
   .pipe(
-    catchError(this.errorS.handleError)
+    //no puedo utilizar la funcion handleError porque la respuesta se obtiene en formato blob o pdf y no puedo mostrar los mensajes
+    //ya que deberia de obtener en formato json
+    catchError((error: HttpErrorResponse) => {
+      // Analizar el código de estado del error
+      switch (error.status) {
+        case 500:
+          return throwError(() => (['Error al generar pdf' ]));
+        default:
+          return throwError(() => ([ 'Error desconocido' ]));
+      }
+    })
   );
 }
 
@@ -176,7 +216,17 @@ obtenerSalidasPDF(idCabecera:number): Observable<Blob> {
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   return this.http.get(`${this.apiUrl}/informesAdmin/obtenerSalidas/${idCabecera}`, { headers, responseType: 'blob' })
   .pipe(
-    catchError(this.errorS.handleError)
+    //no puedo utilizar la funcion handleError porque la respuesta se obtiene en formato blob o pdf y no puedo mostrar los mensajes
+    //ya que deberia de obtener en formato json
+    catchError((error: HttpErrorResponse) => {
+      // Analizar el código de estado del error
+      switch (error.status) {
+        case 500:
+          return throwError(() => (['Error al generar pdf' ]));
+        default:
+          return throwError(() => ([ 'Error desconocido' ]));
+      }
+    })
   );
 }
 
@@ -213,6 +263,42 @@ obtenerSalidasPDF(idCabecera:number): Observable<Blob> {
             return throwError(() => (['Error al generar pdf' ]));
           case 501:
             return throwError(() => (['Inventarios insuficientes'] ));
+          // Agrega más casos según sea necesario
+          default:
+            return throwError(() => ([ 'Error desconocido' ]));
+        }
+      })
+    );
+  }
+
+  
+  rendicionesConsecutivos(datos: DatosFiltroComparacionInv): Observable<Blob | any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
+    // Asegúrate de formatear las fechas según tus necesidades
+    const params = {
+      idSucursal: datos.idSucursal,
+      turno1: datos.turno1,
+      fecha1: datos.fecha1,
+      turno2: datos.turno2,
+      fecha2: datos.fecha2,
+    };
+
+    return this.http.get(`${this.apiUrl}/informesAdmin/comparacionRendiciones`, {
+      headers,
+      responseType: 'blob',
+      params,  // Incluir los parámetros en la URL
+    })
+    .pipe(
+      //no puedo utilizar la funcion handleError porque la respuesta se obtiene en formato blob o pdf y no puedo mostrar los mensajes
+      //ya que deberia de obtener en formato json
+      catchError((error: HttpErrorResponse) => {
+        // Analizar el código de estado del error
+        switch (error.status) {
+          case 500:
+            return throwError(() => (['Error al generar pdf' ]));
+          case 501:
+            return throwError(() => (['Rendiciones insuficientes'] ));
           // Agrega más casos según sea necesario
           default:
             return throwError(() => ([ 'Error desconocido' ]));

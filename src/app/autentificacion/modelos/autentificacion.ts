@@ -12,6 +12,8 @@ export interface Usuario{
     turno:string;
     createdAt: Date,
     updatedAt: Date
+    //add para pedidos
+    categoria:string
 }
 
 export interface datosRol{
