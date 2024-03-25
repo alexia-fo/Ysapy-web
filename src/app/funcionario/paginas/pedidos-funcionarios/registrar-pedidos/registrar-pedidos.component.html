@@ -74,7 +74,7 @@
                         <!-- <input formControlName="fechaEntrega" type="datetime-local" id="fechaEntrega" class="form-control"> -->
                         <input formControlName="fechaEntrega" type="date" id="fechaEntrega" class="form-control">
                         <small *ngIf="datoInvalidoCabecera('fechaEntrega')" class="e-mensaje-error">{{mensajeCabecera('fechaEntrega')}}</small>
-                        <small class="e-mensaje-error" [ngClass]="{'text-danger': !fechaHabilitada, 'text-success': fechaHabilitada}">
+                        <small *ngIf="!estableciendoMensaje" class="e-mensaje-error" [ngClass]="{'text-danger': !fechaHabilitada, 'text-success': fechaHabilitada}">
                             {{ mensajeValidacionFecha }}
                         </small>
                           

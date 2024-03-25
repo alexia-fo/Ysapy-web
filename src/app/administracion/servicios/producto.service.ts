@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ManejarErrorService } from 'src/app/utilidades/servicios/errores/manejar-error.service';
-import { ActualizarProducto, EliminadoProducto, GuardarProducto, Producto, RespuestaProductos } from './../modelos/producto.model';
+import { ActualizarProducto, DatosProductos, EliminadoProducto, GuardarProducto, Producto, RespuestaProductos } from './../modelos/producto.model';
+import { RespuestaMarcas } from '../modelos/marca.model';
+import { RespuestaUnidades } from '../modelos/unidad.model';
+import { RespuestaClasificaciones } from '../modelos/clasificacion.model';
 
 @Injectable({
   providedIn: 'root'
@@ -78,4 +81,15 @@ export class ProductoService {
       )
   }
 
+  obtenerDatos(): Observable<DatosProductos> {
+    const marcas$ = this.http.get<RespuestaMarcas>(`${environment.API_URL}/api/marcas`);
+    const unidades$ = this.http.get<RespuestaUnidades>(`${environment.API_URL}/api/unidades`);
+    const clasificaciones$ = this.http.get<RespuestaClasificaciones>(`${environment.API_URL}/api/clasificaciones`);
+
+    return forkJoin({ marcas: marcas$, unidades: unidades$, clasificaciones: clasificaciones$ }).pipe(
+      catchError(this.errorS.handleError)
+    );
+  }
 }
+
+

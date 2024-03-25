@@ -5,7 +5,7 @@
     <div class="row">
 
         <div class="col offset-md-9 col-md-3">
-            <div class="">
+            <div class="d-grid gap-2 my-2">
                 <button class="btn btn-danger" type="button" (click)="mostrarModal(modalFiltros,true)">Ver filtros</button>
                 <button class="btn btn-danger" type="button" (click)="mostrarPDF()">Ver PDF</button>
             </div>
@@ -47,8 +47,8 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let i of cabeceras">
-                            <td  class="text-start">{{i.fechaApertura | date: 'dd/MM/yyyy' }}</td>
-                            <td  class="text-start">{{i.fechaCierre | date: 'dd/MM/yyyy' }}</td>
+                            <td  class="text-start">{{i.fechaApertura | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td  class="text-start">{{i.fechaCierre | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
                             <td class="text-start">{{i.Sucursal.nombre | titlecase}}</td>
                             <td  class="text-center">{{i.turno}}</td>
                             <td class="text-end">{{i.montoApertura |number}}</td>

@@ -96,7 +96,7 @@ export class ValidarRolesGuard implements CanActivate, CanLoad {
       const rolesPermitidos = data['roles']; // Obtener los roles permitidos desde los datos de la ruta
 
       return this.authService.retornarPerfil().pipe(
-        tap(() => console.log('canActivate')),
+        // tap(() => console.log('canActivate')),
         map((respuesta: any) => {
           if (respuesta && respuesta.usuario) {
             const rolUsuario = respuesta.usuario.Rol.rol; // Obtener el rol del usuario desde la respuesta
@@ -147,7 +147,7 @@ export class ValidarRolesGuard implements CanActivate, CanLoad {
       const rolesPermitidos = data['roles']; // Obtener los roles permitidos desde los datos de la ruta
 
       return this.authService.retornarPerfil().pipe(
-        tap(() => console.log('canActivate')),
+        // tap(() => console.log('canActivate')),
         map((respuesta: any) => {
           if (respuesta && respuesta.usuario) {
             const rolUsuario = respuesta.usuario.Rol.rol; // Obtener el rol del usuario desde la respuesta

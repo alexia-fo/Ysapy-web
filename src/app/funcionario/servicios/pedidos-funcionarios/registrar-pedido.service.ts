@@ -107,8 +107,8 @@ export class RegistrarPedidoService {
     })
     .pipe(
       tap((resp)=>{
-        console.log("parametros fechaEntrega "+fechaEntrega+" y codMarca "+codMarca)
-        console.log("respuesta val ", resp)
+         console.log("parametros fechaEntrega "+fechaEntrega+" y codMarca "+codMarca)
+         console.log("respuesta val ", resp)
       }),
       catchError((response: HttpErrorResponse) => {
         return throwError(() => new Error(response.error.msg))
@@ -126,7 +126,7 @@ export class RegistrarPedidoService {
 
   //FIXME: PARA EDITAR PEDIDOS
   obtenerPedido(idCabecera:number): Observable<PedidoObtenido> {
-    console.log(`--- id cabecera servicio ${idCabecera}`)
+    // console.log(`--- id cabecera servicio ${idCabecera}`)
     return this.http.get<PedidoObtenido>(`${this.apiUrl}/pedidosFuncionarios/pedidoGet/${idCabecera}`)
     .pipe(
       catchError(this.errorS.handleError)

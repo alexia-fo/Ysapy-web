@@ -181,6 +181,8 @@ export class UsuarioComponent implements OnInit {
     //siempre va a ser de tipo E:empleado, no hace falta en el formulario
     //usuario.tipo = 'E';
 
+    console.log(usuario)
+
     if (this.accion == 'C') {
       this.servicioUsu.crear(usuario).subscribe({
         next: (respuesta: Usuario) => {
@@ -277,6 +279,10 @@ export class UsuarioComponent implements OnInit {
         mensaje = "La confirmacion de contr. es requerida..";
       }
 
+
+      if (campo == "categoria") {
+        mensaje = "La categoria es requerida..";
+      }
     }
 
     if (this.form.get(campo)?.hasError('minlength')) {
@@ -315,6 +321,10 @@ export class UsuarioComponent implements OnInit {
 
       if (campo == "contra") {
         mensaje = "Contraseña: max 50 caracteres";
+      }
+
+      if (campo == "categoria") {
+        mensaje = "Categoria: max 1 caracter";
       }
     }
 
@@ -408,6 +418,8 @@ export class UsuarioComponent implements OnInit {
         idrol: ['', [Validators.required]],
         idsucursal: ['', [Validators.required]],
         turno: ['', [Validators.required, Validators.maxLength(1)]],
+
+        categoria:[null]
         //LA CONTRASENA SE ACTUALIZARA INDEPENDIENTEMENTE DE LOS DATOS
       });
     } else {
@@ -423,6 +435,9 @@ export class UsuarioComponent implements OnInit {
         idrol: ['', [Validators.required,]],
         idsucursal: ['', [Validators.required]],
         turno: ['M', [Validators.required, Validators.maxLength(1)]],
+
+        categoria:[null],
+
         contra: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],//invenstigar a cuantos caracteres equivale en jwt
         contrasena2: ['', [Validators.required]]
       }, {

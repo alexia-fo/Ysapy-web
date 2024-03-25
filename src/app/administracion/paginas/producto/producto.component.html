@@ -111,6 +111,28 @@
       <small *ngIf="datoInvalido('idclasificacion')" class="e-mensaje-error">{{mensaje('idclasificacion')}}</small>
     </div>
 
+
+    <!------------------>
+
+
+    <div class="col-md-6" *ngIf="!cargandoComboClasif">
+      <label for="idmarca" class="form-label">Marca</label>
+      <select formControlName="idmarca" id="idmarca" class="form-select">
+        <option *ngFor="let m of marcas" [value]="m.codMarca">{{m.nombreMarca}}</option>
+      </select>
+      <small *ngIf="datoInvalido('idmarca')" class="e-mensaje-error">{{mensaje('idmarca')}}</small>
+    </div>
+
+
+    <div class="col-md-6" *ngIf="!cargandoComboClasif">
+      <label for="idunidad" class="form-label">Unidad</label>
+      <select formControlName="idunidad" id="idunidad" class="form-select">
+        <option *ngFor="let u of unidades" [value]="u.codUnidad">{{u.NombreUnidad}}</option>
+      </select>
+      <small *ngIf="datoInvalido('idunidad')" class="e-mensaje-error">{{mensaje('idunidad')}}</small>
+    </div>
+
+    <!------------------>
     <div class="col-md-6" *ngIf="accion=='M'">
       <label for="facturable" class="form-label">Facturable</label>
       <div>

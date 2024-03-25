@@ -51,7 +51,7 @@ const routes: Routes = [
         //agregado para que solo ingresen los cajeros
         canActivate: [ValidarCategoriaGuard],
         data: {
-          roles: ['V']
+          categorias: ['V']
         }
       },
       {

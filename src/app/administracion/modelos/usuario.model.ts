@@ -17,6 +17,8 @@ export interface Usuario{
     turno:string;
     Rol:datoRol;
     Sucursal:datoSucursal;
+
+    categoria:string | null; //Los FUNCIONARIOS tienen categorioa A | C | F los administradores tienen null
 }
 
 //para listar usuarios
@@ -40,6 +42,9 @@ export interface GuardarUsuario extends Omit<Usuario, 'idUsuario' | 'activo' | '
     correo
     tipo
     rol
+    turno
+
+    categoria
     */
 }
 
@@ -52,6 +57,9 @@ export interface ActualizarUsuario extends Omit<Usuario, 'idUsuario' | 'activo' 
     correo
     tipo
     rol
+    turno
+
+    categoria
     */
 }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 import { RegistrarPedidoService } from '../../../servicios/pedidos-funcionarios/registrar-pedido.service';
@@ -6,7 +6,7 @@ import { GuardarPedido, Marca, PedidoObtenido, ProdPedido, Producto, RespuestaDa
 import { respuestaMensaje } from 'src/app/compartidos/modelos/resupuestaBack';
 import { Validaciones } from 'src/app/validaciones/bd';
 import { Observable, catchError, forkJoin, map, of, switchMap, tap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-editar-pedidos',
   templateUrl: './editar-pedidos.component.html',
@@ -80,7 +80,7 @@ export class EditarPedidosComponent {
   
   cargandoOperacion=false;//guardando el pedido
   
-  cargandoProductos=false;//obteniendo los datos de los productos a buscar
+  cargandoProductos=true;//obteniendo los datos de los productos a buscar
   
   marcas:Marca[]=[]; //para el combo de tipo de marcas
   turnos:TurnoPedido[]=[]; //para el combo de tipo de marcas
@@ -113,6 +113,7 @@ export class EditarPedidosComponent {
 
   mensajeValidacionFecha:string='';
   fechaHabilitada:boolean=false;
+  estableciendoMensaje=false;//todo>agregado ahora en tercer public
 
   idCabecera!:number;
 
@@ -124,39 +125,17 @@ export class EditarPedidosComponent {
     private fb: FormBuilder, 
     private servicioP: RegistrarPedidoService,
     private route: ActivatedRoute,
+    private router: Router,
+    // private cdr: ChangeDetectorRef//todo:agregado ahora  en segundo public
   ){}
 
 
   ngOnInit(): void {
-    // this.formPedido.get('nombre')?.disable();//solo mostramos
 
-    // forkJoin({
-    //   pedido: this.servicioP.obtenerPedido(this.idCabecera),
-    //   datos: this.servicioP.obtenerDatos()
-    // })
-    // .subscribe({
-    //   next:(response: { pedido: PedidoObtenido, datos: RespuestaDatosPedido })=>{
+    //todo
+    // this.cargandoProductos=true;
 
-    //     if(response.datos.marca && response.datos.turnos){
-    //       this.marcas=response.datos.marca
-    //       this.turnos=response.datos.turnos;
-    //     }
-
-    //     this.productosPedidos=response.pedido.productos
-    //     this.formCabecera.get('observacion')?.setValue(response.pedido.observacion)
-    //     this.formCabecera.get('marca')?.setValue(response.pedido.marca.toString())
-    //     this.formCabecera.get('fechaEntrega')?.setValue(response.pedido.fechaEntrega.toString())
-    //     this.formCabecera.get('turno')?.setValue(response.pedido.turno.toString())
-
-    //   },
-    //   error:(errores)=>{
-    //     errores.forEach((error: string) => {
-    //       this.mensajeAlertify.mensajeError(error);
-    //     });
-    //     this.cargandoProductos=false;
-    //   }});
-
-
+    this.formPedido.get('nombre')?.disable();
     
   // Dentro del método donde realizas la consulta
   this.route.params.pipe(
@@ -177,18 +156,48 @@ export class EditarPedidosComponent {
 
       this.productosPedidos = response.pedido.productos;
       this.formCabecera.get('observacion')?.setValue(response.pedido.observacion);
+      
+      //TODO: el error consiste en que si establezco primero el valor de marca y luego ejecuto el disabled de marca si funciona
+      //TODO: en cambio si ejecuto primero el disabled y luego ejecuto el setvalue me genera error 
+      //TODO: si retrazo la ejecucion del disabled mediante un settimeout y que primero se ejecute el setvalue evita el error
+      
+      //todo
+      // setTimeout(() => {
+      // this.formCabecera.get('marca')?.disable();
+      // console.log(`valor de la marca luego de disabled ${this.formCabecera.get('marca')?.value}`)
+      ///
       this.formCabecera.get('marca')?.setValue(response.pedido.marca.toString());
+      
+      console.log(`valor de la marca luego del setvalue ${this.formCabecera.get('marca')?.value}`)
+      // }, 1000);
 
       //add
-      if(this.productosPedidos.length>0){
-        this.formCabecera.get('marca')?.disable();
-      }
+      //todo:buscar incorrecto
+      // if(this.productosPedidos.length>0){
+      //   this.formCabecera.get('marca')?.disable();
+      // } 
     
       // this.obtenerProductos();
       //fin add
 
       this.formCabecera.get('fechaEntrega')?.setValue(response.pedido.fechaEntrega.toString());
       this.formCabecera.get('turno')?.setValue(response.pedido.turno.toString());
+            // //todo:buscar incorrecto
+            //*este funciona en forma local
+            // setTimeout(() => {
+              
+                // if(this.productosPedidos.length>0){
+                //   console.log('ejecutado el disableddd 1')         
+                //     this.formCabecera.get('marca')?.disable();
+                //     console.log('ejecutado el disableddd')         
+                //   }
+                  // console.log('ejecutado el disabled')         
+                // }, 100);
+                //*fin este funciona en forma local
+                
+            //todo
+      // this.cargandoProductos=false;
+     
     },
     error: (errores) => {
       errores.forEach((error: string) => {
@@ -208,6 +217,8 @@ export class EditarPedidosComponent {
 
           this.formCabecera.get('marca')?.valueChanges.subscribe((valor: null | string) => {
 
+            console.log('ejecutado el evento cambio de marca, ', this.formCabecera.get('marca')?.value)
+            console.log(`marca seleccionada ${valor}`)
             this.marcaSeleccionada = valor?valor:'';        
             // Disparar la validación
             this.formCabecera.get('fechaEntrega')?.updateValueAndValidity();
@@ -222,7 +233,17 @@ export class EditarPedidosComponent {
             this.turnoSeleccionado = valor?valor:'';
             this.formCabecera.get('fechaEntrega')?.updateValueAndValidity(); // Disparar la validación
           });
+ 
   }
+
+  // ngAfterViewInit(): void {
+  //   console.clear()
+  //     if (this.productosPedidos.length > 0) {
+  //       this.formCabecera.get('marca')?.disable();
+  //       console.log("if ejecutado en el ngAfterViewInit")
+  //     }
+  //     console.log("ejecutado solamente el ngAfterViewInit")
+  // }
 
     // ------ MODAL DE FORMULARIO ------ //
     mostrarModal(id: string, mostrar:boolean) {
@@ -410,12 +431,15 @@ export class EditarPedidosComponent {
   
   seleccionarProducto(i: Producto){
     //establecemos el valor del idProducto para luego guardar el mismo en el array y no el obtenido desde el formulario ya que se puede editar
+    
+    console.log(`Seleccionar ${i}`)
     this.idProductoSeleccionado=i.idProducto;
     this.formPedido.get('idProducto')?.setValue(i.idProducto)
     this.formPedido.get('nombre')?.setValue(i.nombre)
 
     this.unidadMedida=i.Unidad.NombreUnidad;
 
+    console.log(`Seleccionar producto ejecutado`)
 
     this.mostrarModal('smodal', false); 
   }
@@ -533,10 +557,6 @@ export class EditarPedidosComponent {
       turno:parseInt(this.formCabecera.value.turno!),
     }
 
-    console.log('form ', this.formCabecera.value)
-    console.log('marca ', this.formCabecera.get('marca')?.value)
-
-    console.log(`---- data `, data)
 
     this.cargandoOperacion=true;
     this.servicioP.editarPedidos(data, this.idCabecera).subscribe({
@@ -545,7 +565,10 @@ export class EditarPedidosComponent {
         this.mensajeAlertify.mensajeExito(
           `${respuesta.msg}`
         );
-        this.borrarDatos();
+        // this.borrarDatos();//no se va a ejecutar por que genera error en el evento de combo marca porque al buscar productos no encuentra el id
+
+        this.router.navigate(['/funcionario/pedidos/verPedidosEnviados']);
+
       },
       error: (errores: string[]) => {
         errores.forEach((error: string) => {
@@ -559,28 +582,29 @@ export class EditarPedidosComponent {
   }
 
   //FIXME: se limpian todos los formularios y tabla para que la pagina se limpie sin recargar
-  borrarDatos(){
-    // this.servicioP.removerItems();
-    this.formCabecera.reset();
-    this.formPedido.reset();
+  //*no es necesario porque generara error en evento de combo
+  // borrarDatos(){
+  //   // this.servicioP.removerItems();
+  //   this.formCabecera.reset();
+  //   this.formPedido.reset();
 
-    //para evitar errores del datatable
-    this.cargandoTablaPedido=true;
-    this.productosPedidos=[];
-    this.cargandoTablaPedido=false;
+  //   //para evitar errores del datatable
+  //   this.cargandoTablaPedido=true;
+  //   this.productosPedidos=[];
+  //   this.cargandoTablaPedido=false;
 
-    this.formCabecera.get('marca')?.enable();
-    this.productos=[];
+  //   this.formCabecera.get('marca')?.enable();
+  //   this.productos=[];
 
-      //add
-      console.log("Agregar valor a formulario", new Date().toISOString().substring(0, 16))
+  //     //add
+  //     console.log("Agregar valor a formulario", new Date().toISOString().substring(0, 16))
     
-      this.formCabecera.get('fechaEntrega')?.setValue(new Date().toISOString().substring(0, 16));
-      console.log("Agregar valor a formulario fin ", this.formCabecera.get('fechaEntrega'))
+  //     this.formCabecera.get('fechaEntrega')?.setValue(new Date().toISOString().substring(0, 16));
+  //     console.log("Agregar valor a formulario fin ", this.formCabecera.get('fechaEntrega'))
     
-    //add
-    this.mensajeValidacionFecha="";
-    }
+  //   //add
+  //   this.mensajeValidacionFecha="";
+  // }
 
   confirmarOperacionEnvio(){
     //prueba
@@ -611,15 +635,14 @@ export class EditarPedidosComponent {
   }
 
   obtenerProductos() {
-    // console.log('this.formCabecera.value ', this.formCabecera.value);
-
-    let marca: string = this.formCabecera.get('marca')!.value!;
-
-
-    
-    // if(!(this.productosPedidos.length > 0)){//ya no se usa
-
     this.cargandoProductos=true;
+    // console.log('this.formCabecera.value ', this.formCabecera.value);
+     console.log('En obtener productos la marca tiene un valor ', this.formCabecera.get('marca')?.value);
+     
+     let marca: string = this.formCabecera.get('marca')!.value!;
+     
+     console.log('variable marca= ', marca);
+     console.log('parseInt(marca)= ', parseInt(marca));
 
       this.servicioP.productosMarca(parseInt(marca))
           .subscribe({
@@ -635,20 +658,13 @@ export class EditarPedidosComponent {
                   this.cargandoProductos = false;
               }
           });
-    // }
-
-
-    
-  // //para validacion asincrona de la fecha si se encuentra habilitada
-  // this.marcaSeleccionada=this.formCabecera.get('marca')?.value!;
-  // this.turnoSeleccionado=this.formCabecera.get('turno')?.value!;
-
   }
 
 
   
 
 validacionPedido(control: AbstractControl): Observable<ValidationErrors | null> {
+  this.estableciendoMensaje=true;//todo:agregado en tercer public
   const fecha = control.value;
   return this.servicioP.pedidoHabilitado(fecha, this.marcaSeleccionada, this.turnoSeleccionado)
     .pipe(
@@ -660,11 +676,15 @@ validacionPedido(control: AbstractControl): Observable<ValidationErrors | null> 
           //   this.mensajeAlertify.mensajeError(valor.msg);
           // }
           this.mensajeValidacionFecha=valor.msg;
+          // this.cdr.detectChanges(); // Notificar a Angular sobre los cambios//todo:agregado en segundo public - no funciona para actualizar el mensaje
+          this.estableciendoMensaje=false;//todo:agregado en tercer public
+
         }else{
           this.mensajeValidacionFecha='';
+          this.estableciendoMensaje=false;//todo:agregado en tercer public
         }
         this.fechaHabilitada=valor.isAvailable;
-        console.log("valor isAvailable ", this.fechaHabilitada)
+        // console.log("valor isAvailable ", this.fechaHabilitada)
       }),
       map((response: any) => {
         return response.isAvailable ? null : { not_available: true };

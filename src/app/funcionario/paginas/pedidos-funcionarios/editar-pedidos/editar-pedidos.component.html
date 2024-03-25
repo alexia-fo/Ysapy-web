@@ -36,7 +36,7 @@
         <!--ACCIONES PARA LA SALIDA-->
         <div class="col-12 d-flex justify-content-end my-3">
             <button class="btn btn-warning me-2" (click)="confirmarOperacionEnvio()">Enviar</button>
-            <button class="btn btn-danger" (click)="borrarDatos()">Borrar</button>
+            <!-- <button class="btn btn-danger" (click)="borrarDatos()">Borrar</button> --><!--no es necesario porque generara error en evento de combo-->
         </div>
 
         <div class="col-12">
@@ -74,7 +74,7 @@
                         <!-- <input formControlName="fechaEntrega" type="datetime-local" id="fechaEntrega" class="form-control"> -->
                         <input formControlName="fechaEntrega" type="date" id="fechaEntrega" class="form-control">
                         <small *ngIf="datoInvalidoCabecera('fechaEntrega')" class="e-mensaje-error">{{mensajeCabecera('fechaEntrega')}}</small>
-                        <small class="e-mensaje-error" [ngClass]="{'text-danger': !fechaHabilitada, 'text-success': fechaHabilitada}">
+                        <small *ngIf="!estableciendoMensaje" class="e-mensaje-error" [ngClass]="{'text-danger': !fechaHabilitada, 'text-success': fechaHabilitada}"><!-- todo: agregado ahora-->
                             {{ mensajeValidacionFecha }}
                         </small>
                           
@@ -183,8 +183,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="table-responsive pb-2">
-                    <table *ngIf="!cargandoProductos" class="table" datatable [dtOptions]="dtOptionsProductos">
+                <div class="table-responsive pb-2" *ngIf="!cargandoProductos && productos.length>0" >
+                    <table class="table" datatable [dtOptions]="dtOptionsProductos">
                         <thead>
                             <tr>
                                 <th class="text-center"> Id </th>

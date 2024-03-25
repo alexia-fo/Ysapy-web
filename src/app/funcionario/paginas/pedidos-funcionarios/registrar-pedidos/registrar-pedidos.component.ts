@@ -113,6 +113,8 @@ export class RegistrarPedidosComponent {
 
   mensajeValidacionFecha:string='';
   fechaHabilitada:boolean=false;
+  estableciendoMensaje=false;//todo>agregado ahora en tercer public
+
 
   unidadMedida:string="";
 
@@ -514,6 +516,9 @@ export class RegistrarPedidosComponent {
 
   //FIXME: se limpian todos los formularios y tabla para que la pagina se limpie sin recargar
   borrarDatos(){
+    //add
+    this.mensajeValidacionFecha="";
+
     // this.servicioP.removerItems();
     this.formCabecera.reset();
     this.formPedido.reset();
@@ -526,11 +531,9 @@ export class RegistrarPedidosComponent {
     this.formCabecera.get('marca')?.enable();
     this.productos=[];
 
-    
-      this.formCabecera.get('fechaEntrega')?.setValue(new Date().toISOString().substring(0, 16));
-    
-    //add
-    this.mensajeValidacionFecha="";
+    //todo: se tenia que poner la fecha de mañana por defecto pero esta generando innecesariamente el mensaje de error de la fecha
+    //this.formCabecera.get('fechaEntrega')?.setValue(new Date().toISOString().substring(0, 16));
+  
     }
 
   confirmarOperacionEnvio(){
@@ -606,6 +609,7 @@ export class RegistrarPedidosComponent {
   
 
 validacionPedido(control: AbstractControl): Observable<ValidationErrors | null> {
+  this.estableciendoMensaje=true;//todo:agregado en tercer public
   const fecha = control.value;
   return this.servicioP.pedidoHabilitado(fecha, this.marcaSeleccionada, this.turnoSeleccionado)
     .pipe(
@@ -617,8 +621,10 @@ validacionPedido(control: AbstractControl): Observable<ValidationErrors | null> 
           //   this.mensajeAlertify.mensajeError(valor.msg);
           // }
           this.mensajeValidacionFecha=valor.msg;
+          this.estableciendoMensaje=false;//todo:agregado en tercer public
         }else{
           this.mensajeValidacionFecha='';
+          this.estableciendoMensaje=false;//todo:agregado en tercer public
         }
         this.fechaHabilitada=valor.isAvailable;
         console.log("valor isAvailable ", this.fechaHabilitada)

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { EliminadoProducto, Producto, RespuestaProductos } from '../../modelos/producto.model';
+import { DatosProductos, EliminadoProducto, Producto, RespuestaProductos } from '../../modelos/producto.model';
 import { Clasificacion, RespuestaClasificaciones } from '../../modelos/clasificacion.model';
 import { ProductoService } from '../../servicios/producto.service';
 import { ClasificacionService } from '../../servicios/clasificacion.service';
@@ -13,6 +13,8 @@ import { TablaItemPipe } from 'src/app/utilidades/modelos/modal-buscar.model';
 import { BooleanToStringPipe } from 'src/app/utilidades/pipes/boolean-to-string.pipe';
 import { DecimalPipe } from '@angular/common';
 import { Validaciones } from 'src/app/validaciones/bd';
+import { Marca } from '../../modelos/marca.model';
+import { Unidad } from '../../modelos/unidad.model';
 
 @Component({
   selector: 'app-product',
@@ -130,6 +132,10 @@ export class ProductoComponent implements OnInit{
   //ya no es necesario pq al instaciar en el ngOnInit una vez como "crear" se evita el error
   //formInstanciado=false; //ya que al modificar o crear nuevo, recien se instancia el formulario, el html genera error pq ya se requiere al visualizar el modal 
 
+
+  //add
+  marcas:Marca[]=[];
+  unidades:Unidad[]=[];
   constructor(
     private formulario:FormBuilder,
     private mensajeAlertify: AlertifyService,
@@ -255,6 +261,16 @@ export class ProductoComponent implements OnInit{
         mensaje="La clasificación es requerida";
       }
 
+      //add
+      if(campo=="idmarca"){
+        mensaje="La marca es requerida";
+      }
+
+      if(campo=="idunidad"){
+        mensaje="La unidad de medida es requerida";
+      }
+
+      //fin
       if(this.accion=='M'){
         if(campo=="facturable"){
           mensaje="Facturable requerido";
@@ -340,6 +356,8 @@ export class ProductoComponent implements OnInit{
 
   obtenerSeleccionado(producto: Producto) {
 
+    console.log(producto)
+
     //para limpiar la imagen anteriormente seleccionada
     this.limpiarArchivo();
     this.accion="M";
@@ -364,6 +382,10 @@ export class ProductoComponent implements OnInit{
         descripcion:['', [Validators.maxLength(200)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
         idclasificacion:['',[Validators.required]],
         facturable:['',[Validators.required]],
+
+        //add
+        idmarca:['',[Validators.required]],
+        idunidad:['',[Validators.required]],
       });
 
     }else{
@@ -377,20 +399,70 @@ export class ProductoComponent implements OnInit{
         precio:['',[Validators.required, Validators.min(0)]],
         descripcion:['', [Validators.maxLength(200)]],//[Validators.required, Validators.minLength(5), Validators.maxLength(200)]
         idclasificacion:['',[Validators.required]],
+
+        
+        //add
+        idmarca:['',[Validators.required]],
+        idunidad:['',[Validators.required]],
       });
     }
   }
 
 
+  //todo: actualizando
+
+  // obtenerClasificaciones(esModificacion:boolean){
+  //   if(esModificacion && this.seleccionado!=undefined){//solo para vonve
+  //     this.cargandoComboClasif=true;
+  //     this.servicioClasif.obtenerClasificaciones()
+  //     .subscribe({
+  //       next:(response:RespuestaClasificaciones)=>{
+  //         this.clasificaciones=response.clasificacion;
+  //         this.cargandoComboClasif=false;
+  //         this.form.patchValue(this.seleccionado);
+  //         //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
+  //         this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
+
+  //       },
+  //       error:(errores)=>{
+  //         errores.forEach((error: string) => {
+  //           this.mensajeAlertify.mensajeError(error);
+  //         });
+  //       }
+
+  //     });
+  //   }else{
+  //     this.cargandoComboClasif=true;
+  //     this.servicioClasif.obtenerClasificaciones()
+  //     .subscribe({
+  //       next:(response:RespuestaClasificaciones)=>{
+  //         this.clasificaciones=response.clasificacion;
+  //         this.cargandoComboClasif=false;
+  //       },
+  //       error:(errores)=>{
+  //         errores.forEach((error: string) => {
+  //           this.mensajeAlertify.mensajeError(error);
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
+
   obtenerClasificaciones(esModificacion:boolean){
-    if(esModificacion && this.seleccionado!=undefined){
+    if(esModificacion && this.seleccionado!=undefined){//solo para vonve
       this.cargandoComboClasif=true;
-      this.servicioClasif.obtenerClasificaciones()
+      this.servicioProd.obtenerDatos()
       .subscribe({
-        next:(response:RespuestaClasificaciones)=>{
-          this.clasificaciones=response.clasificacion;
+        next:(response:DatosProductos)=>{
+          this.clasificaciones=response.clasificaciones.clasificacion;
+          this.marcas=response.marcas.marca;
+          this.unidades=response.unidades.unidad;
+
           this.cargandoComboClasif=false;
           this.form.patchValue(this.seleccionado);
+          console.log('consulta ', this.seleccionado)
+          console.log(response)
+
           //el precio se establece en decimal y por ahora solo es necesario que se maneje como entero
           this.form.get('precio')?.setValue(parseInt(this.seleccionado.precio.toString()));
 
@@ -404,10 +476,13 @@ export class ProductoComponent implements OnInit{
       });
     }else{
       this.cargandoComboClasif=true;
-      this.servicioClasif.obtenerClasificaciones()
+      this.servicioProd.obtenerDatos()
       .subscribe({
-        next:(response:RespuestaClasificaciones)=>{
-          this.clasificaciones=response.clasificacion;
+        next:(response:DatosProductos)=>{
+          this.clasificaciones=response.clasificaciones.clasificacion;
+          this.marcas=response.marcas.marca;
+          this.unidades=response.unidades.unidad;
+
           this.cargandoComboClasif=false;
         },
         error:(errores)=>{
@@ -417,7 +492,10 @@ export class ProductoComponent implements OnInit{
         }
       });
     }
+
   }
+
+
 
   // -------- imagen -----------------// 
 
@@ -521,6 +599,7 @@ export class ProductoComponent implements OnInit{
 /*
 import { registerLocaleData } from '@angular/common';
 import localeEsPy from '@angular/common/locales/es-PY';
+import { Marca } from '../../modelos/marca.model';
 // Registra la configuración de localización para 'es-PY'
 registerLocaleData(localeEsPy, 'es-PY');
 //COPIAR EN EL COMPONENTE

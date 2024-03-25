@@ -1,4 +1,6 @@
-import { datoClasificacion } from "./clasificacion.model";
+import { RespuestaClasificaciones, datoClasificacion } from "./clasificacion.model";
+import { RespuestaMarcas } from "./marca.model";
+import { RespuestaUnidades, Unidad } from "./unidad.model";
 import { Usuario, datoUsuario } from "./usuario.model";
 
 //-----inicio producto-------
@@ -18,6 +20,10 @@ export interface Producto {
     activo:boolean;
     Usuario:datoUsuario;
     Clasificacion: datoClasificacion;
+
+    //ADD
+    idmarca:number;
+    idunidad:number;
 }
 
 //para listar productos en modulo administracion
@@ -59,4 +65,11 @@ export interface EliminadoProducto{
 
 export interface datoProducto{
     nombre:string;
+}
+
+//para obtener todos los datos de combos para el alta y modificacion de una sola vez
+export interface DatosProductos{
+    unidades:RespuestaUnidades,
+    marcas:RespuestaMarcas,
+    clasificaciones:RespuestaClasificaciones
 }

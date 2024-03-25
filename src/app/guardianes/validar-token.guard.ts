@@ -17,7 +17,7 @@ export class ValidarTokenGuard implements CanActivate, CanLoad {
   canActivate():Observable<boolean> | boolean {
     
     return this.authService.retornarPerfil().pipe(
-      tap(()=>console.log('canActive')),
+      // tap(()=>console.log('canActive')),
       map((respuesta: any) => {
         if (respuesta && respuesta.usuario) {
           return true; // El perfil del usuario se obtuvo correctamente
@@ -59,7 +59,7 @@ export class ValidarTokenGuard implements CanActivate, CanLoad {
   canLoad():Observable<boolean> | boolean{
     
     return this.authService.retornarPerfil().pipe(
-      tap(()=>console.log('canActive')),
+      // tap(()=>console.log('canActive')),
       map((respuesta: any) => {
         if (respuesta && respuesta.usuario) {
           return true; // El perfil del usuario se obtuvo correctamente

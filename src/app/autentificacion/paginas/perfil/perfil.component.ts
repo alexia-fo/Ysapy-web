@@ -21,4 +21,18 @@ export class PerfilComponent {
   ngOnInit(): void {
     this.usuario=this.servicioA.usuario;
   }
+
+  get getCategoria(){
+    let valor="No cuenta con ninguna categoria asignada"
+
+    if(this.usuario.categoria=="V"){
+      valor="Venta";
+    }else if(this.usuario.categoria=="F"){
+      valor='Fabrica';
+    }else if(this.usuario.categoria=="C"){
+      valor="Cocina"
+    }
+
+    return valor;
+  }
 }
