@@ -51,7 +51,8 @@ export class VerPedidosRecibidosComponent {
   obteniendoPDF=false;
 
   marcas:Marca[]=[];
-  turnos:TurnoPedido[]=[];
+  //turnos:TurnoPedido[]=[];            //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
+
 
   constructor(
     private formulario:FormBuilder,
@@ -79,7 +80,7 @@ export class VerPedidosRecibidosComponent {
     }).subscribe({
       next: (result:{marcas:RespuestaMarcas, turnos:RespuestaTurnoPedido}) => {
         this.marcas = result.marcas.marca;
-        this.turnos = result.turnos.turno;
+        //this.turnos = result.turnos.turno;            //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
         this.cargandoDatos=false;
       },
       error: (errores) => {
@@ -152,4 +153,25 @@ export class VerPedidosRecibidosComponent {
 
   }
 
+  buscar3(){//todo: para ver el usuario y fecha de alta de quienes enviaron tarde su pedido
+    this.obteniendoPDF=true;
+    this.mostrarModal(this.modalFiltros, false);
+
+    console.log(this.form.value)
+
+    this.servicioL.verPedidosPorSucursalYmarcaPDFconHorario(this.form.value)
+    .subscribe({
+      next: (respuesta:Blob) => {
+        ObtenerPDF.visualizarPDF(respuesta);       
+        this.obteniendoPDF=false;
+      },
+      error: (errores) => {
+        errores.forEach((error: string) => {
+          this.mensajeAlertify.mensajeError(error);
+        });
+        this.obteniendoPDF=false;
+      },
+    });
+
+  }
 }

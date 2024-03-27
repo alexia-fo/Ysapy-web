@@ -12,7 +12,7 @@ export interface GuardarPedido{
     fechaEntrega:Date,
     marca:number,
     productos: ProdPedido[];
-    turno:number
+    //turno:number//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
 }
 
 //marcas de productos
@@ -75,9 +75,9 @@ export interface DatosCabeceraPedidos{
     Sucursal:{
         nombre:string
     },
-    Parametro:{
-        nombre:string
-    },
+    // Parametro:{//TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
+    //     nombre:string
+    // },
     fechaEntrega:Date,
     fechaAlta: Date,
 }
@@ -98,7 +98,8 @@ export interface DatosFiltroCabecera{
 //* para filtrar los pedidos recibidos antes de generar pdf
 export interface DatosFiltroPedidos_sucursalMarca{
     fecha:Date;
-    turno:number | "null";
+    //turno:number | "null";   //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
+
     codMarca:number | "null";
 }
 

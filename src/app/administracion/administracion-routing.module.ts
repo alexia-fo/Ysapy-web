@@ -22,6 +22,7 @@ import { EditarRecepcionesComponent } from './paginas/editar-recepciones/editar-
 import { EditarSalidasComponent } from './paginas/editar-salidas/editar-salidas.component';
 import { ComparacionRendicionesComponent } from './paginas/comparacion-rendiciones/comparacion-rendiciones.component';
 import { VerPedidosRecibidosComponent } from '../funcionario/paginas/pedidos-funcionarios/ver-pedidos-recibidos/ver-pedidos-recibidos.component';
+import { RegistrarPedidosComponent } from '../funcionario/paginas/pedidos-funcionarios/registrar-pedidos/registrar-pedidos.component';
 
 const routes: Routes = [
   {
@@ -121,6 +122,13 @@ const routes: Routes = [
         {
           path:'verPedidosRecibidos',
           component: VerPedidosRecibidosComponent,
+          canDeactivate: [ModalCloseGuard]
+  
+        },
+        //TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
+        {
+          path:'registrarPedidos',
+          component: RegistrarPedidosComponent,
           canDeactivate: [ModalCloseGuard]
   
         },

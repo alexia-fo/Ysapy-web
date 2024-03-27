@@ -129,4 +129,26 @@ export class ObtenerPedidosService {
        })
      );
     }
+
+    verPedidosPorSucursalYmarcaPDFconHorario(datos:DatosFiltroPedidos_sucursalMarca): Observable<Blob> {
+      
+      this.params=datos; //funciona
+
+      //*solo se aceptan parametros de tipo strings
+      return this.http.get(`${this.apiUrl}/pedidosFuncionarios/verPedidosPorSucursalYmarcaPDFconHora/`, { 
+        responseType: 'blob',
+        params:this.params
+      })
+      .pipe(
+       catchError((error: HttpErrorResponse) => {
+         // Analizar el código de estado del error
+         switch (error.status) {
+           case 500:
+             return throwError(() => (['Error al generar pdf' ]));
+           default:
+             return throwError(() => ([ 'Error desconocido' ]));
+         }
+       })
+     );
+    }
 }

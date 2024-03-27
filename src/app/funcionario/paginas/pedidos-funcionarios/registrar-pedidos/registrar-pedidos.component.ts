@@ -83,7 +83,8 @@ export class RegistrarPedidosComponent {
   cargandoProductos=false;//obteniendo los datos de los productos a buscar
   
   marcas:Marca[]=[]; //para el combo de tipo de marcas
-  turnos:TurnoPedido[]=[]; //para el combo de tipo de marcas
+  
+  //turnos:TurnoPedido[]=[]; //para el combo de tipo de marcas//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
 
   marcaSeleccionada:string='';// es de tipo string porque solo puedo asignar valores numericos, string como parametro de una peticio el la req.params de angular y al cargar la ventana no tendra ningun valor por lo que no puedo asignar null ni undefined
   turnoSeleccionado:string='';
@@ -102,7 +103,8 @@ export class RegistrarPedidosComponent {
       // asyncValidators: [Validaciones.validacionPedido(this.servicioP, this.marcaSeleccionada)],
       // updateOn: "blur"
     }],
-    turno:['', Validators.required]
+    
+    //turno:['', Validators.required]//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
   });
 
   formPedido:FormGroup=this.fb.group({
@@ -144,7 +146,7 @@ export class RegistrarPedidosComponent {
         if(response.marca && response.turnos){
         // if(this.invHabilitado && response.marca && response.turnos){
           this.marcas=response.marca
-          this.turnos=response.turnos;
+          //this.turnos=response.turnos;//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
         }
 
       },
@@ -488,7 +490,7 @@ export class RegistrarPedidosComponent {
       fechaEntrega:new Date(this.formCabecera.value.fechaEntrega!),
       marca: marcaValue!.codMarca,
       productos:this.productosPedidos,
-      turno:parseInt(this.formCabecera.value.turno!),
+      //turno:parseInt(this.formCabecera.value.turno!),//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
     }
 
     console.log(this.formCabecera.value)

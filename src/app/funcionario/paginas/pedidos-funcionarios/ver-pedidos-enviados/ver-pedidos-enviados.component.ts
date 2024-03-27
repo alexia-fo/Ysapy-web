@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { RespuestaMarcas } from 'src/app/administracion/modelos/marca.model';
 import { DatosCabeceraPedidos, Marca, RespDatosCabeceraPedidos, TurnoPedido } from 'src/app/funcionario/modelos/pedido-funcionario';
 import { ObtenerPedidosService } from 'src/app/funcionario/servicios/pedidos-funcionarios/obtener-pedidos.service';
 import { RegistrarPedidoService } from 'src/app/funcionario/servicios/pedidos-funcionarios/registrar-pedido.service';
@@ -58,7 +59,8 @@ export class VerPedidosEnviadosComponent {
   obteniendoPDF=false;
 
   marcas:Marca[]=[];
-  turnos:TurnoPedido[]=[];
+  // turnos:TurnoPedido[]=[];//TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
+
 
   // idCabecera!:number;
 
@@ -78,7 +80,8 @@ export class VerPedidosEnviadosComponent {
       desde:[new Date(this.diasAntes).toISOString().substring(0, 10)],
       limite:[new Date(this.fechaHoy).toISOString().substring(0, 10)],
       tipoFecha:['fechaAlta', [Validators.required]],
-      turno:['todos', [Validators.required]],
+      // turno:['todos', [Validators.required]],            //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
+
       codMarca:['todos', [Validators.required]],
     });
 
@@ -92,12 +95,34 @@ export class VerPedidosEnviadosComponent {
 
 
     
+    //TODO: SI FUNCIONABA PERO AHORA YA NO SE VA A FILTRAR POR TURNO PORQUE YA NO SE GUARDA
     // Luego, encadenas las consultas utilizando switchMap para obtener las cabeceras después de que las dos primeras se completen
-    this.servicioR.obtenerMarcasYTurnos().pipe(
-      switchMap((data: any) => {
+    // this.servicioR.obtenerMarcasYTurnos().pipe(
+    //   switchMap((data: any) => {
+    //     console.log("data ", data)
+    //     this.marcas=data.marcas.marca
+    //     this.turnos=data.turnos.turno
+    //     return this.servicioC.obtenerCabeceras(this.form.value);
+    //   })
+    //   ).subscribe({
+    //   next: (respuesta: RespDatosCabeceraPedidos) => {
+    //     this.cabeceras = respuesta.cabeceras;
+    //     this.cargandoDatos = false;
+    //   },
+    //   error: (errores) => {
+    //     errores.forEach((error: string) => {
+    //       this.mensajeAlertify.mensajeError(error);
+    //     });
+    //     this.cargandoDatos = false;
+    //   }
+    // });
+
+
+    this.servicioR.marcas().pipe(
+      switchMap((data: RespuestaMarcas) => {
         console.log("data ", data)
-        this.marcas=data.marcas.marca
-        this.turnos=data.turnos.turno
+        this.marcas=data.marca
+        // this.turnos=data.turnos.turno
         return this.servicioC.obtenerCabeceras(this.form.value);
       })
       ).subscribe({
@@ -112,31 +137,7 @@ export class VerPedidosEnviadosComponent {
         this.cargandoDatos = false;
       }
     });
-
-    // Obtener el idCabecera de la URL
-    // this.route.params.pipe(
-    //   switchMap(params => {
-    //     this.idCabecera = params['idCabecera'];
-    //     return this.servicioR.obtenerMarcasYTurnos();
-    //   }),
-    //   switchMap((data: any) => {
-    //     console.log("data ", data);
-    //     this.marcas = data.marcas.marca;
-    //     this.turnos = data.turnos.turno;
-    //     return this.servicioC.obtenerCabeceras(this.form.value);
-    //   })
-    // ).subscribe({
-    //   next: (respuesta: RespDatosCabeceraPedidos) => {
-    //     this.cabeceras = respuesta.cabeceras;
-    //     this.cargandoDatos = false;
-    //   },
-    //   error: (errores) => {
-    //     errores.forEach((error: string) => {
-    //       this.mensajeAlertify.mensajeError(error);
-    //     });
-    //     this.cargandoDatos = false;
-    //   }
-    // });
+    
 
   }
 

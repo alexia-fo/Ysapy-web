@@ -17,13 +17,14 @@
                 <input formControlName="fecha" type="date" id="fecha" class="form-control">
             </div>
     
-            <div class="col-md-5">
+            <!--TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO-->
+            <!-- <div class="col-md-5">
                 <label class="form-label">Turnos</label>
                 <select formControlName="turno" class="form-select">
                     <option [value]="null">Todos</option>
                     <option *ngFor="let t of turnos" [value]="t.idParametro">{{t.nombre}}</option>
                 </select>
-            </div>
+            </div> -->
             
             <div class="col-md-5">
                 <label class="form-label">Marcas</label>
@@ -72,6 +73,28 @@
                 
             </div>
             </div>
+          
+        </div>
+    </div>
+
+
+
+
+    <!-- TODO: AGREGADO PARA VER HORA Y USUARIO QUE CARGO TARDE SU PEDIDO-->
+    <div class="card mt-3">
+        <h5 class="card-header">Listado de pedidos recibidos CON HORARIOS DE ENVIO</h5>
+        <div class="card-body">
+          <h5 class="card-title">Estructurado por sucursal y marca</h5>
+          <p class="card-text">Establecer la fecha de entrega, la marca</p>
+
+        <div class="row">
+            <div class="col-md-6 d-grid">
+    
+                <label for="">Filtrar</label>
+                <button class="btn btn-danger" (click)="buscar3()" type="button">Buscar</button>
+                
+            </div>
+        </div>
           
         </div>
     </div>
