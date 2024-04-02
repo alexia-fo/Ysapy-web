@@ -39,7 +39,6 @@
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
 
               "node_modules/datatables.net-responsive/js/dataTables.responsive.js"
-              
             ]
           },
           "configurations": {

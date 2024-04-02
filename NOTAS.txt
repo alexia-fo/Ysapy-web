@@ -116,5 +116,8 @@ npm install jspdf-autotable@3.5.28
 
 npm install date-fns@2.30.0
 
+-------para utilizar popovers de bootstrap se instalan dependecias
+npm i @popperjs/core
+
 /////// DESARROLLO  ////////
 

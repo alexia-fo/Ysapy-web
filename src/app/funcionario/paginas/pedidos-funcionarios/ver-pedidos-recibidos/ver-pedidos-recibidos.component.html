@@ -2,18 +2,25 @@
     <h3 class="text-center text-dark-emphasis">Pedidos Recibidos</h3>
 
 </div>
-<div class="container">
+<div class="container" id="miDivDeBotones">
 
     <div class="card mt-3">
-        <h5 class="card-header">Filtrar Datos</h5>
+        <!--<h5 class="card-header">Cargar Datos</h5>-->
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="">Cargar Datos</h5>
+
+            <!--<i class="bi bi-info-circle-fill my-2 mx-3 text-success"></i>-->
+            <button #popoverButton type="button" class="btn m-0 p-0" data-bs-toggle="popover" data-bs-placement="left" data-bs-title="Cargar Datos" data-bs-content="Para poder ver los informes se debe cargar la fecha y escoger la categoria"><i class="bi bi-info-circle-fill text-success"></i></button>
+        </div>
+
         <div class="card-body">
-          <h5 class="card-title">Datos</h5>
+          <!--<h5 class="card-title">Datos</h5>-->
           <p class="card-text">Establecer la fecha de entrega, la marca y el turno de los pedidos</p>
           
           <form [formGroup]="form" class="row">
     
             <div class="col-md-6 mb-3">
-                <label for="fecha" class="form-label">Fecha</label>
+                <label for="fecha" class="form-label">Fecha de Entrega</label>
                 <input formControlName="fecha" type="date" id="fecha" class="form-control">
             </div>
     
@@ -27,7 +34,7 @@
             </div> -->
             
             <div class="col-md-5">
-                <label class="form-label">Marcas</label>
+                <label class="form-label">Categoria</label>
                 <select formControlName="codMarca" class="form-select">
                     <option [value]="null">Todos</option>
                     <option *ngFor="let m of marcas" [value]="m.codMarca">{{m.nombreMarca}}</option>
@@ -41,16 +48,23 @@
     </div>
 
     <div class="card mt-3">
-        <h5 class="card-header">Listado de pedidos recibidos</h5>
+
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="">Pedidos por Sucursal</h5>
+
+            <!--<i class="bi bi-info-circle-fill my-2 mx-3 text-success"></i>-->
+            <button #popoverButton type="button" class="btn m-0 p-0" data-bs-toggle="popover" data-bs-placement="left" data-bs-title="Pedidos por Sucursal y Categoria" data-bs-content="Es la suma de pedidos de cada sucursal, los productos se listan por categoria para cada sucursal"><i class="bi bi-info-circle-fill text-success"></i></button>
+        </div>
+
         <div class="card-body">
-          <h5 class="card-title">Estructurado por sucursal y marca</h5>
-          <p class="card-text">Establecer la fecha de entrega, la marca y el turno de los pedidos</p>
+          <!--<h5 class="card-title">Estructurado por sucursal y marca</h5>-->
+          <!--<p class="card-text">Establecer la fecha de entrega, la marca y el turno de los pedidos</p>-->
 
         <div class="row">
             <div class="col-md-6 d-grid">
     
-                <label for="">Filtrar</label>
-                <button class="btn btn-warning" (click)="buscar()" type="button">Buscar</button>
+                <!--<label for="">Filtrar</label>-->
+                <button class="btn btn-warning" (click)="buscar()" type="button">Ver</button>
                 
             </div>
         </div>
@@ -59,43 +73,56 @@
     </div>
 
     <div class="card mt-3">
-        <h5 class="card-header">Totales de Pedidos Recibidos</h5>
+        <!--<h5 class="card-header">Total de Pedidos</h5>-->
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="">Total de Pedidos</h5>
+            <button #popoverButton type="button" class="btn m-0 p-0" data-bs-toggle="popover" data-bs-placement="left" data-bs-title="Total de pedidos" data-bs-content="Es la suma de los pedidos de todas las sucursales"><i class="bi bi-info-circle-fill text-success"></i></button>
+        </div>
+
         <div class="card-body">
-          <h5 class="card-title">Suma total de cada producto</h5>
-          <p class="card-text">Es el total de productos que se deben producir para todas las sucursales</p>
+          <!--<h5 class="card-title">Suma total de cada producto</h5>-->
+          <!--<p class="card-text">Es el total de productos que se deben producir para todas las sucursales</p>-->
   
             <div class="row">
                     
             <div class="col-md-6 d-grid">
     
-                <label for="">Filtrar</label>
-                <button class="btn btn-warning" (click)="buscar2()" type="button">Buscar</button>
+                <!--<label for="">Filtrar</label>-->
+                <button class="btn btn-warning" (click)="buscar2()" type="button">Ver</button>
                 
             </div>
             </div>
           
         </div>
     </div>
-
-
-
 
     <!-- TODO: AGREGADO PARA VER HORA Y USUARIO QUE CARGO TARDE SU PEDIDO-->
-    <div class="card mt-3">
-        <h5 class="card-header">Listado de pedidos recibidos CON HORARIOS DE ENVIO</h5>
-        <div class="card-body">
-          <h5 class="card-title">Estructurado por sucursal y marca</h5>
-          <p class="card-text">Establecer la fecha de entrega, la marca</p>
-
-        <div class="row">
-            <div class="col-md-6 d-grid">
+    <div *ngIf="usuario">
+        <div class="card mt-3" *ngIf="usuario.Rol.rol=='ADMINISTRADOR' || usuario.Rol.rol=='ROOT'">
+            <!--<h5 class="card-header">Listado de pedidos recibidos CON HORARIOS DE ENVIO</h5>-->
+            
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="">Listado de pedidos recibidos CON HORARIOS DE ENVIO</h5>
+                <button #popoverButton type="button" class="btn m-0 p-0" data-bs-toggle="popover" data-bs-placement="left" data-bs-title="Productos pedidos con horarios" data-bs-content="Cada uno de los productos que conforman un pedido con su horario de registro y el usuario que lo registro, listado por sucursal y categoria"><i class="bi bi-info-circle-fill text-success"></i></button>
+            </div>
+            
+            <div class="card-body">
+              <h5 class="card-title">Estructurado por sucursal y marca</h5>
+              <p class="card-text">Establecer la fecha de entrega, la marca</p>
     
-                <label for="">Filtrar</label>
-                <button class="btn btn-danger" (click)="buscar3()" type="button">Buscar</button>
-                
+            <div class="row">
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-danger" (click)="buscar3()" type="button">Ver</button>  
+                </div>
+            </div>
+    
             </div>
         </div>
-          
-        </div>
     </div>
+
+    <br>
+    <br>
+
 </div>
+
+

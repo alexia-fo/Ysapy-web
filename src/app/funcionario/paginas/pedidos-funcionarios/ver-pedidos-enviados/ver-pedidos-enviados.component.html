@@ -44,7 +44,7 @@
                             <!-- //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO -->
                             <!-- <th class="text-center">Turno</th> -->
                             <th class="text-center">Detalle</th>
-                            <th class="text-center">Editar</th>
+                            <!--<th class="text-center">Editar</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -59,7 +59,7 @@
                             <!-- <td class="text-start">{{i.Parametro.nombre | titlecase}}</td> -->
 
                             <td  class="text-center"><button (click)="mostrarDetallePDF(i.idCabecera)" class="btn btn-secondary"><i class="bi bi-arrow-up-right"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
-                            <td  class="text-center"><button class="btn btn-success" [routerLink]="'../editarPedidos/' + i.idCabecera"><i class="bi bi-pencil"></i></button></td> <!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
+                            <!--<td  class="text-center"><button class="btn btn-success" [routerLink]="'../editarPedidos/' + i.idCabecera"><i class="bi bi-pencil"></i></button></td> --><!--[routerLink]="'../detalleRendicion/'+i.idCabecera"--> <!--(click)="redirigirADetalleRendicion(i.idCabecera)"-->      
                         </tr>
                     </tbody>
                 </table>

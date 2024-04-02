@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { Marca, RespuestaMarcas, RespuestaTurnoPedido, TurnoPedido } from 'src/app/funcionario/modelos/pedido-funcionario';
@@ -7,12 +7,18 @@ import { RegistrarPedidoService } from 'src/app/funcionario/servicios/pedidos-fu
 import { ObtenerPDF } from 'src/app/utilidades/clases/pdf';
 import { AlertifyService } from 'src/app/utilidades/servicios/mensajes/alertify.service';
 
+import { AutentificacionService } from 'src/app/autentificacion/servicios/autentificacion.service';
+import { Perfil } from 'src/app/autentificacion/modelos/autentificacion';
+
+
+import { Popover } from 'bootstrap';
+declare var bootstrap: any;
 @Component({
   selector: 'app-ver-pedidos-recibidos',
   templateUrl: './ver-pedidos-recibidos.component.html',
   styleUrls: ['./ver-pedidos-recibidos.component.css']
 })
-export class VerPedidosRecibidosComponent {
+export class VerPedidosRecibidosComponent implements AfterViewInit{
 
   modalFiltros="modalFiltros";
   
@@ -53,17 +59,47 @@ export class VerPedidosRecibidosComponent {
   marcas:Marca[]=[];
   //turnos:TurnoPedido[]=[];            //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
 
-
+  usuario!:Perfil;
+  @ViewChildren('popoverButton') popoverButtons!: QueryList<ElementRef>;
   constructor(
     private formulario:FormBuilder,
     private mensajeAlertify: AlertifyService,
     private servicioL: ObtenerPedidosService,
     private servicioR: RegistrarPedidoService,
+    private servicioA: AutentificacionService
   ){
     this.obtenerFechas();
   }
+
+  
+  ngAfterViewInit() {
+    this.popoverButtons.forEach(button => {
+      const popover = new bootstrap.Popover(button.nativeElement);
+    });
+  }
   
   ngOnInit(): void {
+    //obtener perfil de usuario para ocultar informes segun el rol de usuario
+    this.usuario=this.servicioA.usuario;
+
+    //inicio de configuracion de popover
+    
+    /*
+    Array.from(document.querySelectorAll('button[data-bs-toggle="popover"'))
+    .forEach(popoverNode=>{
+      console.log(popoverNode)
+      return new Popover(popoverNode)
+      
+    }
+    );
+    */
+
+  // Inicializar los popovers solo en los botones dentro de un div específico
+ // const popoverButtons = document.querySelectorAll('#miDivDeBotones button[data-bs-toggle="popover"]');
+ // popoverButtons.forEach(button => new Popover(button));
+    
+    //fin de configuracion
+
     //establecer valores por defecto al formulario para obtener los datos iniciales
     this.form=this.formulario.group({
       fecha:[new Date(this.fechaHoy).toISOString().substring(0, 10)],

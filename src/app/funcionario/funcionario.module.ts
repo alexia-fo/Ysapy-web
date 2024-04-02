@@ -22,6 +22,8 @@ import { VerPedidosEnviadosComponent } from './paginas/pedidos-funcionarios/ver-
 import { VerPedidosRecibidosComponent } from './paginas/pedidos-funcionarios/ver-pedidos-recibidos/ver-pedidos-recibidos.component';
 import { EditarPedidosComponent } from './paginas/pedidos-funcionarios/editar-pedidos/editar-pedidos.component';
 
+
+
 @NgModule({
   declarations: [
     MainComponent,
