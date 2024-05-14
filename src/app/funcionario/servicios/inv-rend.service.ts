@@ -20,7 +20,7 @@ export class InvRendService {
 
   //! --- Cabecera de Inventario ---
 
-  //FIXME:verifica si el inventario se encuentra habilitado
+  //**verifica si el inventario se encuentra habilitado
   verExiteApertura(): Observable<invCabHabilitado> {
     return this.http.get<invCabHabilitado>(`${this.apiUrl}/inventarios/verExisteApertura`)
     .pipe(
@@ -28,7 +28,7 @@ export class InvRendService {
     );
   } 
 
-  //FIXME:obtiene el nombre de sucursal del usuario activo
+  //**obtiene el nombre de sucursal del usuario activo
   sucDeUsuario(): Observable<RespuestaSucursal> {
     return this.http.get<RespuestaSucursal>(`${this.apiUrl}/inventarios/sucDeUsuario`)
       .pipe(
@@ -36,7 +36,7 @@ export class InvRendService {
     );
   }
  
-  /*FIXME:
+  /*
     obtenerDatosCabecera() es una función que no toma ningún argumento y devuelve un Observable de tipo RespuestaDatosCab.
 
     La función comienza llamando a verExiteApertura(). Esto parece ser una llamada a una función o método que devuelve un Observable de tipo invCabHabilitado. 
@@ -74,7 +74,7 @@ export class InvRendService {
     );
   }  
 
-  //FIXME:inserta una nueva cabecera de inventario
+  //**inserta una nueva cabecera de inventario
   crearApertura(datos: guardarCabecera): Observable<respuestaMensaje> {
     return this.http.post<respuestaMensaje>(`${this.apiUrl}/inventarios/crearApertura`, { ...datos })
       .pipe(
@@ -82,9 +82,9 @@ export class InvRendService {
     );
   }
 
-  //! --- Invetario de productos ---
+  //! --- Detalle de inventario ---
 
-  //FIXME: Verifica si el inventario de productos se encuentra disponible 
+  //** Verifica si el inventario de productos se encuentra disponible 
   /*
     Si se va a registrar un inventario de producto se verifica si se encuentra habilitado
     (cuando se va a registrar el inventario por primera vez o apertura, se verifica que haya una apertura - o cabecera
@@ -97,7 +97,7 @@ export class InvRendService {
     );
   }
 
-  //FIXME: Obtiene el listado de productos "facturables y activos"
+  //** Obtiene el listado de productos "facturables y activos"
   productosInventario(): Observable<RespuestaProductos> {
     return this.http.get<RespuestaProductos>(`${this.apiUrl}/inventarios/productosInventario`)
     .pipe(
@@ -105,7 +105,7 @@ export class InvRendService {
     );
   }
   
-  /*FIXME:
+  /*
 
     Dentro de la función pasada a switchMap(), se verifica si la propiedad habilitado en el objeto respuesta 
     (que es el valor emitido por verificarInventario()) es verdadera o falsa.

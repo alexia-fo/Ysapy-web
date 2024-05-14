@@ -131,13 +131,13 @@ const routes: Routes = [
         //registraran los de cocina, venta, fabrica
 
       },
-      {
-        path:'editarPedidos/:idCabecera',
-        component:EditarPedidosComponent,
-        canDeactivate: [ModalCloseGuard]
-        //registraran los de cocina, venta, fabrica
+      // {
+      //   path:'editarPedidos/:idCabecera',
+      //   component:EditarPedidosComponent,
+      //   canDeactivate: [ModalCloseGuard]
+      //   //registraran los de cocina, venta, fabrica
 
-      },
+      // },
     ]
   }
 ];

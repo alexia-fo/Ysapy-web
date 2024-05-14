@@ -23,6 +23,7 @@ import { EditarSalidasComponent } from './paginas/editar-salidas/editar-salidas.
 import { ComparacionRendicionesComponent } from './paginas/comparacion-rendiciones/comparacion-rendiciones.component';
 import { VerPedidosRecibidosComponent } from '../funcionario/paginas/pedidos-funcionarios/ver-pedidos-recibidos/ver-pedidos-recibidos.component';
 import { RegistrarPedidosComponent } from '../funcionario/paginas/pedidos-funcionarios/registrar-pedidos/registrar-pedidos.component';
+import { VerPedidosEnviadosComponent } from '../funcionario/paginas/pedidos-funcionarios/ver-pedidos-enviados/ver-pedidos-enviados.component';
 
 const routes: Routes = [
   {
@@ -118,6 +119,12 @@ const routes: Routes = [
       },
 
       ///agregado para ver pedidos (utiliza el mismo componente que funcionario)
+        {
+          path:'verPedidosEnviados',
+          component: VerPedidosEnviadosComponent,
+          canDeactivate: [ModalCloseGuard]
+          //varan los de cocina, venta, fabrica
+        },
       
         {
           path:'verPedidosRecibidos',

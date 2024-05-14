@@ -112,9 +112,10 @@ export class VerPedidosRecibidosComponent implements AfterViewInit{
 
     forkJoin({
       marcas: this.servicioR.marcas(),
-      turnos: this.servicioR.obtenerTurnos()
+     // turnos: this.servicioR.obtenerTurnos()//TODO: POR AHORA TURNO ESTA DESHABILITADO
     }).subscribe({
-      next: (result:{marcas:RespuestaMarcas, turnos:RespuestaTurnoPedido}) => {
+      // next: (result:{marcas:RespuestaMarcas, turnos:RespuestaTurnoPedido}) => {//TODO: POR HAORA TURNO ESTA DESHABILITADO
+      next: (result:{marcas:RespuestaMarcas}) => {
         this.marcas = result.marcas.marca;
         //this.turnos = result.turnos.turno;            //TODO: POR AHORA EL TURNO YA NO SERA ESTABLECIDO EN LA CABECERA COMO UN ID, POR ESO YA NO SERA NECESARIO FILTRAR LOS INFORMES POR TURNO
         this.cargandoDatos=false;

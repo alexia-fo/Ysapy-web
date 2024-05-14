@@ -77,16 +77,20 @@ export class MenuFuncionarioComponent {
           route: '/administracion',
           isDropdown: true,
           dropdownItems: [
-            {
-              title: 'Pedido Recibidos',
-              route: '/verPedidosRecibidos',
-              isDropdown: false
-            },
-
             //AGREGADO AHORA//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
             {
               title: 'Registrar',
               route: '/registrarPedidos',
+              isDropdown: false
+            },
+            {
+              title: 'Ver pedidos Enviados',
+              route: '/verPedidosEnviados',
+              isDropdown: false
+            },
+            {
+              title: 'Pedido Recibidos',
+              route: '/verPedidosRecibidos',
               isDropdown: false
             },
           ]
@@ -161,16 +165,20 @@ export class MenuFuncionarioComponent {
           route: '/administracion',
           isDropdown: true,
           dropdownItems: [
-            {
-              title: 'Pedido Recibidos',
-              route: '/verPedidosRecibidos',
-              isDropdown: false
-            },
-
             //AGREGADO AHORA//TODO: COMENTADO PARA IMPLEMENTAR 27-03-2024
             {
               title: 'Registrar',
               route: '/registrarPedidos',
+              isDropdown: false
+            },
+            {
+              title: 'Ver pedidos Enviados',
+              route: '/verPedidosEnviados',
+              isDropdown: false
+            },
+            {
+              title: 'Pedido Recibidos',
+              route: '/verPedidosRecibidos',
               isDropdown: false
             },
           ]
