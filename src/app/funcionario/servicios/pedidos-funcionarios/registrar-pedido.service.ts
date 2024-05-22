@@ -26,9 +26,9 @@ export class RegistrarPedidoService {
   //   .pipe(
   //     catchError(this.errorS.handleError)
   //   );
-  // } 
+  // }
 
-  
+
   //FIXME: 2. OBTENER LAS MARCAS REGISTRADAS PARA COMBO (UNA VEZ SELECCIONADA LA MARCA SE SOLICITARAN LOS PRODUCTOS DE ESA MARCA)
   marcas(): Observable<RespuestaMarcas> {
     return this.http.get<RespuestaMarcas>(`${this.apiUrl}/pedidosFuncionarios/marcas`)
@@ -62,7 +62,7 @@ export class RegistrarPedidoService {
       });
     }
 
-    
+
     obtenerDatos(): Observable<RespuestaDatosPedido> {
       // return this.verHabilitado().pipe(
         // switchMap((respuesta: pedidoCabHabilitado): Observable<RespuestaDatosPedido> => {
@@ -70,16 +70,16 @@ export class RegistrarPedidoService {
         //     // Usar forkJoin para combinar múltiples solicitudes en paralelo
             return forkJoin({
               marcas: this.marcas(),
-              turnos: this.obtenerTurnos()
-            }).pipe(
-              map(( respuestas : { marcas: RespuestaMarcas, turnos: RespuestaTurnoPedido }) => {
+              //turnos: this.obtenerTurnos()//TODO:COMENTADO PARA NO VALIDAR TURNOS POR AHORA
+            }).pipe(//{ marcas: RespuestaMarcas, turnos: RespuestaTurnoPedido }//TODO:COMENTADO PARA NO VALIDAR TURNOS POR AHORA
+              map(( respuestas : { marcas: RespuestaMarcas }) => {
                 return {
                   mostrar: true,
                   // descripcion: respuesta.descripcion,
                   marca: respuestas.marcas.marca,
                   // idCabeceraInv: respuesta.idCabeceraInv,
                   // fechaApertura: respuesta.fechaApertura,
-                  turnos: respuestas.turnos.turno // Incluir los turnos en la respuesta
+                  turnos: []//respuestas.turnos.turno // Incluir los turnos en la respuesta//TODO:COMENTADO PARA NO VALIDAR TURNOS POR AHORA
                 };
               })
             );
